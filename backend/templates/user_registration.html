@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Registration Details</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+    <table role="presentation" cellspacing="0" cellpadding="0" width="100%" style="margin: auto; max-width: 600px;">
+        <tr>
+            <td style="background-color: #0c2959; text-align: center; padding: 20px;">
+                <h2 style="color: #ffffff;">Account Registration Details</h2>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 20px; background-color: #ffffff;">
+                <p>Dear {{ first_name }},</p>
+                <p>Your account has been successfully registered. Here are your login details:</p>
+                <p>Email: {{ email }}</p>
+                <p>Password: {{ password }}</p>
+                <p style="text-align: center; margin-top: 20px;">Please keep this information secure.</p>
+                <p style="text-align: center; margin-top: 20px;">You can log in <a href="{{ login_url }}" style="color: #0c2959; text-decoration: none;">here</a>.</p>
+                <p style="text-align: center; margin-top: 20px;">Best regards,<br>PEMOST Team</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; padding: 10px; background-color: #0c2959; color: #ffffff;">
+                <p>&copy; 2025 PEMOST Solution Limited. All rights reserved.</p>
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

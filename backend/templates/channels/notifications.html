@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>New Chat Message</div>
+    <div id="notification"></div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        const token = ''
+        var loc = window.location;
+        var wsStart = 'ws://';
+        if (loc.protocol == 'https:') {
+            wsStart = 'wss://';
+        }
+        var endpoint = wsStart + loc.host + '/channel/lstupdate/';
+        console.log("the endpoint:",endpoint)
+
+        var occurenceSocket = new WebSocket(endpoint + '?token=' + token);
+
+        {#let occurenceSocket = new WebSocket(endpoint, token);#}
+        occurenceSocket.onopen = function (e) {
+            console.log('WebSockets connection created.', e);
+        };
+        occurenceSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log("data:",data)
+        };
+
+        occurenceSocket.onerror = function (e) {
+            console.error('WebSocket error:', e);
+        };
+
+        occurenceSocket.onclose = function (e) {
+            console.log(e);
+            console.error('Chat socket closed unexpectedly');
+        };
+
+    </script>
+{% endblock script %}
