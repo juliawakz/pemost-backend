@@ -1,0 +1,329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% load static %}
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="date=no" />
+    <meta name="format-detection" content="address=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title>NaiParq Email {{ title }}</title>
+
+
+    <link rel="icon" type="image/x-icon" href="{{ SITE_URL }}{% static 'email/assets/imgs/favicon.ico' %}">
+
+    <style type="text/css">
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            font-family: 'Sk-Modernist', sans-serif;
+            color: #000000;
+        }
+        body {
+            Margin: 0;
+            padding: 0;
+            background: url("{{ SITE_URL }}{% static 'email/assets/imgs/landing-page-bg.jpg' %}") center;
+            background-size: cover;
+            min-height: 100vh;
+        }
+        a, a:hover {
+            color: #15c;
+            text-decoration: none;
+        }
+
+        table {
+            border-spacing: 0;
+        }
+        td {
+            padding: 0;
+        }
+        img {
+            border: 0;
+        }
+        @font-face {
+            font-family: 'Sk-Modernist';
+            src: url('{{ SITE_URL }}{% static "email/assets/fonts/Sk-Modernist-Bold.woff" %}');
+            src: url('{{ SITE_URL }}{% static "email/assets/fonts/Sk-Modernist-Mono.woff" %}');
+            src: url('{{ SITE_URL }}{% static "email/assets/fonts/Sk-Modernist-Regular.woff" %}');
+        }
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .webkit {
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        .outer {
+            Margin: 0 auto;
+            width: 100%;
+            max-width: 900px;
+            border-spacing: 0;
+            font-family: sans-serif;
+            color: #000;
+        }
+
+        .outer .content {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .outer p {
+            font-size: 24px;
+            line-height: 27px;
+            padding: 10px;
+            text-align: justify;
+            text-justify: inter-word;
+
+        }
+
+        .outer p span {
+            font-weight: bold;
+        }
+
+        .email-book {
+            padding: 20px 0 50px;
+        }
+
+        .email-book a {
+            background: #000000;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            line-height: 170%;
+            text-align: center;
+            width: 225px;
+            height: 55px;
+            padding: 20px 60px;
+            text-decoration: none;
+        }
+
+        .call-to-action {
+            background: #FBCE33;
+            width: 100%;
+            table-layout: fixed;
+            padding: 20px 0;
+        }
+
+        .two-columns {
+            Margin: 0 auto;
+            width: 100%;
+            max-width: 900px;
+            border-spacing: 0;
+            font-family: sans-serif;
+            color: #000;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .two-columns .column-one {
+            width: 60%;
+            padding-left: 20px;
+        }
+
+        .two-columns .column-one img {
+            width: 150px;
+        }
+
+        .two-columns .column-one h4{
+            font-weight: normal;
+            font-size: 24px;
+            line-height: 30px;
+            letter-spacing: 1px;
+            padding: 20px 0
+        }
+
+         .two-columns .column-two {
+            width: 40%;
+            position: relative;
+        }
+        .footer {
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .social-links img {
+            Margin: 10px;
+            width: 30px;
+        }
+
+        .footer a {
+            color: #ffffff;
+        }
+
+        @media screen and (max-width: 600px) {
+            .outer p {
+                font-size: 14px;
+                line-height: 17px;
+                padding-left: 5px;
+            }
+            .two-columns .column-one {
+                padding-left: 10px;
+            }
+            .two-columns .column-one {
+            }
+
+            .two-columns .column-two img {
+                width: 100%;
+            }
+            .two-columns .column-one h4{
+                font-size: 14px;
+                line-height: 17px;
+                font-weight: normal;
+            }
+            .call-to-action {
+                margin-top: 60px;
+            }
+        }
+        @media screen and (max-width: 400px) {
+
+        }
+    </style>
+
+</head>
+<body>
+
+    <center class="wrapper">
+        <div class="webkit">
+            <table class="outer" align="center">
+
+<!--                NaiParq Logo -->
+                <tr>
+                    <td>
+                        <table width="100%" style="border-spacing:0;">
+                            <tr>
+                                <td style="text-align:center;padding:30px 0;">
+                                    <a href="https://naiparq.co.ke/" target="_blank">
+                                        <img src="{{ SITE_URL }}{% static 'email/assets/imgs/naiparq-logo.png' %}" width="150" alt="NaiParq" title="NaiParq">
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+<!--                Email Title -->
+<!--                Email Content -->
+                <!-- Email Link -->
+
+                        {% block content %}
+
+                        {% endblock %}
+
+             <tr>
+                <td class="content" style="padding: 9px 0;text-align: left;font-size:6px;">
+                    <p>
+                        NaiparQ Team.
+                    </p>
+                </td>
+            </tr>
+
+            </table>
+        </div>
+
+
+<!--        Email Call To Action -->
+        <div class="call-to-action">
+            <table width="100%" style="border-spacing: 0" class="two-columns" align="center">
+
+                <tr>
+                    <td class="two-columns">
+
+                        <table class="column-one">
+                            <tr>
+                                <td class="padding">
+
+                                    <table class="content">
+                                        <tr>
+                                            <td>
+                                                <h4>
+                                                    Stop hustling for parking. Use your phone to find and book a parking space in Nairobi and only pay for the duration you plan to use it for.
+                                                </h4>
+                                                <a href="https://play.google.com/store/apps/details?id=ai.swiftlabs.naiparq" target="_blank">
+                                                    <img src="{{ SITE_URL }}{% static 'email/assets/imgs/google-play.png' %}" alt="NaiParq PlayStore App" width="200" title="NaiParq PlayStore App">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table class="column-two">
+                            <tr>
+                                <td class="padding">
+
+                                    <table class="content">
+                                        <tr>
+                                            <td>
+                                                <img width="200" src="{{ SITE_URL }}{% static 'email/assets/imgs/highlights.png' %}" alt="">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+<!--        Email Footer -->
+        <div class="footer" style="background: #000;">
+            <table width="100%" style="border-spacing: 0;color: #fff;" align="center">
+
+                <tr>
+                    <td class="social-links" style="text-align: center; padding: 30px 0;">
+
+                        <a href="https://twitter.com/naiparq" target="_blank">
+                            <img src="{{ SITE_URL }}{% static 'email/assets/imgs/twitter.png' %} " alt="twitter">
+                        </a>
+
+                        <a href="https://www.instagram.com/naiparq/" target="_blank">
+                            <img src="{{ SITE_URL }}{% static 'email/assets/imgs/facebook.png' %}" alt="facebook">
+                        </a>
+
+                        <a href="https://www.facebook.com/Naiparq/" target="_blank">
+                            <img src="{{ SITE_URL }}{% static 'email/assets/imgs/instagram.png' %}" alt="instagram">
+                        </a>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center">
+
+                        <a href="https://naiparq.co.ke/" target="_blank">
+                            naiparq.co.ke
+                        </a>
+
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+
+    </center>
+
+</body>
+</html>

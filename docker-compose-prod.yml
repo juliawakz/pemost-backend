@@ -1,0 +1,161 @@
+version: '3.8'
+
+services:
+  database_prod:
+    image: postgis/postgis:15-3.4-alpine
+    container_name: pemost_db_prod
+    expose:
+      - 5433
+    env_file:
+      - ./backend/environments/env.prod
+    restart: unless-stopped
+    volumes:
+      - database_volume:/var/lib/postgresql/data
+      - ./backend/database/bashfile:/docker-entrypoint-initdb.d
+    networks:
+      - pemost_prod_network
+
+  backend_prod:
+    build: ./backend
+    restart: unless-stopped
+    container_name: pemost_backend_prod
+    command: gunicorn project.wsgi:application --workers 16 --timeout 1500 --worker-class gevent --bind 0.0.0.0:8000
+    volumes:
+      - ./backend:/pemostbackend:rw
+      - static_volume:/pemostbackend/static:rw
+      - media_volume:/pemostbackend/media:rw
+    ports:
+      - 8000:8000
+    env_file:
+      - ./backend/environments/env.prod
+    depends_on:
+      - database_prod
+    networks:
+      - pemost_prod_network
+
+  redis_prod:
+      image: redis:latest
+      container_name: pemost_redis_prod
+      restart: unless-stopped
+      networks:
+        - pemost_prod_network
+
+  celery_worker_prod:
+    build: ./backend
+    container_name: pemost_celery_worker
+    restart: unless-stopped
+    env_file:
+      - ./backend/environments/env.prod
+    command: celery -A project worker -l info
+    volumes:
+      - celery_worker_prod_volume:/celery_volume
+      - media_volume:/pemostbackend/media:rw
+    networks:
+      - pemost_prod_network
+    depends_on:
+      - backend_prod
+      - redis_prod
+      - database_prod
+
+  celery_beat_prod:
+    build: ./backend
+    container_name: pemost_celery_beat
+    restart: unless-stopped
+    env_file:
+      - ./backend/environments/env.prod
+    command: celery -A project beat -l info
+    volumes:
+      - celery_beat_prod_volume:/celery_volume
+      - media_volume:/pemostbackend/media:rw
+    networks:
+      - pemost_prod_network
+    depends_on:
+      - backend_prod
+      - redis_prod
+      - database_prod
+
+  sockets:
+    build: ./backend
+    container_name: pemost_sockets_prod
+    command: daphne --bind 0.0.0.0 --port 6656 --verbosity 0 project.asgi:application
+    restart: unless-stopped
+    volumes:
+      - .:/backend
+      - static_volume:/pemostbackend/static
+      - media_volume:/pemostbackend/media:rw
+    networks:
+      - pemost_prod_network
+    ports:
+      - 6656:6656
+    depends_on:
+      - backend_prod
+      - redis_prod
+      - database_prod
+    env_file:
+      - ./backend/environments/env.prod
+
+  nginx:
+    build:
+      context: ./ssl-certs-proxy/prod/nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    volumes:
+      - nginx_conf:/etc/nginx/conf.d/:rw
+      - static_volume:/pemostbackend/static:rw
+      - media_volume:/pemostbackend/media:rw
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+      - frontend_volume:/frontend:ro
+
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+    depends_on:
+      - backend_prod
+    networks:
+      - pemost_prod_network
+
+  certbot:
+    container_name: certbot
+    build:
+      context: ssl-certs-proxy/prod/certbot
+      dockerfile: Dockerfile
+    depends_on:
+      - nginx
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    networks:
+      - pemost_prod_network
+
+  cert-renew:
+    build:
+      context: ssl-certs-proxy/cert_cron
+      dockerfile: Dockerfile
+    container_name: cert-renew
+    depends_on:
+      - nginx
+      - certbot
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - pemost_prod_network
+
+
+networks:
+  pemost_prod_network:
+    driver: bridge
+
+volumes:
+  static_volume:
+  media_volume:
+  celery_volume:
+  database_volume:
+  celery_worker_prod_volume:
+  celery_beat_prod_volume:
+  nginx_conf:
+  certbot_conf:
+  certbot_www:
+  frontend_volume:
+    external: true

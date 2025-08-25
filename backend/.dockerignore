@@ -1,0 +1,7 @@
+.env
+venv/
+*.psql
+0*.py
+migrations/
+database/
+__pypackages__/

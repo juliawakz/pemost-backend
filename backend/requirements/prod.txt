@@ -1,0 +1,87 @@
+# Core Django stack
+Django==4.2.1
+djangorestframework==3.14.0
+django-filter==23.2
+django-rest-auth==0.9.5
+djangorestframework-gis==1.0
+djangorestframework-simplejwt==5.2.2
+django-cors-headers==3.13.0
+django-json-widget==1.1.1
+drf-spectacular==0.26.5
+python-decouple==3.8
+
+# Authentication & Phone
+django-otp==1.1.3
+django-phonenumber-field==7.1.0
+django-phonenumbers==1.0.1
+phonenumbers==8.13.11
+
+# Background tasks & cache
+celery==5.2.7
+django-celery-beat==2.1.0
+django_celery_results==2.5.1
+redis==4.5.5
+django-redis==5.2.0
+billiard==3.6.4.0
+
+# Realtime (WebSockets)
+channels==4.0.0
+channels-redis==4.1.0
+channels-rabbitmq==4.0.1
+daphne==4.0.0
+gevent==21.12.0
+
+# GIS and Geospatial
+django-leaflet==0.28.3
+GDAL
+geojson==3.0.1
+pyproj==3.4.1
+rasterio==1.3.6
+Shapely==1.8.5
+rtree==1.0.1
+
+# Admin & UI
+django-jazzmin==2.6.0
+
+# Storage & Media
+Pillow==9.5.0
+psycopg2-binary==2.9.6
+django-dbbackup==4.0.2
+
+# Timezone
+django-timezone-field==4.0
+tzdata==2023.3
+
+# Server & HTTP
+gunicorn==20.1.0
+urllib3==1.26.14
+PyYAML==6.0
+beautifulsoup4==4.11.2
+
+# Data tools
+numpy==1.24.2
+pandas==1.5.0
+
+# Firebase Push Notifications
+firebase-admin==6.2.0
+fcm-django==2.0.0
+
+# Sentinel Hub Integration
+sentinelhub==3.8.0
+
+# Dev tools & linting
+black==22.8.0
+flake8==5.0.4
+flake8-isort==4.2.0
+isort==5.12.0
+mypy-extensions==1.0.0
+pre-commit==2.20.0
+pylint==2.15.3
+pylint-celery==0.3
+pylint-django==2.5.3
+six==1.16.0
+django-utils-six==2.0
+coreapi==2.3.3
+
+# Email Integration
+sendgrid

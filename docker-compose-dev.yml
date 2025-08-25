@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgis/postgis:latest
+    container_name: pemost_db
+    ports:
+      - 5432:5432
+    env_file:
+      - ./backend/environments/env.dev
+    restart: unless-stopped
+    volumes:
+      - database_volume:/var/lib/postgresql/data
+      - ./backend/database/bashfile:/docker-entrypoint-initdb.d
+      - ./backend/database/backups:/backuprestore/backups
+    networks:
+      - pemost_network
+
+  redis:
+     image: redis:latest
+     container_name: pemost_redis
+     restart: unless-stopped
+     ports:
+       - 6379:6379
+     networks:
+       - pemost_network
+
+networks:
+  pemost_network:
+    driver: bridge
+
+volumes:
+  database_volume:
+  database_backups:
