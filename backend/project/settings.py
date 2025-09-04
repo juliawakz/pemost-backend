@@ -432,6 +432,7 @@ MIGRATION_MODULES = {
     "api": "migration_files.api",
     "base": "migration_files.base",
     "users": "migration_files.users",
+    "notifications": "migration_files.notifications",
 }
 
 SPECTACULAR_SETTINGS = {

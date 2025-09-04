@@ -8,7 +8,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from phonenumber_field.modelfields import PhoneNumberField
-from users.choices import UserTypeChoices
 from users.manager import UserManager
 
 logger = logging.getLogger(__name__)
@@ -41,18 +40,8 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         null=True,
         blank=True
     )
-    is_verified = models.BooleanField(
-        default=False
-    )
     is_staff = models.BooleanField(
         default=False,
-    )
-    type = models.CharField(
-        max_length=15,
-        choices=UserTypeChoices.choices,
-        default=UserTypeChoices.FARMER,
-        null=False,
-        blank=False,
     )
     date_joined = models.DateTimeField(
         _("date joined"), default=timezone.now
@@ -60,15 +49,6 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(
         _("last login"), default=timezone.now
     )
-    objects = UserManager()
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = [
-        "first_name",
-        "last_name",
-        "phone_number",
-        "type"
-    ]
-
     created_by = models.ForeignKey(
         "self",
         on_delete=models.SET_NULL,
@@ -76,6 +56,14 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         blank=True,
         related_name="created_users"
     )
+
+    objects = UserManager()
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = [
+        "first_name",
+        "last_name",
+        "phone_number"
+    ]
 
     slug = None
     metadata = None
@@ -98,3 +86,10 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         if self.profile_photo:
             return f"{settings.SERVER_HOST}{self.profile_photo.url}"
         return None
+
+    # convenience instance methods
+    def get_all_descendants(self):
+        return User.objects.get_all_descendants(self)
+
+    def get_all_farmers_under(self):
+        return User.objects.get_all_farmers_under(self)
