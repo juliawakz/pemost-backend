@@ -9,12 +9,11 @@ class UserAdmin(admin.ModelAdmin):
         "first_name",
         "last_name",
         "email",
-        "type",
-        "is_verified",
+        "user_role",
         "is_archived",
         "created_at",
     ]
-    list_filter = ["created_at", "updated_at", "type"]
+    list_filter = ["created_at", "updated_at", "user_role"]
     search_fields = [
         "email",
         "id",

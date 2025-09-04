@@ -42,3 +42,9 @@ class InvalidCurrentPasswordException(APIException):
     status_code = 400
     default_detail = _("Wrong current password.")
     default_code = "password-mismatch"
+
+
+class InvalidOTPException(APIException):
+    status_code = 400
+    default_detail = _("The OTP is invalid or expired.")
+    default_code = "invalid-otp"

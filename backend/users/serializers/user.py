@@ -1,15 +1,15 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from users.choices import UserTypeChoices
+from users.choices import RoleChoices
 
 User = get_user_model()
 
 # hierarchy map: higher number = more powerful
 USER_TYPE_HIERARCHY = {
-    UserTypeChoices.SYSTEM_ADMIN: 4,
-    UserTypeChoices.SUPER_EXTENSION: 3,
-    UserTypeChoices.E_EXTENSION: 2,
-    UserTypeChoices.FARMER: 1
+    RoleChoices.SYSTEM_ADMIN: 4,
+    RoleChoices.SUPER_EXTENSION: 3,
+    RoleChoices.E_EXTENSION: 2,
+    RoleChoices.FARMER: 1
 }
 
 
@@ -21,8 +21,6 @@ class UserWriteSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "phone_number",
-            "type",
-            "is_verified",
             "is_archived",
         )
 
@@ -36,9 +34,8 @@ class UserReadSerializer(serializers.ModelSerializer):
             "last_name",
             "full_name",
             "email",
+            "user_role",
             "phone_number",
-            "type",
-            "is_verified",
             "is_archived",
             "date_joined",
             "last_login",
@@ -55,9 +52,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "phone_number",
-            "type",
-            "is_verified",
             "is_archived",
+            "user_role"
         )
 
     def validate(self, attrs):
@@ -67,9 +63,11 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         new_type = attrs.get("type")
 
         if new_type:
-            if request_user.type == UserTypeChoices.AGRODEALER:
+            if request_user.type == RoleChoices.AGRODEALER:
                 raise serializers.ValidationError(
-                    {"type": "You cannot assign a user type."}
+                    {
+                        "type": "You cannot assign a user type."
+                    }
                 )
 
             if not request_user.is_superuser:
@@ -80,13 +78,17 @@ class UserUpdateSerializer(serializers.ModelSerializer):
                 # Prevent escalating higher than self
                 if new_level > request_level and not request_user.is_superuser:
                     raise serializers.ValidationError(
-                        {"type": "You cannot assign a user type higher than your own."}
+                        {
+                            "type": "You cannot assign a user type higher than your own."
+                        }
                     )
 
                 # Prevent downgrading peers/higher-level users
                 if target_user and USER_TYPE_HIERARCHY.get(target_user.type, 0) >= request_level and not request_user.is_superuser:
                     raise serializers.ValidationError(
-                        {"type": "You cannot change the type of a user at the same or higher level."}
+                        {
+                            "type": "You cannot change the type of a user at the same or higher level."
+                        }
                     )
 
         return attrs
