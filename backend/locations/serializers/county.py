@@ -18,3 +18,16 @@ class CountySerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at"
         ]
+
+
+class MinimalCountySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = County
+        fields = [
+            "id",
+            "county_id",
+            "name"
+        ]
+        read_only_fields = [
+            "id"
+        ]

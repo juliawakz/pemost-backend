@@ -8,6 +8,9 @@ from users.choices import RoleChoices
 from users.utils.user import UserUtils
 from users.utils.otp import OtpUtils
 
+from locations.serializers.subcounty import MinimalCountySerializer, MinimalSubCountySerializer
+from locations.serializers.ward import MiniWardSerializer
+
 User = get_user_model()
 user_utils = UserUtils()
 
@@ -64,7 +67,7 @@ class UserSerializer(serializers.ModelSerializer):
             raise ValidationError("Super E-Extension must be assigned at least one county.")
         if role == RoleChoices.E_EXTENSION and not (wards or subcounties):
             raise ValidationError("E-Extension must be assigned at least one ward or subcounty.")
-        if role == RoleChoices.FARMER or role == RoleChoices.AGRODEALER and not wards:
+        if (role == RoleChoices.FARMER or role == RoleChoices.AGRODEALER) and not wards:
             raise ValidationError("Farmer/Agrodealer must be assigned at least one ward.")
 
         # --- Permission checks ---
@@ -72,15 +75,25 @@ class UserSerializer(serializers.ModelSerializer):
             if user.role == RoleChoices.SUPER_EXTENSION:
                 if role not in [RoleChoices.E_EXTENSION, RoleChoices.AGRODEALER, RoleChoices.FARMER]:
                     raise PermissionDenied(f"Super Extension cannot create {role} users.")
-                if wards and user_utils._ensure_all_wards_in_counties(wards, user.counties.all()):
-                    raise ValidationError("Some wards are outside your counties.")
+                if wards:
+                    bad_wards = user_utils._ensure_all_wards_in_counties(wards, user.counties.all())
+                    if bad_wards:
+                        raise serializers.ValidationError({
+                            "message": "Some wards do not belong to your assigned region(s).",
+                            "wards": bad_wards
+                        })
             elif user.role == RoleChoices.E_EXTENSION:
                 if role not in [RoleChoices.FARMER, RoleChoices.AGRODEALER]:
                     raise PermissionDenied("E-Extension may only create Farmer or Agrodealer.")
-                if wards and not user_utils._ensure_wards_subset(wards, user.wards.all()):
-                    raise ValidationError("Wards outside your scope were assigned.")
-                if role == RoleChoices.AGRODEALER and len(wards) != 1:
-                    raise ValidationError("Agrodealer must have exactly one ward.")
+                if wards:
+                    bad_wards = user_utils._ensure_wards_subset(wards, user.wards.all())
+                    if bad_wards:
+                        raise ValidationError({
+                            "message": ["Wards outside your scope were assigned."],
+                            "wards": bad_wards
+                        })
+                    if role == RoleChoices.AGRODEALER and len(wards) != 1:
+                        raise ValidationError("Agrodealer must have exactly one ward.")
             elif request.user != self.instance:
                 raise PermissionDenied("You are not allowed to manage users.")
 
@@ -144,3 +157,10 @@ class UserSerializer(serializers.ModelSerializer):
             sc, c = user_utils._derive_subcounties_and_counties_from_wards(wards)
             instance.subcounties.set(sc)
             instance.counties.set(c)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["counties"] = MinimalCountySerializer(instance.counties.all(), many=True).data
+        data["subcounties"] = MinimalSubCountySerializer(instance.subcounties.all(), many=True).data
+        data["wards"] = MiniWardSerializer(instance.wards.all(), many=True).data
+        return data

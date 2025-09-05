@@ -13,8 +13,12 @@ class WardViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [
         "ward_id",
-        "name"
-    ]  # enable filtering on county_id and name
+        "name",
+        "subcounty__county",
+        "subcounty__county__name",
+        "subcounty",
+        "subcounty__name"
+    ]  # enable filtering
 
     def get_permissions(self):
         """

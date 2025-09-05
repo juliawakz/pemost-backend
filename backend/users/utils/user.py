@@ -21,13 +21,17 @@ class UserUtils:
         return subcounties, counties
 
     def _ensure_all_wards_in_counties(self, wards, counties):
-        bad = [w.id for w in wards if w.subcounty.county_id not in counties.values_list("id", flat=True)]
-        return bad
+        county_ids = set(counties.values_list("id", flat=True))
+        bad_wards = [{"id": str(w.id), "name": w.name} for w in wards if w.subcounty.county_id not in county_ids]
+        return bad_wards
 
     def _ensure_wards_subset(self, wards, allowed_wards):
         allowed_ids = set(allowed_wards.values_list("id", flat=True))
-        provided_ids = set(w.id for w in wards)
-        return not provided_ids.issubset(allowed_ids)
+        bad_wards = [
+            {"id": str(w.id), "name": w.name}
+            for w in wards if w.id not in allowed_ids
+        ]
+        return bad_wards
 
     def check_token_is_valid(self, otp_details: dict):
         user = User.objects.filter(
