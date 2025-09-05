@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     "base",
     "migration_files",
     "users",
+    "locations",
+    "api",
     "notifications",
 ]
 
@@ -245,6 +247,7 @@ CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="amqp://localhost")
 CELERY_RESULT_BACKEND = config(
     "CELERY_RESULT_BACKEND", default="redis://localhost:6379/9"
 )
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
@@ -433,6 +436,7 @@ MIGRATION_MODULES = {
     "base": "migration_files.base",
     "users": "migration_files.users",
     "notifications": "migration_files.notifications",
+    "locations": "migration_files.locations",
 }
 
 SPECTACULAR_SETTINGS = {

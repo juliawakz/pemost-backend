@@ -15,12 +15,7 @@ class Otp(BaseModel):
         User,
         on_delete=models.CASCADE
     )
-    expiry_at = models.DateTimeField(
-        default=timezone.make_aware(
-            timezone.datetime.now() + timezone.timedelta(hours=1),
-            timezone.get_default_timezone()
-        )
-    )
+    expiry_at = models.DateTimeField()
 
     slug = None
     metadata = None
