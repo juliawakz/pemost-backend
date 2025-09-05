@@ -13,8 +13,11 @@ class SubCountyViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [
         "subcounty_id",
-        "name"
-    ]  # enable filtering on county_id and name
+        "name",
+        "county",
+        "county__name",
+        "county__county_id"
+    ]  # enable filtering
 
     def get_permissions(self):
         """
