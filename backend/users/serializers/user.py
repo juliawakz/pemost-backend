@@ -64,8 +64,8 @@ class UserSerializer(serializers.ModelSerializer):
             raise ValidationError("Super E-Extension must be assigned at least one county.")
         if role == RoleChoices.E_EXTENSION and not (wards or subcounties):
             raise ValidationError("E-Extension must be assigned at least one ward or subcounty.")
-        if role == RoleChoices.FARMER and not wards:
-            raise ValidationError("Farmer must be assigned at least one ward.")
+        if role == RoleChoices.FARMER or role == RoleChoices.AGRODEALER and not wards:
+            raise ValidationError("Farmer/Agrodealer must be assigned at least one ward.")
 
         # --- Permission checks ---
         if not (user.is_superuser or user.role == RoleChoices.SYSTEM_ADMIN):
@@ -81,7 +81,7 @@ class UserSerializer(serializers.ModelSerializer):
                     raise ValidationError("Wards outside your scope were assigned.")
                 if role == RoleChoices.AGRODEALER and len(wards) != 1:
                     raise ValidationError("Agrodealer must have exactly one ward.")
-            else:
+            elif request.user != self.instance:
                 raise PermissionDenied("You are not allowed to manage users.")
 
         # --- Location consistency checks ---

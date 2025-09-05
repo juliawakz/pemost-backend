@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
@@ -53,7 +54,8 @@ class UserUtils:
                 "first_name": first_name,
                 "email": email,
                 "password": password,
-                "login_url": login_url
+                "login_url": login_url,
+                "current_year": datetime.now().year,
             }
         )
         send_email_task.delay(
@@ -86,7 +88,8 @@ class UserUtils:
             "email_otp.html",
             {
                 "otp": otp,
-                "user": user.first_name
+                "user": user.first_name,
+                "current_year": datetime.now().year,
             }
         )
         send_email_task.delay(

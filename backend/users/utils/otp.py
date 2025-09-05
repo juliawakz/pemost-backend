@@ -9,6 +9,17 @@ class OtpUtils:
         return get_random_string(token_length, allowed_chars="0123456789")
 
     def generate_random_password(self, length=10):
-        characters = string.ascii_letters + string.digits + string.punctuation
-        password = ''.join(random.choice(characters) for _ in range(length))
+        # Select characters
+        letters = random.choices(string.ascii_letters, k=8)
+        digits = random.choices(string.digits, k=2)
+        special = random.choice(string.punctuation)
+
+        # Combine
+        password_list = letters + digits + [special]
+
+        # Shuffle to avoid predictable positions
+        random.shuffle(password_list)
+
+        # Join into final password
+        password = ''.join(password_list)
         return password

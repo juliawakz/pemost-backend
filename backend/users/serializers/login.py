@@ -48,7 +48,7 @@ class LoginSerializer(serializers.Serializer):
         if not user:
             raise AccountNotRegisteredException()
 
-        if user.is_archived:
+        if user.is_archived or not user.is_active:
             raise AccountDisabledException()
 
         authenticated_user = authenticate(
