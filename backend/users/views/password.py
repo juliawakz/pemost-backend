@@ -19,7 +19,7 @@ class PasswordResetView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         UserUtils().send_email_otp(serializer.data["email"])
         response = {
-            "message": "Reset password OTP  token sent"
+            "message": "Reset OTP sent to email."
         }
         return Response(response, status=status.HTTP_200_OK)
 

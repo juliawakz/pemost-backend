@@ -25,8 +25,11 @@ echo "-------Creating a superuser-------"
 python manage.py shell -c "
 from django.contrib.auth import get_user_model;
 try:
-  get_user_model().objects.create_superuser(first_name='Julia',last_name='Wakaba',email='juliawakaba53@gmail.com',phone_number='+254791049498',password='test1234')
+  get_user_model().objects.create_superuser(first_name='Julia',last_name='Wakaba',email='juliawakaba53@gmail.com',phone_number='+254791049498',password='test1234',role='SYSTEM_ADMIN')
 except Exception as e:
   print(e)
   "
+echo "-------Prepopulating locations from CSV-------"
+python manage.py load_locations sample_data/locations.csv
+
 exec "$@"

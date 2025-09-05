@@ -1,5 +1,3 @@
-from collections import deque
-from django.db import connection
 from django.contrib.auth.base_user import BaseUserManager
 
 
@@ -37,48 +35,3 @@ class UserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
         return self._create_user(first_name, last_name, phone_number, password, **extra_fields)
-
-    def get_all_descendants(self, user):
-        """
-        Returns a queryset of all descendants of a given user.
-        Uses PostgreSQL CTE if available, otherwise falls back to Python BFS.
-        """
-        vendor = connection.vendor
-
-        if vendor == "postgresql":
-            with connection.cursor() as cursor:
-                cursor.execute(f"""
-                    WITH RECURSIVE descendants AS (
-                        SELECT id, created_by_id
-                        FROM {self.model._meta.db_table}
-                        WHERE created_by_id = %s
-                        UNION ALL
-                        SELECT u.id, u.created_by_id
-                        FROM {self.model._meta.db_table} u
-                        INNER JOIN descendants d ON u.created_by_id = d.id
-                    )
-                    SELECT id FROM descendants;
-                """, [user.id])
-                ids = [row[0] for row in cursor.fetchall()]
-            return self.filter(id__in=ids)
-
-        # fallback: BFS traversal in Python
-        visited = set()
-        queue = deque(user.created_users.all())
-        descendant_ids = []
-
-        while queue:
-            child = queue.popleft()
-            if child.pk in visited:
-                continue
-            visited.add(child.pk)
-            descendant_ids.append(child.pk)
-            queue.extend(child.created_users.all())
-
-        return self.filter(id__in=descendant_ids)
-
-    def get_all_farmers_under(self, user):
-        """
-        Returns a queryset of all farmers under a given user.
-        """
-        return self.get_all_descendants(user).filter(user_role="farmer")

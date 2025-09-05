@@ -9,6 +9,9 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from phonenumber_field.modelfields import PhoneNumberField
 from users.manager import UserManager
+from users.choices import RoleChoices
+
+from locations.models import County, SubCounty, Ward
 
 logger = logging.getLogger(__name__)
 
@@ -43,18 +46,25 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(
         default=False,
     )
-    date_joined = models.DateTimeField(
-        _("date joined"), default=timezone.now
-    )
     last_login = models.DateTimeField(
         _("last login"), default=timezone.now
     )
-    created_by = models.ForeignKey(
-        "self",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="created_users"
+    role = models.CharField(
+        max_length=20,
+        choices=RoleChoices.choices,
+        default=RoleChoices.FARMER
+    )
+    counties = models.ManyToManyField(
+        County,
+        blank=True
+    )
+    subcounties = models.ManyToManyField(
+        SubCounty,
+        blank=True
+    )
+    wards = models.ManyToManyField(
+        Ward,
+        blank=True
     )
 
     objects = UserManager()
@@ -75,7 +85,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         get_latest_by = ("-updated_at",)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.full_name} ({self.role})"
 
     @property
     def full_name(self):
@@ -87,9 +97,11 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             return f"{settings.SERVER_HOST}{self.profile_photo.url}"
         return None
 
-    # convenience instance methods
-    def get_all_descendants(self):
-        return User.objects.get_all_descendants(self)
+    def is_system_admin(self):
+        return self.role == RoleChoices.SYSTEM_ADMIN or self.is_superuser
 
-    def get_all_farmers_under(self):
-        return User.objects.get_all_farmers_under(self)
+    def is_super_extension(self):
+        return self.role == RoleChoices.SUPER_EXTENSION
+
+    def is_e_extension(self):
+        return self.role == RoleChoices.E_EXTENSION

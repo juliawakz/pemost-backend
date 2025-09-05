@@ -7,8 +7,8 @@ from users.exceptions import (
     AccountNotRegisteredException,
     InvalidCredentialsException,
 )
-from users.serializers.profile import ProfileSerializer
 
+from users.serializers.user import UserSerializer
 User = get_user_model()
 
 
@@ -30,7 +30,7 @@ class LoginSerializer(serializers.Serializer):
         style={"input_type": "password"},
         allow_blank=False
     )
-    user = ProfileSerializer(
+    user = UserSerializer(
         many=False,
         read_only=True
     )
@@ -67,7 +67,7 @@ class LoginSerializer(serializers.Serializer):
             "user": user,
             "token": {
                 "access": str(refresh.access_token),
-                "refresh": str(RefreshToken.for_user(user)),
+                "refresh": str(refresh),
                 "access_expiry_time": user.last_login + refresh.access_token_class.lifetime,
                 "refresh_expiry_time": user.last_login + refresh.lifetime,
             },
