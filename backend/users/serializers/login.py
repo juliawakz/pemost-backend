@@ -5,11 +5,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from users.exceptions import (
     AccountDisabledException,
     AccountNotRegisteredException,
-    InactiveAccountException,
     InvalidCredentialsException,
 )
-from users.serializers.profile import ProfileSerializer
 
+from users.serializers.user import UserSerializer
 User = get_user_model()
 
 
@@ -27,10 +26,18 @@ class LoginSerializer(serializers.Serializer):
         write_only=True,
     )
     password = serializers.CharField(
-        write_only=True, style={"input_type": "password"}, allow_blank=False
+        write_only=True,
+        style={"input_type": "password"},
+        allow_blank=False
     )
-    user = ProfileSerializer(many=False, read_only=True)
-    token = TokenSerializer(read_only=True, required=False)
+    user = UserSerializer(
+        many=False,
+        read_only=True
+    )
+    token = TokenSerializer(
+        read_only=True,
+        required=False
+    )
 
     def validate(self, attrs):
         email = attrs.get("email")
@@ -41,13 +48,13 @@ class LoginSerializer(serializers.Serializer):
         if not user:
             raise AccountNotRegisteredException()
 
-        if user.is_archived:
+        if user.is_archived or not user.is_active:
             raise AccountDisabledException()
 
-        if not user.is_verified:
-            raise InactiveAccountException()
-
-        authenticated_user = authenticate(username=email, password=password)
+        authenticated_user = authenticate(
+            username=email,
+            password=password
+        )
 
         if not authenticated_user:
             raise InvalidCredentialsException()
@@ -60,7 +67,7 @@ class LoginSerializer(serializers.Serializer):
             "user": user,
             "token": {
                 "access": str(refresh.access_token),
-                "refresh": str(RefreshToken.for_user(user)),
+                "refresh": str(refresh),
                 "access_expiry_time": user.last_login + refresh.access_token_class.lifetime,
                 "refresh_expiry_time": user.last_login + refresh.lifetime,
             },
@@ -69,4 +76,7 @@ class LoginSerializer(serializers.Serializer):
 
 
 class LogoutSerializer(serializers.Serializer):
-    refresh = serializers.CharField(required=True, allow_blank=False)
+    refresh = serializers.CharField(
+        required=True,
+        allow_blank=False
+    )

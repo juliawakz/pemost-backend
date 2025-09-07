@@ -11,8 +11,6 @@ services:
     restart: unless-stopped
     volumes:
       - database_volume:/var/lib/postgresql/data
-      - ./backend/database/bashfile:/docker-entrypoint-initdb.d
-      - ./backend/database/backups:/backuprestore/backups
     networks:
       - pemost_network
 

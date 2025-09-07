@@ -1,92 +1,166 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from users.choices import UserTypeChoices
+from rest_framework.exceptions import ValidationError, PermissionDenied
+from django.db import transaction
+
+from locations.models import County, SubCounty, Ward
+from users.choices import RoleChoices
+from users.utils.user import UserUtils
+from users.utils.otp import OtpUtils
+
+from locations.serializers.subcounty import MinimalCountySerializer, MinimalSubCountySerializer
+from locations.serializers.ward import MiniWardSerializer
 
 User = get_user_model()
-
-# hierarchy map: higher number = more powerful
-USER_TYPE_HIERARCHY = {
-    UserTypeChoices.SYSTEM_ADMIN: 4,
-    UserTypeChoices.SUPER_EXTENSION: 3,
-    UserTypeChoices.E_EXTENSION: 2,
-    UserTypeChoices.FARMER: 1
-}
+user_utils = UserUtils()
 
 
-class UserWriteSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    counties = serializers.PrimaryKeyRelatedField(
+        queryset=County.objects.all(), many=True, required=False
+    )
+    subcounties = serializers.PrimaryKeyRelatedField(
+        queryset=SubCounty.objects.all(), many=True, required=False
+    )
+    wards = serializers.PrimaryKeyRelatedField(
+        queryset=Ward.objects.all(), many=True, required=False
+    )
+
     class Meta:
         model = User
-        fields = (
-            "first_name",
-            "last_name",
-            "email",
-            "phone_number",
-            "type",
-            "is_verified",
-            "is_archived",
-        )
-
-
-class UserReadSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            "id",
-            "first_name",
-            "last_name",
-            "full_name",
-            "email",
-            "phone_number",
-            "type",
-            "is_verified",
-            "is_archived",
-            "date_joined",
-            "last_login",
-            "created_at",
-            "updated_at",
-        )
-
-
-class UserUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            "first_name",
-            "last_name",
-            "email",
-            "phone_number",
-            "type",
-            "is_verified",
-            "is_archived",
-        )
+        fields = [
+            "id", "email", "first_name", "last_name", "phone_number",
+            "role", "counties", "subcounties", "wards",
+            "is_active", "created_at", "updated_at", "full_name",
+        ]
+        read_only_fields = ["id", "created_at", "updated_at", "full_name"]
 
     def validate(self, attrs):
-        request_user = self.context["request"].user
-        target_user = self.instance
+        request = self.context["request"]
+        user = request.user
+        role = attrs.get("role", getattr(self.instance, "role", None))
 
-        new_type = attrs.get("type")
+        if not role:
+            raise ValidationError("Role is required.")
 
-        if new_type:
-            if request_user.type == UserTypeChoices.AGRODEALER:
-                raise serializers.ValidationError(
-                    {"type": "You cannot assign a user type."}
-                )
+        # --- Fetch wards/subcounties/counties from either input or existing instance ---
+        wards = attrs.get("wards")
+        if wards is None and self.instance:
+            wards = list(self.instance.wards.all())
+        else:
+            wards = list(wards or [])
 
-            if not request_user.is_superuser:
-                # current hierarchy levels
-                request_level = USER_TYPE_HIERARCHY.get(request_user.type, 0)
-                new_level = USER_TYPE_HIERARCHY.get(new_type, 0)
+        subcounties = attrs.get("subcounties")
+        if subcounties is None and self.instance:
+            subcounties = list(self.instance.subcounties.all())
+        else:
+            subcounties = list(subcounties or [])
 
-                # Prevent escalating higher than self
-                if new_level > request_level and not request_user.is_superuser:
-                    raise serializers.ValidationError(
-                        {"type": "You cannot assign a user type higher than your own."}
-                    )
+        counties = attrs.get("counties")
+        if counties is None and self.instance:
+            counties = list(self.instance.counties.all())
+        else:
+            counties = list(counties or [])
 
-                # Prevent downgrading peers/higher-level users
-                if target_user and USER_TYPE_HIERARCHY.get(target_user.type, 0) >= request_level and not request_user.is_superuser:
-                    raise serializers.ValidationError(
-                        {"type": "You cannot change the type of a user at the same or higher level."}
-                    )
+        # --- Role-specific checks ---
+        if role == RoleChoices.SUPER_EXTENSION and not counties:
+            raise ValidationError("Super E-Extension must be assigned at least one county.")
+        if role == RoleChoices.E_EXTENSION and not (wards or subcounties):
+            raise ValidationError("E-Extension must be assigned at least one ward or subcounty.")
+        if (role == RoleChoices.FARMER or role == RoleChoices.AGRODEALER) and not wards:
+            raise ValidationError("Farmer/Agrodealer must be assigned at least one ward.")
+
+        # --- Permission checks ---
+        if not (user.is_superuser or user.role == RoleChoices.SYSTEM_ADMIN):
+            if user.role == RoleChoices.SUPER_EXTENSION:
+                if role not in [RoleChoices.E_EXTENSION, RoleChoices.AGRODEALER, RoleChoices.FARMER]:
+                    raise PermissionDenied(f"Super Extension cannot create {role} users.")
+                if wards:
+                    bad_wards = user_utils._ensure_all_wards_in_counties(wards, user.counties.all())
+                    if bad_wards:
+                        raise serializers.ValidationError({
+                            "message": "Some wards do not belong to your assigned region(s).",
+                            "wards": bad_wards
+                        })
+            elif user.role == RoleChoices.E_EXTENSION:
+                if role not in [RoleChoices.FARMER, RoleChoices.AGRODEALER]:
+                    raise PermissionDenied("E-Extension may only create Farmer or Agrodealer.")
+                if wards:
+                    bad_wards = user_utils._ensure_wards_subset(wards, user.wards.all())
+                    if bad_wards:
+                        raise ValidationError({
+                            "message": ["Wards outside your scope were assigned."],
+                            "wards": bad_wards
+                        })
+                    if role == RoleChoices.AGRODEALER and len(wards) != 1:
+                        raise ValidationError("Agrodealer must have exactly one ward.")
+            elif request.user != self.instance:
+                raise PermissionDenied("You are not allowed to manage users.")
+
+        # --- Location consistency checks ---
+        if wards:
+            derived_subcounties, derived_counties = user_utils._derive_subcounties_and_counties_from_wards(wards)
+            if subcounties and set(sc.id for sc in subcounties) != set(derived_subcounties.values_list("id", flat=True)):
+                raise ValidationError("Provided subcounties do not match the wards.")
+            if counties and set(c.id for c in counties) != set(derived_counties.values_list("id", flat=True)):
+                raise ValidationError("Provided counties do not match the wards.")
 
         return attrs
+
+    @transaction.atomic
+    def create(self, validated_data):
+        # --- Extract M2M fields ---
+        wards = validated_data.pop("wards", [])
+        subcounties = validated_data.pop("subcounties", [])
+        counties = validated_data.pop("counties", [])
+
+        # --- Generate random password ---
+        password = OtpUtils().generate_random_password()
+        validated_data["password"] = password
+
+        # --- Create instance ---
+        instance = self.Meta.model.objects.create(**validated_data)
+        instance.set_password(password)
+        instance.save()
+
+        # --- Set M2M relations ---
+        if wards:
+            instance.wards.set(wards)
+        if subcounties:
+            instance.subcounties.set(subcounties)
+        if counties:
+            instance.counties.set(counties)
+
+        # --- Sync locations from wards ---
+        self._sync_locations(instance)
+
+        # --- Send login credentials ---
+        UserUtils().send_login_credentials_email(
+            first_name=instance.first_name,
+            email=instance.email,
+            password=password,
+            login_url=self.context["request"].build_absolute_uri("/login/")
+        )
+
+        return instance
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        self._sync_locations(instance)
+        return instance
+
+    def _sync_locations(self, instance):
+        """Keep subcounties & counties coherent with wards."""
+        wards = instance.wards.all()
+        if wards.exists():
+            sc, c = user_utils._derive_subcounties_and_counties_from_wards(wards)
+            instance.subcounties.set(sc)
+            instance.counties.set(c)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["counties"] = MinimalCountySerializer(instance.counties.all(), many=True).data
+        data["subcounties"] = MinimalSubCountySerializer(instance.subcounties.all(), many=True).data
+        data["wards"] = MiniWardSerializer(instance.wards.all(), many=True).data
+        return data
