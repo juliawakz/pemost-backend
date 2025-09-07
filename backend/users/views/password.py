@@ -18,7 +18,9 @@ class PasswordResetView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         UserUtils().send_email_otp(serializer.data["email"])
-        response = {"message": "Reset password OTP  token sent"}
+        response = {
+            "message": "Reset OTP sent to email."
+        }
         return Response(response, status=status.HTTP_200_OK)
 
 
@@ -29,13 +31,16 @@ class PasswordResetConfirmView(GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        if UserUtils().check_token_is_valid(serializer.data):
-            UserUtils().change_password(serializer.data)
-            response = {"message": "Password Changed."}
-            return Response(response, status=status.HTTP_200_OK)
-        else:
-            response = {"message": "Invalid or expired Otp"}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        # serializer handles token + password logic
+        serializer.save()
+
+        return Response(
+            {
+                "message": "Password reset successful."
+            },
+            status=status.HTTP_200_OK
+        )
 
 
 class PasswordChangeView(GenericAPIView):
@@ -43,9 +48,12 @@ class PasswordChangeView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        context = {"request": self.request}
-        serializer = self.get_serializer(data=request.data, context=context)
+        serializer = self.get_serializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
-        UserUtils().change_password(serializer.validated_data)
-        response = {"message": "Password Changed."}
-        return Response(response, status=status.HTTP_200_OK)
+        serializer.save()
+        return Response(
+            {
+                "message": "Password changed successfully."
+            },
+            status=status.HTTP_200_OK
+        )
