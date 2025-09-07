@@ -49,7 +49,7 @@ django-dbbackup==4.0.2
 
 # Timezone
 django-timezone-field==5.0.0
-tzdata==2023.3
+tzdata==2025.2
 
 # Server & HTTP
 gunicorn==21.2.0

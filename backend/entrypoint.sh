@@ -12,7 +12,7 @@ then
     echo "PostgreSQL started"
 fi
 
-echo "-------Apply database migrate------"
+echo "-------Generate Migartion Files------"
 python manage.py makemigrations --noinput || exit 1
 
 echo "-------Apply database migrate------"
@@ -29,7 +29,7 @@ try:
 except Exception as e:
   print(e)
   "
-echo "-------Prepopulating locations from CSV-------"
+echo "-------Prepopulate locations{county,subcounty,ward} from CSV-------"
 python manage.py load_locations sample_data/locations.csv
 
 exec "$@"
