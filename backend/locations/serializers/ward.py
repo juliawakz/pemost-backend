@@ -1,7 +1,7 @@
 # serializers.py
-from rest_framework import serializers
 from locations.models.ward import Ward
 from locations.serializers.subcounty import MinimalSubCountySerializer
+from rest_framework import serializers
 
 
 class WardSerializer(serializers.ModelSerializer):

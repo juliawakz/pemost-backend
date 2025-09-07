@@ -27,6 +27,7 @@ class SubCounty(BaseModel):
         verbose_name = _("SubCounty")
         verbose_name_plural = _("SubCounties")
         unique_together = ("name", "county")
+        ordering = ("subcounty_id",)
 
     def __str__(self):
         return f"{self.name} ({self.county.name})"

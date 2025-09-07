@@ -1,9 +1,8 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
-
 from locations.models.subcounty import SubCounty
 from locations.serializers.subcounty import SubCountySerializer
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from users.permissions.user import IsSystemAdminOrSuperUser
 
 

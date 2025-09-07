@@ -23,7 +23,6 @@ def test_logout_view():
     client.force_authenticate(user)
     data = {"refresh": response.data["token"]["refresh"]}
     response = client.post("/api/v2/users/logout/", data=data)
-    print(response.data)
     assert response.status_code == status.HTTP_200_OK
     assert response.data == {"message": "Successful Logout"}
 

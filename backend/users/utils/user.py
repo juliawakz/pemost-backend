@@ -1,11 +1,12 @@
 from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from django.utils import timezone
-from users.models.otp import Otp
 from locations.models import County, SubCounty
 from notifications.tasks import send_email_task
+from users.models.otp import Otp
 from users.utils.otp import OtpUtils
 
 User = get_user_model()

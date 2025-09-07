@@ -1,10 +1,11 @@
 import pytest
 from django.contrib.auth import get_user_model
+from locations.factory.ward import WardFactory
 from rest_framework import status
 from rest_framework.test import APIClient
-from users.choices import UserTypeChoices
+from users.choices import RoleChoices
 from users.factory.user import SystemAdminFactory, UserFactory
-from users.serializers.user import UserReadSerializer
+from users.serializers.user import UserSerializer
 
 User = get_user_model()
 
@@ -18,6 +19,7 @@ def test_get_all_users_cannot_be_accessed_by_normal_user():
 
     response = client.get("/api/v2/users/")
     assert response.status_code == status.HTTP_200_OK
+    assert response.data["count"] == 1
 
 
 @pytest.mark.django_db
@@ -31,7 +33,7 @@ def test_retrieve_user():
     response = client.get(f"/api/v2/users/{user.id}/")
 
     assert response.status_code == status.HTTP_200_OK
-    serialized_user = UserReadSerializer(instance=user).data
+    serialized_user = UserSerializer(instance=user).data
     assert response.data == serialized_user
 
 
@@ -52,15 +54,16 @@ def test_get_all_users():
 
 @pytest.mark.django_db
 def test_update_user():
+    ward = WardFactory()
     user = UserFactory.create()
+    user.wards.add(ward)
     updated_data = {
         "first_name": "Lala",
         "last_name": "hehe",
         "phone_number": "0722567890",
         "email": "haha.lele@example.com",
-        "is_verified": False,
         "is_archived": True,
-        "type": UserTypeChoices.SYSTEM_ADMIN,
+        "role": RoleChoices.AGRODEALER,
     }
 
     admin = SystemAdminFactory.create()
@@ -77,9 +80,8 @@ def test_update_user():
     assert user.last_name == "hehe"
     assert user.phone_number == "0722567890"
     assert user.email == "haha.lele@example.com"
-    assert user.is_verified is False
     assert user.is_staff is False
-    assert user.type == UserTypeChoices.SYSTEM_ADMIN
+    assert user.role == RoleChoices.AGRODEALER
 
 
 @pytest.mark.django_db
@@ -119,7 +121,9 @@ def test_filter_by_last_name():
     admin = SystemAdminFactory.create()
     client = APIClient()
     client.force_authenticate(user=admin)
-    response = client.get("/api/v2/users/", {"last_name": user.last_name, "first_name": user.first_name})
+    response = client.get(
+        "/api/v2/users/",
+        {"last_name": user.last_name, "first_name": user.first_name})
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert data["count"] == 1

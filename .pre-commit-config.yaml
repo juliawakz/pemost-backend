@@ -1,4 +1,4 @@
-exclude: 'docs|migrations|.git|ssl-certs-proxy'
+exclude: 'docs|migrations|.git|ssl-certs-proxy|__init__.py'
 default_stages: [commit]
 fail_fast: true
 
@@ -19,6 +19,7 @@ repos:
       - id: isort
         name: isort
         args: ["--profile", "black"]
+        exclude: ^(migrations/|legacy_code/)
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0

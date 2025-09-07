@@ -28,6 +28,7 @@ class SubCountyAdmin(admin.ModelAdmin):
     list_display = [
         "subcounty_id",
         "name",
+        "county",
         "created_at",
     ]
     list_filter = [
@@ -46,6 +47,7 @@ class WardAdmin(admin.ModelAdmin):
     list_display = [
         "ward_id",
         "name",
+        "subcounty",
         "created_at",
     ]
     list_filter = [
@@ -53,7 +55,8 @@ class WardAdmin(admin.ModelAdmin):
     ]
 
     search_fields = [
-        "name"
+        "name",
+        "subcounty"
     ]
     list_per_page = 50
     formfield_overrides = {models.JSONField: {"widget": JSONEditorWidget}}

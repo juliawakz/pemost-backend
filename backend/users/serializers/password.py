@@ -1,13 +1,13 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
 from django.utils import timezone
-from users.models.otp import Otp
+from rest_framework import serializers
 from users.exceptions import (
     AccountNotRegisteredException,
     InvalidCurrentPasswordException,
+    InvalidOTPException,
     PasswordMismatchException,
-    InvalidOTPException
 )
+from users.models.otp import Otp
 
 User = get_user_model()
 
@@ -29,20 +29,20 @@ class PasswordResetSerializer(serializers.Serializer):
 class PasswordResetConfirmSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     token = serializers.CharField(required=True, max_length=6, min_length=6)
-    password1 = serializers.CharField(required=True, write_only=True)
-    password2 = serializers.CharField(required=True, write_only=True)
+    new_password1 = serializers.CharField(required=True, write_only=True)
+    new_password2 = serializers.CharField(required=True, write_only=True)
 
     def validate(self, attrs):
         email = attrs["email"]
-        password1 = attrs["password1"]
-        password2 = attrs["password2"]
+        new_password1 = attrs["new_password1"]
+        new_password2 = attrs["new_password2"]
 
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             raise AccountNotRegisteredException()
 
-        if password1 != password2:
+        if new_password1 != new_password2:
             raise PasswordMismatchException()
 
         # validate OTP
@@ -58,7 +58,7 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
         user = self.validated_data["user"]
-        password = self.validated_data["password1"]
+        password = self.validated_data["new_password1"]
         user.set_password(password)
         user.save()
         return user

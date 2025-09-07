@@ -1,15 +1,17 @@
+from decouple import config
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
-from rest_framework.exceptions import ValidationError, PermissionDenied
 from django.db import transaction
-
 from locations.models import County, SubCounty, Ward
-from users.choices import RoleChoices
-from users.utils.user import UserUtils
-from users.utils.otp import OtpUtils
-
-from locations.serializers.subcounty import MinimalCountySerializer, MinimalSubCountySerializer
+from locations.serializers.subcounty import (
+    MinimalCountySerializer,
+    MinimalSubCountySerializer,
+)
 from locations.serializers.ward import MiniWardSerializer
+from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied, ValidationError
+from users.choices import RoleChoices
+from users.utils.otp import OtpUtils
+from users.utils.user import UserUtils
 
 User = get_user_model()
 user_utils = UserUtils()
@@ -45,6 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         # --- Fetch wards/subcounties/counties from either input or existing instance ---
         wards = attrs.get("wards")
+
         if wards is None and self.instance:
             wards = list(self.instance.wards.all())
         else:
@@ -139,7 +142,7 @@ class UserSerializer(serializers.ModelSerializer):
             first_name=instance.first_name,
             email=instance.email,
             password=password,
-            login_url=self.context["request"].build_absolute_uri("/login/")
+            login_url=f"{config('LOGIN_URL', default='http://127.0.0.1:8000')}/login/"
         )
 
         return instance

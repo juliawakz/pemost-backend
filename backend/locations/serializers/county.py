@@ -1,6 +1,6 @@
 # serializers.py
-from rest_framework import serializers
 from locations.models.county import County
+from rest_framework import serializers
 
 
 class CountySerializer(serializers.ModelSerializer):

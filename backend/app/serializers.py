@@ -557,7 +557,6 @@ class UploadPestControlCsvSerializer(serializers.Serializer):
                 elif row["stage_pest"].lower().strip() == "pupae":
                     stage = PEST_STAGE.PUPAE
 
-
                 if row["stage_crop growth"].lower().strip() == "vegetative":
                     stage_crop_growth = GrowthStage.VEGETATIVE
                 elif row["stage_crop growth"].lower().strip() == "flowering":

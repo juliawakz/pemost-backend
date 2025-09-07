@@ -1,16 +1,14 @@
 import os
 import os.path
-import random
 import shutil
 import tempfile
 import traceback
 import zipfile
 
-from app.models import County, Crop_Type, Crop_Variety, Farm, SubCounty, Ward
+from app.models import County, Farm, SubCounty, Ward
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geos.geometry import GEOSGeometry
 from django.core.exceptions import ValidationError
-from fcm_django.models import DeviceType, FCMDevice
 from osgeo import ogr
 
 User = get_user_model()
