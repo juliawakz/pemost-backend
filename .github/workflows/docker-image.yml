@@ -33,6 +33,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /root/v2/pemost_backend_v2
+            git pull
             docker-compose -f docker-compose-v2.yml down --remove-orphans
             docker system prune -af
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/pemost-backend:latest
