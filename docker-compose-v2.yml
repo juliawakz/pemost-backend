@@ -2,8 +2,8 @@ services:
   database_v2:
     image: postgis/postgis:15-3.4-alpine
     container_name: pemost_db_v2
-    ports:
-      - 5434:5434
+    expose:
+      - 5434
     env_file:
       - ./backend/environments/env.v2
     restart: unless-stopped
