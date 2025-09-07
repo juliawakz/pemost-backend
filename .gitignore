@@ -147,3 +147,4 @@ database/
 firebasefile.json
 env.v2
 backend/environments/env.v2
+.vscode/

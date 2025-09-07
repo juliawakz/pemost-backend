@@ -1,9 +1,9 @@
-name: CI/CD Pipeline
+name: Pemost CI/CD Pipeline
 
 on:
   push:
     branches:
-      - develop   # adjust to your deployment branch
+      - develop   # Deployment branch
 
 jobs:
   build-and-deploy:
@@ -21,16 +21,16 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/pemost-backend:latest
-          docker build -t $IMAGE_NAME:latest .
+          IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/pemost-backend
+          docker build -t $IMAGE_NAME:latest ./backend
           docker push $IMAGE_NAME:latest
 
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/pemost-backend:latest
+      # - name: Deploy to Server
+      #   uses: appleboy/ssh-action@v1.2.0
+      #   with:
+      #     host: ${{ secrets.SERVER_HOST }}
+      #     username: ${{ secrets.SERVER_USER }}
+      #     key: ${{ secrets.SERVER_SSH_KEY }}
+      #     script: |
+      #       docker pull ${{ secrets.DOCKERHUB_USERNAME }}/pemost-backend:latest
   
