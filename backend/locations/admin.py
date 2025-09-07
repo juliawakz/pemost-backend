@@ -55,9 +55,8 @@ class WardAdmin(admin.ModelAdmin):
     ]
 
     search_fields = [
-        "name",
-        "subcounty"
-    ]
+        "name"
+        ]
     list_per_page = 50
     formfield_overrides = {models.JSONField: {"widget": JSONEditorWidget}}
     save_on_top = True
