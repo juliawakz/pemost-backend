@@ -1,7 +1,8 @@
 import logging
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail, Content
+
 from decouple import config
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Content, Mail
 
 logger = logging.getLogger(__file__)
 

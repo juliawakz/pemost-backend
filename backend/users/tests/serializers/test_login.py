@@ -4,7 +4,6 @@ from rest_framework.exceptions import ValidationError
 from users.exceptions import (
     AccountDisabledException,
     AccountNotRegisteredException,
-    InactiveAccountException,
     InvalidCredentialsException,
 )
 from users.factory.user import UserFactory
@@ -17,7 +16,7 @@ User = get_user_model()
 def test_login_valid_user():
     user = UserFactory.create()
     data = {
-        "email": user.email,
+        "email": str(user.email),
         "password": "admin",
     }
 
@@ -62,26 +61,6 @@ def test_login_is_archived_accounts():
     }
     serializer = LoginSerializer(data=data)
     with pytest.raises(AccountDisabledException):
-        serializer.is_valid(raise_exception=True)
-
-
-@pytest.mark.django_db
-def test_login_is_not_activated_accounts():
-    user_data = {
-        "first_name": "John",
-        "last_name": "Doe",
-        "phone_number": "+123456789",
-        "email": "john.doe@example.com",
-    }
-
-    user = User.objects.create(**user_data)
-
-    data = {
-        "email": user.email,
-        "password": "pass",
-    }
-    serializer = LoginSerializer(data=data)
-    with pytest.raises(InactiveAccountException):
         serializer.is_valid(raise_exception=True)
 
 

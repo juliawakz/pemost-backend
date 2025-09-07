@@ -7,8 +7,8 @@ from users.exceptions import (
     AccountNotRegisteredException,
     InvalidCredentialsException,
 )
-
 from users.serializers.user import UserSerializer
+
 User = get_user_model()
 
 
@@ -48,7 +48,7 @@ class LoginSerializer(serializers.Serializer):
         if not user:
             raise AccountNotRegisteredException()
 
-        if user.is_archived or not user.is_active:
+        if user.is_archived:
             raise AccountDisabledException()
 
         authenticated_user = authenticate(

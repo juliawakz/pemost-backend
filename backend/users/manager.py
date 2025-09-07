@@ -1,4 +1,5 @@
 from django.contrib.auth.base_user import BaseUserManager
+from users.choices import RoleChoices
 
 
 class UserManager(BaseUserManager):
@@ -30,6 +31,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, first_name, last_name, phone_number, password, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("role", RoleChoices.SYSTEM_ADMIN)
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
         if extra_fields.get("is_superuser") is not True:

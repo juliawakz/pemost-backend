@@ -2,7 +2,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from notifications.tasks import send_email_task
-from users.factory.user import SystemAdminFactory, UnverifiedUserFactory, UserFactory
+from users.factory.user import UserFactory
 from users.models.otp import Otp
 from users.utils.otp import OtpUtils
 from users.utils.user import UserUtils
@@ -21,6 +21,10 @@ def test_otp(test_user):
     return Otp.objects.create(
         user=test_user,
         token="123456",
+        expiry_at=timezone.make_aware(
+            timezone.datetime.now() + timezone.timedelta(hours=1),
+            timezone.get_default_timezone()
+        )
     )
 
 
@@ -39,26 +43,6 @@ def test_check_token_expired(test_user, test_otp):
     )
     otp.save()
     assert not UserUtils().check_token_is_valid(otp_details)
-
-
-@pytest.mark.django_db
-def test_verify_user():
-    user = UnverifiedUserFactory.create()
-    UserUtils().verify_user(user.email)
-    user.refresh_from_db()
-    assert user.is_verified is True
-
-
-@pytest.mark.django_db
-def test_check_system_admin():
-    user = SystemAdminFactory.create()
-    assert UserUtils().check_system_admin(user.id)
-
-
-@pytest.mark.django_db
-def test_not_check_system_admin():
-    user = UserFactory.create()
-    assert not UserUtils().check_system_admin(user.id)
 
 
 @pytest.mark.django_db

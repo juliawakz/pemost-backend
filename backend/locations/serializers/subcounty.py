@@ -1,7 +1,7 @@
 # serializers.py
-from rest_framework import serializers
 from locations.models.subcounty import SubCounty
 from locations.serializers.county import MinimalCountySerializer
+from rest_framework import serializers
 
 
 class SubCountySerializer(serializers.ModelSerializer):

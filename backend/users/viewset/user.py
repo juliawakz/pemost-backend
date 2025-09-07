@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-
-from users.serializers.user import UserSerializer
 from users.choices import RoleChoices
+from users.serializers.user import UserSerializer
 
 User = get_user_model()
 
@@ -11,6 +11,14 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = [
+        "first_name",
+        "last_name",
+        "email",
+        "phone_number",
+        "role"
+    ]  # enable filtering on county_id and name
 
     def get_queryset(self):
         u = self.request.user

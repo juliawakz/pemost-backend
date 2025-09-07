@@ -21,6 +21,7 @@ class County(BaseModel):
     class Meta:
         verbose_name = _("County")
         verbose_name_plural = _("Counties")
+        ordering = ("county_id",)
 
     def __str__(self):
         return self.name

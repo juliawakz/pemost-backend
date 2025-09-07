@@ -7,11 +7,10 @@ from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from phonenumber_field.modelfields import PhoneNumberField
-from users.manager import UserManager
-from users.choices import RoleChoices
-
 from locations.models import County, SubCounty, Ward
+from phonenumber_field.modelfields import PhoneNumberField
+from users.choices import RoleChoices
+from users.manager import UserManager
 
 logger = logging.getLogger(__name__)
 

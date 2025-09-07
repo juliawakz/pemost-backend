@@ -1,4 +1,5 @@
 import csv
+
 from django.core.management.base import BaseCommand
 from locations.models import County, SubCounty, Ward
 from tqdm import tqdm  # install with: pip install tqdm

@@ -1,12 +1,8 @@
 import datetime
-import os
-import shutil
 
 import geojson
 import rtree
-from app.choices import GrowthStage
 from app.models import Any_Occurrence, Farm, Pest_Control_Modified, Planting_Information
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import Union
 from django.contrib.gis.geos import GEOSGeometry

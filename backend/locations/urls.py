@@ -1,10 +1,9 @@
 # urls.py
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
+from django.urls import include, path
 from locations.viewsets.county import CountyViewSet
 from locations.viewsets.subcounty import SubCountyViewSet
 from locations.viewsets.ward import WardViewSet
+from rest_framework.routers import DefaultRouter
 
 app_name = "locations"
 
