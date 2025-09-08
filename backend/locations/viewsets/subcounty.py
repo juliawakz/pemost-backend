@@ -1,4 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from locations.filterset.subcounty import SubCountyFilter
 from locations.models.subcounty import SubCounty
 from locations.serializers.subcounty import SubCountySerializer
 from rest_framework import viewsets
@@ -10,13 +11,7 @@ class SubCountyViewSet(viewsets.ModelViewSet):
     queryset = SubCounty.objects.all().order_by("subcounty_id")
     serializer_class = SubCountySerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = [
-        "subcounty_id",
-        "name",
-        "county",
-        "county__name",
-        "county__county_id"
-    ]  # enable filtering
+    filterset_class = SubCountyFilter
 
     def get_permissions(self):
         """

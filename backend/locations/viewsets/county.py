@@ -1,4 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from locations.filterset.county import CountyFilter
 from locations.models.county import County
 from locations.serializers.county import CountySerializer
 from rest_framework import viewsets
@@ -10,10 +11,7 @@ class CountyViewSet(viewsets.ModelViewSet):
     queryset = County.objects.all().order_by("county_id")
     serializer_class = CountySerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = [
-        "county_id",
-        "name"
-    ]  # enable filtering on county_id and name
+    filterset_class = CountyFilter
 
     def get_permissions(self):
         """
