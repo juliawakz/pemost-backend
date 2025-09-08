@@ -7,7 +7,7 @@ from users.exceptions import (
     AccountNotRegisteredException,
     InvalidCredentialsException,
 )
-from users.serializers.user import UserSerializer
+from users.serializers.profile import ProfileSerializer
 
 User = get_user_model()
 
@@ -30,7 +30,7 @@ class LoginSerializer(serializers.Serializer):
         style={"input_type": "password"},
         allow_blank=False
     )
-    user = UserSerializer(
+    user = ProfileSerializer(
         many=False,
         read_only=True
     )

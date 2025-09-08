@@ -1,4 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from locations.filterset.ward import WardFilter
 from locations.models.ward import Ward
 from locations.serializers.ward import WardSerializer
 from rest_framework import viewsets
@@ -10,14 +11,7 @@ class WardViewSet(viewsets.ModelViewSet):
     queryset = Ward.objects.all().order_by("ward_id")
     serializer_class = WardSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = [
-        "ward_id",
-        "name",
-        "subcounty__county",
-        "subcounty__county__name",
-        "subcounty",
-        "subcounty__name"
-    ]  # enable filtering
+    filterset_class = WardFilter
 
     def get_permissions(self):
         """
