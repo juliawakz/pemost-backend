@@ -150,3 +150,5 @@ backend/environments/env.v2
 .vscode/
 .DS_Store
 *.sqlite3
+static/**
+static/*
