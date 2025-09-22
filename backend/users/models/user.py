@@ -26,6 +26,11 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         null=False,
         blank=False,
     )
+    id_number = models.CharField(
+        unique=True,
+        null=True,
+        blank=True
+    )
     phone_number = PhoneNumberField(
         unique=True,
         null=False,
