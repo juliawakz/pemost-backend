@@ -65,8 +65,9 @@ INSTALLED_APPS = [
     "migration_files",
     "users",
     "locations",
-    "api",
     "notifications",
+    "farms",
+    "crops"
 ]
 
 MIDDLEWARE = [
@@ -437,6 +438,8 @@ MIGRATION_MODULES = {
     "users": "migration_files.users",
     "notifications": "migration_files.notifications",
     "locations": "migration_files.locations",
+    "farms": "migration_files.farms",
+    "crops": "migration_files.crops"
 }
 
 SPECTACULAR_SETTINGS = {

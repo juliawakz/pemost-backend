@@ -12,7 +12,15 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/v2/users/", include("users.urls", namespace="users")),
-    path("api/v2/locations/", include("locations.urls", namespace="locations"))
+    path(
+        "api/v2/locations/",
+        include("locations.urls", namespace="locations")
+    ),
+    path(
+        "api/v2/notifications/",
+        include("notifications.urls", namespace="notifications")
+    ),
+    path("api/v2/farms/", include("farms.urls", namespace="farms"))
 ]
 
 urlpatterns += static(

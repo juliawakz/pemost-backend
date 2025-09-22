@@ -16,6 +16,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     last_name = factory.Faker("last_name")
     email = factory.Sequence(lambda n: f"user{n}@example.com")
     phone_number = factory.Sequence(lambda n: f"+254700000{n:03d}")
+    id_number = factory.Faker("bothify", text="??########")
     password = factory.LazyAttribute(lambda _: make_password("admin"))
     role = RoleChoices.FARMER
     is_staff = False
