@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from notifications.models import Notification
 from notifications.serializers import NotificationSerializer
 from rest_framework import permissions, status, viewsets
@@ -5,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
+@extend_schema(tags=["Notifications"])
 class NotificationViewSet(viewsets.ModelViewSet):
     """
     Users can fetch their notifications.
@@ -14,6 +16,8 @@ class NotificationViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Notification.objects.none()
         return Notification.objects.filter(message_to=self.request.user)
 
     # Disable DELETE

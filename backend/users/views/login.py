@@ -1,9 +1,11 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from users.serializers.login import LoginSerializer
 
 
+@extend_schema(tags=["Authentication"])
 class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
     permission_classes = [permissions.AllowAny]

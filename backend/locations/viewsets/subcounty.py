@@ -1,4 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from locations.filterset.subcounty import SubCountyFilter
 from locations.models.subcounty import SubCounty
 from locations.serializers.subcounty import SubCountySerializer
@@ -7,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from users.permissions.user import IsSystemAdminOrSuperUser
 
 
+@extend_schema(tags=["Locations - Subcounties"])
 class SubCountyViewSet(viewsets.ModelViewSet):
     queryset = SubCounty.objects.all().order_by("subcounty_id")
     serializer_class = SubCountySerializer
