@@ -44,6 +44,6 @@ class GrowthStage(BaseModel):
     class Meta:
         verbose_name = "Growth Stage"
         verbose_name_plural = "Growth Stages"
-        unique_together = ("crop_variety", "growth_stage")
+        unique_together = ("crop", "growth_stage")
         ordering = ("-created_at",)
         get_latest_by = ("-created_at",)
