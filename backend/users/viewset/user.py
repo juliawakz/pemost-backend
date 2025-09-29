@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from users.choices import RoleChoices
@@ -9,6 +10,7 @@ from users.serializers.user import UserSerializer
 User = get_user_model()
 
 
+@extend_schema(tags=["Users"])
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
@@ -17,6 +19,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         u = self.request.user
+
+        if getattr(self, "swagger_fake_view", False):
+            return User.objects.none()
 
         if u.is_superuser or u.role == RoleChoices.SYSTEM_ADMIN:
             return User.objects.all()

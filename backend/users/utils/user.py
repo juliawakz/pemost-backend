@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from decouple import config
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
@@ -52,7 +53,8 @@ class UserUtils:
         user.save()
 
     def send_login_credentials_email(
-            self, first_name: str, email: str, password: str, login_url: str):
+            self, first_name: str, email: str, password: str):
+        login_url = f"{config('LOGIN_URL', default='http://127.0.0.1:8000')}/login/"
         template = render_to_string(
             "user_registration.html",
             {

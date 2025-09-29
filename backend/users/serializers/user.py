@@ -1,6 +1,7 @@
 from decouple import config
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from drf_spectacular.utils import extend_schema_field
 from locations.models import County, SubCounty, Ward
 from locations.serializers.subcounty import (
     MinimalCountySerializer,
@@ -32,8 +33,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id", "email", "first_name", "last_name", "phone_number",
-            "role", "counties", "subcounties", "wards",
-            "is_active", "created_at", "updated_at", "full_name",
+            "id_number", "role", "counties", "subcounties", "wards",
+            "created_at", "updated_at", "full_name",
         ]
         read_only_fields = ["id", "created_at", "updated_at", "full_name"]
 
@@ -141,8 +142,7 @@ class UserSerializer(serializers.ModelSerializer):
         UserUtils().send_login_credentials_email(
             first_name=instance.first_name,
             email=instance.email,
-            password=password,
-            login_url=f"{config('LOGIN_URL', default='http://127.0.0.1:8000')}/login/"
+            password=password
         )
 
         return instance
