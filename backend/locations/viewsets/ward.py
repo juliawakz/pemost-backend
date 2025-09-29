@@ -1,4 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from locations.filterset.ward import WardFilter
 from locations.models.ward import Ward
 from locations.serializers.ward import WardSerializer
@@ -7,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from users.permissions.user import IsSystemAdminOrSuperUser
 
 
+@extend_schema(tags=["Locations - Wards"])
 class WardViewSet(viewsets.ModelViewSet):
     queryset = Ward.objects.all().order_by("ward_id")
     serializer_class = WardSerializer

@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -10,6 +11,7 @@ from users.serializers.password import (
 from users.utils.user import UserUtils
 
 
+@extend_schema(tags=["Password"])
 class PasswordResetView(GenericAPIView):
     serializer_class = PasswordResetSerializer
     permission_classes = [permissions.AllowAny]
@@ -24,6 +26,7 @@ class PasswordResetView(GenericAPIView):
         return Response(response, status=status.HTTP_200_OK)
 
 
+@extend_schema(tags=["Password"])
 class PasswordResetConfirmView(GenericAPIView):
     serializer_class = PasswordResetConfirmSerializer
     permission_classes = [permissions.AllowAny]
@@ -43,9 +46,10 @@ class PasswordResetConfirmView(GenericAPIView):
         )
 
 
+@extend_schema(tags=["Password"])
 class PasswordChangeView(GenericAPIView):
     serializer_class = PasswordChangeSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, context={"request": request})

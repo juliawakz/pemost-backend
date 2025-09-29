@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -6,9 +7,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from users.serializers.login import LogoutSerializer
 
 
+@extend_schema(tags=["Authentication"])
 class LogoutView(GenericAPIView):
     serializer_class = LogoutSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

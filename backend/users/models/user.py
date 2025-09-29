@@ -26,6 +26,11 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         null=False,
         blank=False,
     )
+    id_number = models.CharField(
+        unique=True,
+        null=True,
+        blank=True
+    )
     phone_number = PhoneNumberField(
         unique=True,
         null=False,
@@ -87,7 +92,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         return f"{self.full_name} ({self.role})"
 
     @property
-    def full_name(self):
+    def full_name(self) -> str:
         return f"{self.first_name} {self.last_name}"
 
     @property

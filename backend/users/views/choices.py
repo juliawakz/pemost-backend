@@ -1,16 +1,18 @@
+from drf_spectacular.utils import extend_schema
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
 from users.choices import RoleChoices
 from users.serializers.choices import RoleChoiceSerializer
 
 
+@extend_schema(tags=["Users"])
 class RoleChoicesView(APIView):
     """
     Endpoint to fetch all RoleChoices.
     """
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
     serializer_class = RoleChoiceSerializer
 
     def get(self, request, *args, **kwargs):
