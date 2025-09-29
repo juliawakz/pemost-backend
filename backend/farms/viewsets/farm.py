@@ -1,38 +1,19 @@
 from django.db.models import Q
+from drf_spectacular.utils import extend_schema
 from farms.filtersets.farm import FarmFilter
 from farms.models.farm import Farm
-from farms.serializers.farm import FarmSerializer, FarmsImportSerializer
-from rest_framework import generics, status, viewsets
+from farms.serializers.farm import FarmSerializer
+from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from users.choices import RoleChoices
 
 
-class FarmsImportViewset(generics.GenericAPIView):
-    queryset = None
-    serializer_class = FarmsImportSerializer
-    permission_classes = (IsAuthenticated)
-
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        serializer = self.get_serializer(
-            data=data,
-            context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        total_farms = serializer.save()
-        return Response(
-            {
-                "message": f"{total_farms} farms uploaded",
-                "status": status.HTTP_200_OK,
-            }
-        )
-
-
+@extend_schema(tags=["Farms"])
 class FarmViewset(viewsets.ModelViewSet):
     queryset = Farm.objects.all()
     serializer_class = FarmSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = [IsAuthenticated]
     filterset_class = FarmFilter
 
     def get_queryset(self):

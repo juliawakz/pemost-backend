@@ -446,6 +446,31 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "PEMOST SOLUTION",
     "DESCRIPTION": "PEMOST solution platform",
     "VERSION": "2.0.0",
-    "SERVE_INCLUDE_SCHEMA": False,
-    "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
+    "SERVE_INCLUDE_SCHEMA": True,
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SECURITY": [{"BearerAuth": []}],
+    "AUTHENTICATION_WHITELIST": [],
+    "SCHEMA_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "SECURITY_DEFINITIONS": {
+        "BearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+        }
+    },
+    "TAGS": [
+        {"name": "Users", "description": "User registration and management endpoints"},
+        {"name": "Profile", "description": "Profile management endpoints"},
+        {"name": "Farms", "description": "Farm registration and management"},
+        {"name": "Agrodealers", "description": "Agrodealer registration and management"},
+        {"name": "Interventions", "description": "Interventions management"},
+        {"name": "Locations - Counties", "description": "Counties management endpoints"},
+        {"name": "Locations - Subcounties", "description": "Subcounties management endpoints"},
+        {"name": "Locations - Wards", "description": "Wards management endpoints"},
+        {"name": "Notifications", "description": "Notifications management"},
+        {"name": "Authentication", "description": "Login, logout and refresh token handling"},
+        {"name": "Password", "description": "Password management endpoints"},
+    ],
 }
