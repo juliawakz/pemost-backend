@@ -77,7 +77,7 @@ class CropVariety(BaseModel):
         get_latest_by = "created_at"
 
     def __str__(self):
-        return f"{self.crop_type.name} - {self.variety}"
+        return f"{self.name}"
 
     def save(self, *args, **kwargs):
         self.name = self.name.title()
