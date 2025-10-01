@@ -1,6 +1,9 @@
 from farms.models.farm import Farm
 from rest_framework import serializers
 from users.choices import RoleChoices
+from farms.utils.location_checks import LocationChecks
+
+location_checks = LocationChecks()
 
 
 class FarmSerializer(serializers.ModelSerializer):
@@ -12,17 +15,12 @@ class FarmSerializer(serializers.ModelSerializer):
         owner = attrs.get("owner")
         ward = attrs.get("ward")
         user = self.request.user
-        if user.role == RoleChoices.AGRODEALER or user.role == RoleChoices.FARMER:
-            raise serializers.ValidationError(
-                "You are not allowed to perform this action."
-            )
-        if owner and ward and ward not in owner.wards.all():
-            raise serializers.ValidationError(
-                "Farm ward must be one of the wards where\
-                    the farmer is registered."
-            )
+
         if owner.role != RoleChoices.FARMER:
             raise serializers.ValidationError(
                 "Owner must have the role 'Farmer'."
             )
+
+        location_checks.check_ward(ward, user)
+
         return attrs

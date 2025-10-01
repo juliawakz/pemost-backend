@@ -1,10 +1,9 @@
 from base.models import BaseModel
 from crops.choices import SERVERE, GrowthStage
-from crops.models.crop import Crop
+from crops.models.crop_variety import Crop
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -30,11 +29,21 @@ class GrowthStage(BaseModel):
     maximum_days = models.IntegerField(
         validators=[MinValueValidator(0)]
     )
-    owner = models.ForeignKey(
+    created_by = models.ForeignKey(
         User,
+        related_name="%(class)s_created",
         on_delete=models.SET_NULL,
-        related_name="growth_stage_owner",
-        null=True
+        null=True,
+        blank=True,
+        editable=False
+    )
+    updated_by = models.ForeignKey(
+        User,
+        related_name="%(class)s_updated",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        editable=False
     )
     slug = None
 

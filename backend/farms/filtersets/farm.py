@@ -3,7 +3,7 @@ from django_filters import rest_framework as filters
 from farms.models.farm import Farm
 
 
-class FarmFilter(filters.FilterSet):
+class FarmFilterSet(filters.FilterSet):
     subcounty = filters.CharFilter(
         field_name="ward__subcounty", lookup_expr="exact"
     )
