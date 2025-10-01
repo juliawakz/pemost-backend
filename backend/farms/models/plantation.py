@@ -52,6 +52,6 @@ class Plantation(BaseModel):
         self.clean()
         self.notification_end_date = self.transplanting_date +\
             datetime.timedelta(
-                days=self.crop_variety.max_maturity_in_days
+                days=self.crop_variety.max_maturity_days
             )
         super().save(*args, **kwargs)

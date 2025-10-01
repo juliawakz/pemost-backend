@@ -1,12 +1,22 @@
+from django.contrib.auth import get_user_model
 from farms.models.farm import Farm
-from rest_framework import serializers
-from users.choices import RoleChoices
 from farms.utils.location_checks import LocationChecks
+from locations.models.ward import Ward
+from rest_framework import serializers
 
 location_checks = LocationChecks()
 
+User = get_user_model()
+
 
 class FarmSerializer(serializers.ModelSerializer):
+    owner = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all()
+    )
+    ward = serializers.PrimaryKeyRelatedField(
+        queryset=Ward.objects.all()
+    )
+
     class Meta:
         model = Farm
         fields = "__all__"
@@ -14,9 +24,9 @@ class FarmSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         owner = attrs.get("owner")
         ward = attrs.get("ward")
-        user = self.request.user
+        user = self.context["request"].user
 
-        if owner.role != RoleChoices.FARMER:
+        if owner and not owner.is_farmer():
             raise serializers.ValidationError(
                 "Owner must have the role 'Farmer'."
             )

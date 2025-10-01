@@ -1,7 +1,5 @@
-from decouple import config
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from drf_spectacular.utils import extend_schema_field
 from locations.models import County, SubCounty, Ward
 from locations.serializers.subcounty import (
     MinimalCountySerializer,

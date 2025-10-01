@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from users.serializers.user import user_utils
 from users.choices import RoleChoices
+from users.serializers.user import user_utils
 
 
 class LocationChecks:

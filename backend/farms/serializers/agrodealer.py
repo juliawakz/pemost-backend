@@ -1,12 +1,22 @@
+from django.contrib.auth import get_user_model
 from farms.models.agrodealer import AgroDealer
+from farms.utils.location_checks import LocationChecks
+from locations.models.ward import Ward
 from rest_framework import serializers
 from users.choices import RoleChoices
-from farms.utils.location_checks import LocationChecks
 
 location_checks = LocationChecks()
+User = get_user_model()
 
 
 class AgroDealerSerializer(serializers.ModelSerializer):
+    owner = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all()
+    )
+    ward = serializers.PrimaryKeyRelatedField(
+        queryset=Ward.objects.all()
+    )
+
     class Meta:
         model = AgroDealer
         fields = "__all__"

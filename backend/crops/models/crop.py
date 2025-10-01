@@ -7,29 +7,24 @@ User = get_user_model()
 
 class Crop(BaseModel):
     name = models.CharField(
-        max_length=200,
-        unique=True,
-        blank=False,
-        null=False,
-        default="Tomato"
+        max_length=100,
+        unique=True
     )
     created_by = models.ForeignKey(
         User,
         related_name="%(class)s_created",
         on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        editable=False
+        null=True
     )
     updated_by = models.ForeignKey(
         User,
         related_name="%(class)s_updated",
         on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        editable=False
+        null=True
     )
+
     slug = None
+    metadata = None
 
     def save(self, *args, **kwargs):
         self.name = self.name.title()
@@ -39,5 +34,5 @@ class Crop(BaseModel):
         return self.name
 
     class Meta:
-        verbose_name = "Crop Type"
-        verbose_name_plural = "Crop Types"
+        verbose_name = "Crop"
+        verbose_name_plural = "Crops"

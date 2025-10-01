@@ -1,14 +1,15 @@
+import logging
+
 from base.models import BaseModel
 from django.contrib.auth import get_user_model
 from django.contrib.gis.db import models as gis_models
 from django.core.exceptions import ValidationError
-from phonenumber_field.modelfields import PhoneNumberField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from users.choices import RoleChoices
-from locations.models.ward import Ward
 from geopy.geocoders import Nominatim
-import logging
+from locations.models.ward import Ward
+from phonenumber_field.modelfields import PhoneNumberField
+from users.choices import RoleChoices
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -50,6 +51,8 @@ class AgroDealer(BaseModel):
         blank=True,
         null=True
     )
+    slug = None
+    metadata = None
 
     class Meta:
         verbose_name = _("Agro Dealer")
