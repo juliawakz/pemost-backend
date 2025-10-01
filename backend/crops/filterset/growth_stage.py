@@ -4,7 +4,7 @@ from crops.models.growth_stage import GrowthStage
 
 class GrowthStageFilterSet(django_filters.FilterSet):
     # Filter by crop variety (exact match by ID)
-    crop_variety = django_filters.NumberFilter(
+    crop_variety = django_filters.CharFilter(
         field_name="crop_variety__id",
         lookup_expr="exact"
     )
@@ -17,7 +17,7 @@ class GrowthStageFilterSet(django_filters.FilterSet):
 
     # Filter by crop type (via crop_variety -> crop_type -> name)
     crop_name = django_filters.CharFilter(
-        field_name="crop_variety__crop_type__name",
+        field_name="crop_variety__crop__name",
         lookup_expr="icontains"
     )
 

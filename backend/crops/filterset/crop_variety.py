@@ -7,7 +7,7 @@ class CropVarietyFilterSet(django_filters.FilterSet):
         field_name="name",
         lookup_expr="icontains"
     )
-    crop = django_filters.NumberFilter(
+    crop = django_filters.CharFilter(
         field_name="crop",
         lookup_expr="exact"
     )
