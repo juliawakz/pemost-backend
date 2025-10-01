@@ -9,6 +9,7 @@ class UserAdmin(admin.ModelAdmin):
         "first_name",
         "last_name",
         "email",
+        "phone_number",
         "role",
         "is_archived",
         "created_at",

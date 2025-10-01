@@ -20,7 +20,7 @@ urlpatterns = [
     ),
     path(
         "api/v2/users/",
-        include("users.urls",namespace="users")
+        include("users.urls", namespace="users")
     ),
     path(
         "api/v2/locations/",
@@ -33,6 +33,10 @@ urlpatterns = [
     path(
         "api/v2/farms/",
         include("farms.urls", namespace="farms")
+    ),
+    path(
+        "api/v2/crops/",
+        include("crops.urls", namespace="crops")
     )
 ]
 
@@ -43,8 +47,16 @@ urlpatterns += static(
 
 if settings.DEBUG:
     urlpatterns += [
-        path("", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-        path("redoc/", SpectacularRedocView.as_view(), name="redoc")
+        path(
+            "",
+            SpectacularSwaggerView.as_view(url_name="schema"),
+            name="swagger-ui"
+        ),
+        path(
+            "redoc/",
+            SpectacularRedocView.as_view(),
+            name="redoc"
+        )
     ]
 
 handler404 = "project.views.handler404"

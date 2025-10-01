@@ -71,6 +71,9 @@ sentinelhub==3.9.1
 # Email Integration
 sendgrid
 
+# Nominatim
+geopy==2.4.1
+
 # Testing & development
 factory-boy==3.3.0
 pytest==7.4.2

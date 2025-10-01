@@ -1,7 +1,5 @@
-from decouple import config
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from drf_spectacular.utils import extend_schema_field
 from locations.models import County, SubCounty, Ward
 from locations.serializers.subcounty import (
     MinimalCountySerializer,
@@ -96,8 +94,6 @@ class UserSerializer(serializers.ModelSerializer):
                             "message": ["Wards outside your scope were assigned."],
                             "wards": bad_wards
                         })
-                    if role == RoleChoices.AGRODEALER and len(wards) != 1:
-                        raise ValidationError("Agrodealer must have exactly one ward.")
             elif request.user != self.instance:
                 raise PermissionDenied("You are not allowed to manage users.")
 

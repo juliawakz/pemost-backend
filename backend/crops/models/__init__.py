@@ -1,3 +1,3 @@
-from crops.models.crop_type import CropType
 from crops.models.crop import Crop
-from crops.models.crop_stage import GrowthStage
+from crops.models.crop_variety import CropVariety
+from crops.models.growth_stage import GrowthStage

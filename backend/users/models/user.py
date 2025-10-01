@@ -89,7 +89,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         get_latest_by = ("-updated_at",)
 
     def __str__(self):
-        return f"{self.full_name} ({self.role})"
+        return f"{self.full_name}"
 
     @property
     def full_name(self) -> str:
@@ -109,3 +109,9 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     def is_e_extension(self):
         return self.role == RoleChoices.E_EXTENSION
+
+    def is_agrodealer(self):
+        return self.role == RoleChoices.AGRODEALER
+
+    def is_farmer(self):
+        return self.role == RoleChoices.FARMER
