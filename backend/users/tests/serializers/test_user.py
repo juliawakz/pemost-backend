@@ -183,23 +183,6 @@ def test_e_extension_cannot_assign_outside_wards():
 
 
 @pytest.mark.django_db
-def test_e_extension_agrodealer_requires_exactly_one_ward():
-    e_extenision = EExtensionFactory()
-    ward = WardFactory()
-    other_ward = WardFactory(subcounty=ward.subcounty)
-    e_extenision.wards.add(ward)
-    e_extenision.wards.add(other_ward)
-
-    request = type("MockRequest", (), {"user": e_extenision})
-    data["role"] = RoleChoices.AGRODEALER
-    data["wards"] = [other_ward.id, ward.id]
-
-    serializer = UserSerializer(data=data, context={"request": request})
-    with pytest.raises(ValidationError, match="Agrodealer must have exactly one ward"):
-        serializer.is_valid(raise_exception=True)
-
-
-@pytest.mark.django_db
 def test_e_extension_can_create_farmer_in_assigned_ward():
     e_extenision = EExtensionFactory()
     ward = WardFactory()

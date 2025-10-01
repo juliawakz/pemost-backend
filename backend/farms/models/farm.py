@@ -15,9 +15,7 @@ User = get_user_model()
 class Farm(BaseModel):
     name = models.CharField(
         max_length=250,
-        unique=True,
-        blank=True,
-        null=True
+        unique=True
     )
     boundary = gis_models.PolygonField(
         srid=4326,
@@ -44,6 +42,7 @@ class Farm(BaseModel):
     )
 
     slug = None
+    metadata = None
 
     def clean(self):
         if self.owner and self.ward and self.ward not\

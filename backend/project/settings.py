@@ -463,8 +463,12 @@ SPECTACULAR_SETTINGS = {
     "TAGS": [
         {"name": "Users", "description": "User registration and management endpoints"},
         {"name": "Profile", "description": "Profile management endpoints"},
-        {"name": "Farms", "description": "Farm registration and management"},
+        {"name": "Farm", "description": "Farm registration and management"},
+        {"name": "Plantation", "description": "Plantation registration and management"},
         {"name": "Agrodealers", "description": "Agrodealer registration and management"},
+        {"name": "Crop", "description": "Crops registration and management"},
+        {"name": "Crop Varieties", "description": "Crop Varieties registration and management"},
+        {"name": "Growth Stages", "description": "Growth stages registration and management"},
         {"name": "Interventions", "description": "Interventions management"},
         {"name": "Locations - Counties", "description": "Counties management endpoints"},
         {"name": "Locations - Subcounties", "description": "Subcounties management endpoints"},

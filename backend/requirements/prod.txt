@@ -70,3 +70,6 @@ sentinelhub==3.9.1
 
 # Email Integration
 sendgrid
+
+# Nominatim
+geopy==2.4.1

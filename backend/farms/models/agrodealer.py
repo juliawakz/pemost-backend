@@ -1,11 +1,17 @@
+import logging
+
 from base.models import BaseModel
 from django.contrib.auth import get_user_model
 from django.contrib.gis.db import models as gis_models
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from geopy.geocoders import Nominatim
+from locations.models.ward import Ward
+from phonenumber_field.modelfields import PhoneNumberField
 from users.choices import RoleChoices
 
+logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
@@ -22,24 +28,31 @@ class AgroDealer(BaseModel):
         null=True,
         blank=True
     )
+    ward = models.ForeignKey(
+        Ward,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=False
+    )
     location = gis_models.PointField(
         geography=True,
         srid=4326
     )  # WGS84 lat/lon
-    phone = models.CharField(
-        max_length=20,
+    phone_number = PhoneNumberField(
+        null=True,
         blank=True,
-        null=True
     )
     email = models.EmailField(
         blank=True,
         null=True
     )
     address = models.CharField(
-        max_length=255,
+        max_length=100,
         blank=True,
         null=True
     )
+    slug = None
+    metadata = None
 
     class Meta:
         verbose_name = _("Agro Dealer")
@@ -59,8 +72,29 @@ class AgroDealer(BaseModel):
 
     def clean(self):
         if self.owner and self.owner.role != RoleChoices.AGRODEALER:
-            raise ValidationError(_("Owner must have the role 'Agrodealer'."))
+            raise ValidationError(
+                _("Owner must have the role 'Agrodealer'.")
+            )
 
     def save(self, *args, **kwargs):
         self.clean()  # enforce validation even outside forms/DRF
+
+        # Always overwrite address with reverse geocode result
+        if self.location:
+            try:
+                geolocator = Nominatim(user_agent="agrodealer_app")
+                location = geolocator.reverse(
+                    (self.latitude, self.longitude),
+                    language="en"
+                )
+                if location and location.address:
+                    self.address = location.address
+                else:
+                    self.address = None
+            except Exception as e:
+                logger.warning(
+                    f"Nominatim reverse geocoding failed: {e}"
+                )
+                self.address = None  # fallback to null if lookup fails
+
         super().save(*args, **kwargs)

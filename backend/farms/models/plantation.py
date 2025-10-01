@@ -1,7 +1,7 @@
 import datetime
 
 from base.models import BaseModel
-from crops.models.crop import Crop
+from crops.models.crop_variety import CropVariety
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -17,15 +17,10 @@ class Plantation(BaseModel):
         related_name="farm_plantation",
         null=True
     )
-    crop = models.ForeignKey(
-        Crop,
+    crop_variety = models.ForeignKey(
+        CropVariety,
         on_delete=models.SET_NULL,
         related_name="crop_plantation",
-        null=True
-    )
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
         null=True
     )
     transplanting_date = models.DateField()
@@ -36,7 +31,7 @@ class Plantation(BaseModel):
     slug = None
 
     class Meta:
-        unique_together = ("farm", "crop", "transplanting_date")
+        unique_together = ("farm", "crop_variety", "transplanting_date")
         verbose_name = "Plantation"
         verbose_name_plural = "Plantations"
         ordering = ("-created_at",)
@@ -57,6 +52,6 @@ class Plantation(BaseModel):
         self.clean()
         self.notification_end_date = self.transplanting_date +\
             datetime.timedelta(
-                days=self.crop_variety.max_maturity_in_days
+                days=self.crop_variety.max_maturity_days
             )
         super().save(*args, **kwargs)
