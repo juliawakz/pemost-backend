@@ -1,13 +1,13 @@
 from django.db.models import Q
-from drf_spectacular.utils import extend_schema
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from farms.filtersets.farm import FarmFilterSet
 from farms.models.farm import Farm
 from farms.serializers.farm import FarmSerializer
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from users.choices import RoleChoices
+from users.permissions.user import IsSuperExtensionOrEExtension
 
 
 @extend_schema(tags=["Farm"])
@@ -21,16 +21,16 @@ class FarmViewset(viewsets.ModelViewSet):
     def get_queryset(self):
         u = self.request.user
 
-        if u.is_superuser or u.role == RoleChoices.SYSTEM_ADMIN:
+        if u.is_superuser or u.is_system_admin():
             return self.queryset.all()
 
-        if u.role == RoleChoices.SUPER_EXTENSION:
+        if u.is_super_extension():
             return self.queryset.filter(
                 ward__subcounty__county__in=u.counties.all(),
                 is_archived=False
             ).distinct()
 
-        if u.role == RoleChoices.E_EXTENSION:
+        if u.is_e_extension():
             return self.queryset.filter(
                 ward__in=u.wards.all(),
                 is_archived=False
@@ -58,3 +58,17 @@ class FarmViewset(viewsets.ModelViewSet):
                 serializer.errors,
                 status.HTTP_400_BAD_REQUEST
             )
+
+    def get_permissions(self):
+        """
+        - Any authenticated user can list/retrieve.
+        - Only system admin/superuser/superextension/eextension
+            can create/update/delete.
+        """
+        if self.action in ["list", "retrieve"]:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [
+                IsSuperExtensionOrEExtension
+            ]
+        return [permission() for permission in permission_classes]

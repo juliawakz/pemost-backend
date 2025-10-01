@@ -1,5 +1,5 @@
-from rest_framework import serializers
 from farms.utils.farm import FarmUtils
+from rest_framework import serializers
 from users.choices import RoleChoices
 
 

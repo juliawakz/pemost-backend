@@ -1,6 +1,6 @@
 from base.models import BaseModel
-from crops.choices import SERVERE, GrowthStage
-from crops.models.crop_variety import Crop
+from crops.choices import GrowthStageChoices, SeverityChoices
+from crops.models.crop_variety import CropVariety
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -9,19 +9,20 @@ User = get_user_model()
 
 
 class GrowthStage(BaseModel):
-    crop = models.ForeignKey(
-        Crop,
+    crop_variety = models.ForeignKey(
+        CropVariety,
         on_delete=models.CASCADE,
-        related_name="growth_stage_crop"
+        related_name="%(class)s_growth_stage",
+        null=True
     )
     growth_stage = models.CharField(
         max_length=60,
-        choices=GrowthStage.choices
+        choices=GrowthStageChoices.choices
     )
     severity = models.CharField(
         max_length=60,
-        choices=SERVERE.choices,
-        default=SERVERE.NONE
+        choices=SeverityChoices.choices,
+        default=SeverityChoices.NONE
     )
     minimum_days = models.IntegerField(
         validators=[MinValueValidator(0)]
@@ -46,6 +47,7 @@ class GrowthStage(BaseModel):
         editable=False
     )
     slug = None
+    metadata = None
 
     def __str__(self):
         return f"{self.crop_variety.crop_type.name}-{self.growth_stage}"
@@ -53,6 +55,6 @@ class GrowthStage(BaseModel):
     class Meta:
         verbose_name = "Growth Stage"
         verbose_name_plural = "Growth Stages"
-        unique_together = ("crop", "growth_stage")
+        unique_together = ("crop_variety", "growth_stage")
         ordering = ("-created_at",)
         get_latest_by = ("-created_at",)

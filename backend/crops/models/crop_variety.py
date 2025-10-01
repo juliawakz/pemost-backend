@@ -15,7 +15,10 @@ class CropVariety(BaseModel):
         related_name="crops"
     )
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(
+        max_length=100,
+        unique=True
+    )
 
     min_maturity_days = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     max_maturity_days = models.IntegerField(default=0, validators=[MinValueValidator(0)])
@@ -64,10 +67,11 @@ class CropVariety(BaseModel):
     )
 
     slug = None
+    metadata = None
 
     class Meta:
-        verbose_name = _("Crop")
-        verbose_name_plural = _("Crops")
+        verbose_name = _("Crop Variety")
+        verbose_name_plural = _("Crop Varieties")
         unique_together = ("name", "crop")
         ordering = ("-created_at",)
         get_latest_by = "created_at"
@@ -76,5 +80,5 @@ class CropVariety(BaseModel):
         return f"{self.crop_type.name} - {self.variety}"
 
     def save(self, *args, **kwargs):
-        self.variety = self.variety.title()
+        self.name = self.name.title()
         super().save(*args, **kwargs)
