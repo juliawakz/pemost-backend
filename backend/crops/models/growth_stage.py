@@ -50,7 +50,7 @@ class GrowthStage(BaseModel):
     metadata = None
 
     def __str__(self):
-        return f"{self.crop_variety.crop_type.name}-{self.growth_stage}"
+        return f"{self.crop_variety.crop.name}-{self.growth_stage}"
 
     class Meta:
         verbose_name = "Growth Stage"
