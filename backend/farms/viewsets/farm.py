@@ -1,6 +1,7 @@
 from django.db.models import Q
 from drf_spectacular.utils import extend_schema
-from farms.filtersets.farm import FarmFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from farms.filtersets.farm import FarmFilterSet
 from farms.models.farm import Farm
 from farms.serializers.farm import FarmSerializer
 from rest_framework import status, viewsets
@@ -14,7 +15,8 @@ class FarmViewset(viewsets.ModelViewSet):
     queryset = Farm.objects.all()
     serializer_class = FarmSerializer
     permission_classes = [IsAuthenticated]
-    filterset_class = FarmFilter
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = FarmFilterSet
 
     def get_queryset(self):
         u = self.request.user
