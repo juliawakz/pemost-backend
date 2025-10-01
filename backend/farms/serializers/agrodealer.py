@@ -21,7 +21,7 @@ class AgroDealerSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def validate(self, attrs):
-        user = self.request.user
+        user = self.context["request"].user
         ward = attrs.get("ward")
         owner = attrs.get("owner")
 
@@ -30,6 +30,7 @@ class AgroDealerSerializer(serializers.ModelSerializer):
                 "Owner must have the role 'Agrodealer'."
             )
 
-        location_checks.check_ward(ward, user)
+        location_checks.check_ward(ward, user) # Add permissions based on assigned areas.
+        location_checks.check_ward(ward, owner)
 
         return attrs
