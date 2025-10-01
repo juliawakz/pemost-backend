@@ -8,8 +8,7 @@ User = get_user_model()
 class Crop(BaseModel):
     name = models.CharField(
         max_length=100,
-        unique=True,
-        default="Tomato"
+        unique=True
     )
     created_by = models.ForeignKey(
         User,
