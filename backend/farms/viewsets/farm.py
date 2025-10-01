@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from users.choices import RoleChoices
 
 
-@extend_schema(tags=["Farms"])
+@extend_schema(tags=["Farm"])
 class FarmViewset(viewsets.ModelViewSet):
     queryset = Farm.objects.all()
     serializer_class = FarmSerializer
