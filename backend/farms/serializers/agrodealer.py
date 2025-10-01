@@ -3,7 +3,6 @@ from farms.models.agrodealer import AgroDealer
 from farms.utils.location_checks import LocationChecks
 from locations.models.ward import Ward
 from rest_framework import serializers
-from users.choices import RoleChoices
 
 location_checks = LocationChecks()
 User = get_user_model()
@@ -26,7 +25,7 @@ class AgroDealerSerializer(serializers.ModelSerializer):
         ward = attrs.get("ward")
         owner = attrs.get("owner")
 
-        if owner and owner.role != RoleChoices.AGRODEALER:
+        if owner and not owner.is_agrodealer():
             raise serializers.ValidationError(
                 "Owner must have the role 'Agrodealer'."
             )

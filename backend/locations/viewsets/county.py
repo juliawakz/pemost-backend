@@ -23,5 +23,5 @@ class CountyViewSet(viewsets.ModelViewSet):
         if self.action in ["list", "retrieve"]:
             permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [IsAuthenticated, IsSystemAdminOrSuperUser]
+            permission_classes = [IsSystemAdminOrSuperUser]
         return [permission() for permission in permission_classes]

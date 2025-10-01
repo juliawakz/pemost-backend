@@ -19,6 +19,8 @@ class IsSuperExtensionOrEExtension(BasePermission):
             user
             and user.is_authenticated
             and (
+                user.is_superuser or
+                user.is_system_admin() or
                 user.is_super_extension() or
                 user.is_e_extension()
             )
