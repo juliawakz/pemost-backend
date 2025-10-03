@@ -1,16 +1,17 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
-from django.conf import settings
+from locations.models import County, SubCounty, Ward
 from phonenumber_field.serializerfields import PhoneNumberField
-from rest_framework import serializers, ValidationError
-from locations.models import Ward, SubCounty, County
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from users.utils.user import UserUtils
 
 User = get_user_model()
 user_utils = UserUtils()
 
 
-class RegistrationSerializer(serializers.ModelSerializer):
+class RegisterAccountSerializer(serializers.ModelSerializer):
     county = serializers.PrimaryKeyRelatedField(
         queryset=County.objects.all(), required=True
     )
@@ -25,6 +26,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(
         required=True, write_only=True)
 
+    class Meta:
+        model = User
+        fields = [
+            "email", "first_name", "last_name", "phone_number",
+            "id_number", "role", "county", "subcounty", "ward",
+            "password1", "password2", "id_number"
+        ]
+
     def validate(self, attrs):
         password1 = attrs.get("password1")
         password2 = attrs.get("password2")
@@ -33,12 +42,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
         subcounty = attrs.pop("subcounty")
         county = attrs.pop("county")
 
-        wards = list(ward or [])
-        subcounties = list(subcounty or [])
-        counties = list(county or [])
+        wards = [ward]
+        subcounties = [subcounty]
+        counties = [county]
 
         if password1 != password2:
-            raise ValidationError("The two password fields didn't match.")
+            raise ValidationError(
+                "The two password fields didn't match."
+            )
 
         # --- Location consistency checks ---
         if wards:
@@ -67,15 +78,27 @@ class RegistrationSerializer(serializers.ModelSerializer):
             "phone_number": validated_data["phone_number"],
             "password": validated_data["password1"]
         }
+        # --- Extract M2M fields ---
+        wards = validated_data.pop("wards", [])
+        subcounties = validated_data.pop("subcounties", [])
+        counties = validated_data.pop("counties", [])
 
         user = User.objects.create_user(**user_data)
 
         user_utils.send_email_otp(email=validated_data["email"])
 
+        # --- Set M2M relations ---
+        if wards:
+            user.wards.set(wards)
+        if subcounties:
+            user.subcounties.set(subcounties)
+        if counties:
+            user.counties.set(counties)
+
         return user
 
 
-class OtpVerifySerializer(serializers.Serializer):
+class VerifyAccountSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     token = serializers.CharField(
         required=True,

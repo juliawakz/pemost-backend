@@ -1,12 +1,11 @@
-from drf_spectacular.utils import extend_schema
+from crops.filterset.crop import CropFilterSet
 from crops.models.crop import Crop
 from crops.serializers.crop import CropSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from django_filters.rest_framework import DjangoFilterBackend
-from users.permissions.user import \
-    IsSuperExtensionOrEExtension
-from crops.filterset.crop import CropFilterSet
+from users.permissions.user import IsSuperExtensionOrEExtension
 
 
 @extend_schema(tags=["Crop"])

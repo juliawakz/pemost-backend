@@ -11,7 +11,9 @@ class UserAdmin(admin.ModelAdmin):
         "email",
         "phone_number",
         "role",
+        "is_verified",
         "is_archived",
+        "is_managed",
         "created_at",
     ]
     list_filter = ["created_at", "updated_at", "role"]

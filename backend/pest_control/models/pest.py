@@ -1,8 +1,8 @@
-from django.db import models
 from base.models import BaseModel
 from django.core.validators import MinValueValidator
-from pest_control.choices import ACTION_THRESHOLD_RISK, \
-    PEST_STAGE
+from django.db import models
+from pest_control.choices import ACTION_THRESHOLD_RISK, PEST_STAGE
+
 from backend.crops.models.crop_growth_stage import GrowthStage
 
 
