@@ -1,9 +1,8 @@
+# Register your models here.
+from crops.models import Crop, CropGrowthStage, CropVariety
 from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
-
-# Register your models here.
-from crops.models import Crop, CropVariety, GrowthStage
 
 
 class CropAdmin(admin.ModelAdmin):
@@ -53,7 +52,7 @@ class CropVarietyAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-class GrowthStageAdmin(admin.ModelAdmin):
+class CropGrowthStageAdmin(admin.ModelAdmin):
     list_display = [
         "crop_variety",
         "growth_stage",
@@ -78,4 +77,4 @@ class GrowthStageAdmin(admin.ModelAdmin):
 
 admin.site.register(Crop, CropAdmin)
 admin.site.register(CropVariety, CropVarietyAdmin)
-admin.site.register(GrowthStage, GrowthStageAdmin)
+admin.site.register(CropGrowthStage, CropGrowthStageAdmin)

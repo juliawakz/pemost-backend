@@ -17,6 +17,10 @@ user_utils = UserUtils()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    role = serializers.ChoiceField(
+        choices=RoleChoices.choices,
+        required=True
+    )
     counties = serializers.PrimaryKeyRelatedField(
         queryset=County.objects.all(), many=True, required=False
     )
@@ -104,6 +108,8 @@ class UserSerializer(serializers.ModelSerializer):
                 raise ValidationError("Provided subcounties do not match the wards.")
             if counties and set(c.id for c in counties) != set(derived_counties.values_list("id", flat=True)):
                 raise ValidationError("Provided counties do not match the wards.")
+
+        attrs["is_verified"] = True
 
         return attrs
 

@@ -1,20 +1,19 @@
+from crops.filterset.crop_growth_stage import CropGrowthStageFilterSet
+from crops.models.crop_growth_stage import CropGrowthStage
+from crops.serializers.growth_stage import CropGrowthStageSerializer
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
-from crops.models.growth_stage import GrowthStage
-from crops.serializers.growth_stage import GrowthStageSerializer
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from django_filters.rest_framework import DjangoFilterBackend
-from users.permissions.user import \
-    IsSuperExtensionOrEExtension
-from crops.filterset.growth_stage import GrowthStageFilterSet
+from users.permissions.user import IsSuperExtensionOrEExtension
 
 
-@extend_schema(tags=["Growth Stages"])
-class GrowthStageViewset(viewsets.ModelViewSet):
-    queryset = GrowthStage.objects.all()
-    serializer_class = GrowthStageSerializer
+@extend_schema(tags=["Crop Growth Stages"])
+class CropGrowthStageViewset(viewsets.ModelViewSet):
+    queryset = CropGrowthStage.objects.all()
+    serializer_class = CropGrowthStageSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_class = GrowthStageFilterSet
+    filterset_class = CropGrowthStageFilterSet
 
     def get_permissions(self):
         """

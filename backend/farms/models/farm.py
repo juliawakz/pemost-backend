@@ -58,11 +58,13 @@ class Farm(BaseModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name or 'Unnamed'} - {self.owner.first_name} {self.owner.last_name}"
+        return f"{self.name or 'Unnamed'} - {self.owner.first_name}\
+            {self.owner.last_name}"
 
     def get_sqm_by_wgs84_polygon(self, geom):
         """
-        Converts wgs 84 coordinates(lat/lon) to projected coordinates(meters) and get the acreage of a farm
+        Converts wgs 84 coordinates(lat/lon) to projected coordinates(meters)
+        and get the acreage of a farm
         :param geom:
         :return: area
         """
