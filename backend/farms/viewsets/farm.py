@@ -7,8 +7,10 @@ from farms.serializers.farm import FarmSerializer
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from users.permissions.user import\
-    IsSuperExtensionOrEExtension, IsSystemAdminOrSuperUser
+from users.permissions.user import (
+    IsSuperExtensionOrEExtension,
+    IsSystemAdminOrSuperUser,
+)
 
 
 @extend_schema(tags=["Farm"])

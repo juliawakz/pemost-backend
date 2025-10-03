@@ -70,6 +70,16 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         Ward,
         blank=True
     )
+    is_managed = models.BooleanField(
+        blank=False,
+        null=False,
+        default=False
+    )
+    is_verified = models.BooleanField(
+        blank=False,
+        null=False,
+        default=False
+    )
 
     objects = UserManager()
     USERNAME_FIELD = "email"

@@ -1,6 +1,6 @@
+from crops.models.crop_variety import CropVariety
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
-from crops.models.crop_variety import CropVariety
 
 
 class CropVarietySerializer(serializers.ModelSerializer):

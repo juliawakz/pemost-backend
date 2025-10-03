@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class GrowthStageChoices(models.TextChoices):
+class CropGrowthStageChoices(models.TextChoices):
     VEGETATIVE = "vegetative", _("Vegatative")
     FLOWERING = "flowering", _("Flowering")
     FRUITING = "fruiting", _("Fruiting")

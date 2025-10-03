@@ -1,12 +1,11 @@
-from drf_spectacular.utils import extend_schema
+from crops.filterset.crop_variety import CropVarietyFilterSet
 from crops.models.crop_variety import CropVariety
 from crops.serializers.crop_variety import CropVarietySerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from django_filters.rest_framework import DjangoFilterBackend
-from users.permissions.user import \
-    IsSuperExtensionOrEExtension
-from crops.filterset.crop_variety import CropVarietyFilterSet
+from users.permissions.user import IsSuperExtensionOrEExtension
 
 
 @extend_schema(tags=["Crop Varieties"])
