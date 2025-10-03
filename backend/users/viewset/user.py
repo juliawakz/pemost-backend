@@ -29,13 +29,13 @@ class UserViewSet(viewsets.ModelViewSet):
         if u.role == RoleChoices.SUPER_EXTENSION:
             return User.objects.filter(
                 role__in=[RoleChoices.E_EXTENSION, RoleChoices.FARMER, RoleChoices.AGRODEALER],
-                wards__subcounty__county__in=u.counties.all(), is_archived=False
+                wards__subcounty__county__in=u.counties.all(), is_archived=False, is_managed=True
             ).distinct()
 
         if u.role == RoleChoices.E_EXTENSION:
             return User.objects.filter(
                 role__in=[RoleChoices.FARMER, RoleChoices.AGRODEALER],
-                wards__in=u.wards.all(), is_archived=False
+                wards__in=u.wards.all(), is_archived=False, is_managed=True
             ).distinct()
 
         return User.objects.filter(id=u.id, is_archived=False)

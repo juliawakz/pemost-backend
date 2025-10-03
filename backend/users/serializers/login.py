@@ -5,6 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from users.exceptions import (
     AccountDisabledException,
     AccountNotRegisteredException,
+    InactiveAccountException,
     InvalidCredentialsException,
 )
 from users.serializers.profile import ProfileSerializer
@@ -50,6 +51,9 @@ class LoginSerializer(serializers.Serializer):
 
         if user.is_archived:
             raise AccountDisabledException()
+
+        if not user.is_verified:
+            raise InactiveAccountException()
 
         authenticated_user = authenticate(
             username=email,

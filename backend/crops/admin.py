@@ -1,9 +1,8 @@
+# Register your models here.
+from crops.models import Crop, CropGrowthStage, CropVariety
 from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
-
-# Register your models here.
-from crops.models import Crop, CropVariety, CropGrowthStage
 
 
 class CropAdmin(admin.ModelAdmin):

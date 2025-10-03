@@ -1,11 +1,11 @@
 # urls.py
-from django.urls import include, path
-from crops.viewsets.crop import CropViewset
-from crops.viewsets.crop_variety import CropVarietyViewset
-from crops.viewsets.crop_growth_stage import CropGrowthStageViewset
-from rest_framework.routers import DefaultRouter
 from crops.views.growth_stage import CropGrowthStageChoicesView
 from crops.views.severity import SeverityChoicesView
+from crops.viewsets.crop import CropViewset
+from crops.viewsets.crop_growth_stage import CropGrowthStageViewset
+from crops.viewsets.crop_variety import CropVarietyViewset
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
 app_name = "crops"
 

@@ -9,6 +9,7 @@ from users.views.password import (
     PasswordResetView,
 )
 from users.views.profile import ProfileView
+from users.views.registration import RegisterAccountView, VerifyAccountView
 from users.views.token import CustomTokenRefreshView
 from users.viewset.user import UserViewSet
 
@@ -18,9 +19,31 @@ router = DefaultRouter()
 router.register(r"", UserViewSet, basename="users")
 
 urlpatterns = [
-    path("roles/", RoleChoicesView.as_view(), name="role-choices"),
-    path("profile/", ProfileView.as_view(), name="profile"),
-    path("login/", LoginAPIView.as_view(), name="user-login"),
+    path(
+        "register/account/",
+        RegisterAccountView.as_view(),
+        name="register-account"
+    ),
+    path(
+        "verify/account/",
+        VerifyAccountView.as_view(),
+        name="verify-account"
+    ),
+    path(
+        "roles/",
+        RoleChoicesView.as_view(),
+        name="role-choices"
+    ),
+    path(
+        "profile/",
+        ProfileView.as_view(),
+        name="profile"
+    ),
+    path(
+        "login/",
+        LoginAPIView.as_view(),
+        name="user-login"
+    ),
     path(
         "password/reset/",
         PasswordResetView.as_view(),
@@ -36,7 +59,11 @@ urlpatterns = [
         PasswordChangeView.as_view(),
         name="password-change"
     ),
-    path("logout/", LogoutView.as_view(), name="logout"),
+    path(
+        "logout/",
+        LogoutView.as_view(),
+        name="logout"
+    ),
     path(
         "token/refresh/",
         CustomTokenRefreshView.as_view(),

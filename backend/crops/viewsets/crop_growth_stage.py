@@ -1,12 +1,11 @@
-from drf_spectacular.utils import extend_schema
+from crops.filterset.crop_growth_stage import CropGrowthStageFilterSet
 from crops.models.crop_growth_stage import CropGrowthStage
 from crops.serializers.growth_stage import CropGrowthStageSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from django_filters.rest_framework import DjangoFilterBackend
-from users.permissions.user import \
-    IsSuperExtensionOrEExtension
-from crops.filterset.crop_growth_stage import CropGrowthStageFilterSet
+from users.permissions.user import IsSuperExtensionOrEExtension
 
 
 @extend_schema(tags=["Crop Growth Stages"])

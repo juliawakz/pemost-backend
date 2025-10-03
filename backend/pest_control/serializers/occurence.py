@@ -1,5 +1,5 @@
-from rest_framework import serializers
 from pest_control.models.occurence import Occurrence
+from rest_framework import serializers
 
 
 class OccurrenceSerializer(serializers.ModelSerializer):
