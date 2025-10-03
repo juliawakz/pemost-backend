@@ -16,6 +16,11 @@ otp_utils = OtpUtils()
 
 # ---------- User Helpers Functions ----------
 class UserUtils:
+    def verify_user(self, email: str):
+        user = User.objects.filter(email=email).first()
+        user.is_verified = True
+        user.save()
+
     def _derive_subcounties_and_counties_from_wards(self, wards_qs):
         # wards -> subcounties -> counties
         subcounties = SubCounty.objects.filter(wards__in=wards_qs).distinct()

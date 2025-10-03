@@ -1,5 +1,5 @@
 from base.models import BaseModel
-from crops.choices import GrowthStageChoices, SeverityChoices
+from crops.choices import CropGrowthStageChoices, SeverityChoices
 from crops.models.crop_variety import CropVariety
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
@@ -8,7 +8,7 @@ from django.db import models
 User = get_user_model()
 
 
-class GrowthStage(BaseModel):
+class CropGrowthStage(BaseModel):
     crop_variety = models.ForeignKey(
         CropVariety,
         on_delete=models.CASCADE,
@@ -17,7 +17,7 @@ class GrowthStage(BaseModel):
     )
     growth_stage = models.CharField(
         max_length=60,
-        choices=GrowthStageChoices.choices
+        choices=CropGrowthStageChoices.choices
     )
     severity = models.CharField(
         max_length=60,
@@ -53,8 +53,8 @@ class GrowthStage(BaseModel):
         return f"{self.crop_variety.crop.name}-{self.growth_stage}"
 
     class Meta:
-        verbose_name = "Growth Stage"
-        verbose_name_plural = "Growth Stages"
+        verbose_name = "Crop Growth Stage"
+        verbose_name_plural = "Crop Growth Stages"
         unique_together = ("crop_variety", "growth_stage")
         ordering = ("-created_at",)
         get_latest_by = ("-created_at",)
