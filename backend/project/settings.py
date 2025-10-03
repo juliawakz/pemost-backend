@@ -469,7 +469,7 @@ SPECTACULAR_SETTINGS = {
         {"name": "Crop", "description": "Crops registration and management"},
         {"name": "Crop Varieties", "description": "Crop Varieties registration and management"},
         {"name": "Growth Stages", "description": "Growth stages registration and management"},
-        {"name": "Interventions", "description": "Interventions management"},
+        {"name": "Pest Control", "description": "Pest control management"},
         {"name": "Locations - Counties", "description": "Counties management endpoints"},
         {"name": "Locations - Subcounties", "description": "Subcounties management endpoints"},
         {"name": "Locations - Wards", "description": "Wards management endpoints"},

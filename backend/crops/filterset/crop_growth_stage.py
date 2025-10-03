@@ -1,8 +1,8 @@
 import django_filters
-from crops.models.growth_stage import GrowthStage
+from crops.models.crop_growth_stage import CropGrowthStage
 
 
-class GrowthStageFilterSet(django_filters.FilterSet):
+class CropGrowthStageFilterSet(django_filters.FilterSet):
     # Filter by crop variety (exact match by ID)
     crop_variety = django_filters.CharFilter(
         field_name="crop_variety__id",
@@ -54,7 +54,7 @@ class GrowthStageFilterSet(django_filters.FilterSet):
     )
 
     class Meta:
-        model = GrowthStage
+        model = CropGrowthStage
         fields = [
             "crop_variety",
             "crop_variety_name",

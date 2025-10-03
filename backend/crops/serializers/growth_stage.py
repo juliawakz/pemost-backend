@@ -1,14 +1,14 @@
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
-from crops.models.growth_stage import GrowthStage
+from crops.models.crop_growth_stage import CropGrowthStage
 
 
-class GrowthStageSerializer(serializers.ModelSerializer):
+class CropGrowthStageSerializer(serializers.ModelSerializer):
     created_by = serializers.StringRelatedField(read_only=True)
     updated_by = serializers.StringRelatedField(read_only=True)
 
     class Meta:
-        model = GrowthStage
+        model = CropGrowthStage
         fields = "__all__"
         read_only_fields = ["created_by", "updated_by"]
 
