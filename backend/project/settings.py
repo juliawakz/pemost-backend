@@ -67,7 +67,8 @@ INSTALLED_APPS = [
     "locations",
     "notifications",
     "farms",
-    "crops"
+    "crops",
+    "pest_control"
 ]
 
 MIDDLEWARE = [
@@ -439,7 +440,8 @@ MIGRATION_MODULES = {
     "notifications": "migration_files.notifications",
     "locations": "migration_files.locations",
     "farms": "migration_files.farms",
-    "crops": "migration_files.crops"
+    "crops": "migration_files.crops",
+    "pest_control": "migration_files.pest_control"
 }
 
 SPECTACULAR_SETTINGS = {

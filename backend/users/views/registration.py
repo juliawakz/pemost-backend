@@ -1,10 +1,11 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
-
-from users.serializers.registeration import \
-    RegisterAccountSerializer, VerifyAccountSerializer
+from users.serializers.registeration import (
+    RegisterAccountSerializer,
+    VerifyAccountSerializer,
+)
 from users.utils.user import UserUtils
 
 user_utils = UserUtils()

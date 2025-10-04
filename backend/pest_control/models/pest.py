@@ -1,13 +1,13 @@
 from base.models import BaseModel
+from crops.choices import CropGrowthStageChoices
+from crops.models.crop_variety import CropVariety
 from django.core.validators import MinValueValidator
 from django.db import models
 from pest_control.choices import ACTION_THRESHOLD_RISK, PEST_STAGE
 
-from backend.crops.models.crop_growth_stage import GrowthStage
-
 
 class Pest(BaseModel):
-    pest_type = models.CharField(
+    name = models.CharField(
         max_length=100
     )
 
@@ -29,8 +29,14 @@ class Pest(BaseModel):
         max_length=50
     )
 
+    crop_variety = models.ForeignKey(
+        CropVariety,
+        on_delete=models.CASCADE,
+        related_name="pest_crop_variety"
+    )
+
     growth_stage = models.CharField(
-        choices=GrowthStage.choices,
+        choices=CropGrowthStageChoices.choices,
         max_length=50
     )
 
