@@ -21,7 +21,7 @@ services:
       - migration_files_v2:/pemostbackend/migration_files:rw
       - static_volume_v2:/pemostbackend/static:rw
       - media_volume_v2:/pemostbackend/media:rw
-      - backend/firebasefile.json:/pemostbackend/firebasefile.json:ro
+      - ./backend/firebasefile.json:/pemostbackend/firebasefile.json:ro
     expose:
       - 8001
     env_file:
@@ -41,7 +41,7 @@ services:
   #     - migration_files_v2:/pemostbackend/migration_files:rw
   #     - static_volume_v2:/pemostbackend/static:rw
   #     - media_volume_v2:/pemostbackend/media:rw
-  #     - backend/firebasefile.json:/pemostbackend/firebasefile.json:ro
+  #     - ./backend/firebasefile.json:/pemostbackend/firebasefile.json:ro
   #   networks:
   #     - pemost_backend_pemost_prod_network
   #   ports:
@@ -74,7 +74,7 @@ services:
       - migration_files_v2:/pemostbackend/migration_files:rw
       - static_volume_v2:/pemostbackend/static:rw
       - media_volume_v2:/pemostbackend/media:rw
-      - backend/firebasefile.json:/pemostbackend/firebasefile.json:ro
+      - ./backend/firebasefile.json:/pemostbackend/firebasefile.json:ro
     networks:
       - pemost_backend_pemost_prod_network
     depends_on:
@@ -93,7 +93,7 @@ services:
       - migration_files_v2:/pemostbackend/migration_files:rw
       - static_volume_v2:/pemostbackend/static:rw
       - media_volume_v2:/pemostbackend/media:rw
-      - backend/firebasefile.json:/pemostbackend/firebasefile.json:ro
+      - ./backend/firebasefile.json:/pemostbackend/firebasefile.json:ro
     networks:
       - pemost_backend_pemost_prod_network
     depends_on:
