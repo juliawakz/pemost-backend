@@ -10,7 +10,7 @@ from users.utils.user import UserUtils
 user_utils = UserUtils()
 
 
-@extend_schema(tags=["Farmer Registration"])
+@extend_schema(tags=["Farmer Account Registration"])
 class RegisterAccountView(CreateAPIView):
     serializer_class = RegisterAccountSerializer
     permission_classes = [permissions.AllowAny]
@@ -23,7 +23,7 @@ class RegisterAccountView(CreateAPIView):
         return Response(response_data, status=status.HTTP_201_CREATED)
 
 
-@extend_schema(tags=["Farmer Registration"])
+@extend_schema(tags=["Farmer Account Registration"])
 class VerifyAccountView(GenericAPIView):
     serializer_class = VerifyAccountSerializer
     permission_classes = [permissions.AllowAny]
@@ -32,7 +32,12 @@ class VerifyAccountView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if user_utils.check_token_is_valid(serializer.data):
-            user_utils.verify_user(serializer.data["email"])
+            user = user_utils.verify_user(
+                serializer.data["email"], serializer.data["token"]
+            )
+            user_utils.invalidate_token(
+                user, serializer.data["token"]
+            )
             response = {"message": "Account Activated."}
             return Response(response, status=status.HTTP_200_OK)
         else:

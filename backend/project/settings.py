@@ -464,6 +464,7 @@ SPECTACULAR_SETTINGS = {
         {"name": "Users", "description": "User registration and management endpoints"},
         {"name": "Profile", "description": "Profile management endpoints"},
         {"name": "Farm", "description": "Farm registration and management"},
+        {"name": "Farmer Account Registration", "description": "Farmer registration and management"},
         {"name": "Plantation", "description": "Plantation registration and management"},
         {"name": "Agrodealers", "description": "Agrodealer registration and management"},
         {"name": "Crop", "description": "Crops registration and management"},

@@ -20,7 +20,7 @@ class AgrodealerViewset(viewsets.ModelViewSet):
     def get_queryset(self):
         u = self.request.user
 
-        if u.is_superuser or u.is_system_admin():
+        if u.is_superuser or u.is_system_admin() or u.is_farmer():
             return self.queryset.all()
 
         if u.is_super_extension():
