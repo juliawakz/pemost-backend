@@ -1,4 +1,5 @@
 from django.urls import include, path
+from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import DefaultRouter
 from users.views.choices import RoleChoicesView
 from users.views.login import LoginAPIView
@@ -19,6 +20,11 @@ router = DefaultRouter()
 router.register(r"", UserViewSet, basename="users")
 
 urlpatterns = [
+    path(
+        "apikey/",
+        obtain_auth_token,
+        name='obtain-auth-token'
+    ),
     path(
         "register/account/",
         RegisterAccountView.as_view(),

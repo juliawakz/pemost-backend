@@ -2,7 +2,7 @@ from base.models import BaseModel
 from django.contrib.gis.db import models as gis_models
 
 
-class Occurrence(BaseModel):
+class PestOccurrence(BaseModel):
     yellow_buffer = gis_models.GeometryField(
         null=True,
         srid=4326,
