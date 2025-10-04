@@ -30,7 +30,7 @@ class RegisterAccountSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "email", "first_name", "last_name", "phone_number",
-            "id_number", "role", "county", "subcounty", "ward",
+            "id_number", "county", "subcounty", "ward",
             "password1", "password2", "id_number"
         ]
 
@@ -63,6 +63,10 @@ class RegisterAccountSerializer(serializers.ModelSerializer):
                     set(derived_counties.values_list("id", flat=True)):
                 raise ValidationError(
                     "Provided county does not match the ward.")
+        else:
+            raise ValidationError(
+                "You must provide a ward."
+            )
 
         attrs["counties"] = counties
         attrs["subcounties"] = subcounties
@@ -76,8 +80,10 @@ class RegisterAccountSerializer(serializers.ModelSerializer):
             "last_name": validated_data["last_name"],
             "email": validated_data["email"],
             "phone_number": validated_data["phone_number"],
-            "password": validated_data["password1"]
+            "password": validated_data["password1"],
+            "id_number": validated_data.get("id_number", None)
         }
+
         # --- Extract M2M fields ---
         wards = validated_data.pop("wards", [])
         subcounties = validated_data.pop("subcounties", [])

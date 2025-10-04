@@ -8,8 +8,10 @@ from users.exceptions import (
     PasswordMismatchException,
 )
 from users.models.otp import Otp
+from users.utils.user import UserUtils
 
 User = get_user_model()
+user_utils = UserUtils()
 
 
 class PasswordResetSerializer(serializers.Serializer):
@@ -59,8 +61,13 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     def save(self, **kwargs):
         user = self.validated_data["user"]
         password = self.validated_data["new_password1"]
+        token = self.validated_data["token"]
         user.set_password(password)
         user.save()
+        user_utils.invalidate_token(
+            user,
+            token
+        )
         return user
 
 

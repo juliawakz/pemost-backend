@@ -31,6 +31,6 @@ class FarmSerializer(serializers.ModelSerializer):
                 "Owner must have the role 'Farmer'."
             )
 
-        location_checks.check_ward(ward, user)
+        location_checks.check_ward_farmer(ward, user)
 
         return attrs
