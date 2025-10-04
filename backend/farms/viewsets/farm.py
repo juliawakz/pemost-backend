@@ -7,10 +7,7 @@ from farms.serializers.farm import FarmSerializer
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from users.permissions.user import (
-    IsSuperExtensionOrEExtension,
-    IsSystemAdminOrSuperUser,
-)
+from users.permissions.user import IsSuperExtensionOrEExtensionOwner
 
 
 @extend_schema(tags=["Farm"])
@@ -30,13 +27,15 @@ class FarmViewset(viewsets.ModelViewSet):
         if u.is_super_extension():
             return self.queryset.filter(
                 ward__subcounty__county__in=u.counties.all(),
-                is_archived=False
+                is_archived=False,
+                owner__is_managed=True
             ).distinct()
 
         if u.is_e_extension():
             return self.queryset.filter(
                 ward__in=u.wards.all(),
-                is_archived=False
+                is_archived=False,
+                owner__is_managed=True
             ).distinct()
 
         return self.queryset.filter(
@@ -72,6 +71,6 @@ class FarmViewset(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [
-                IsSuperExtensionOrEExtension
+                IsSuperExtensionOrEExtensionOwner
             ]
         return [permission() for permission in permission_classes]

@@ -67,7 +67,8 @@ INSTALLED_APPS = [
     "locations",
     "notifications",
     "farms",
-    "crops"
+    "crops",
+    "pest_control"
 ]
 
 MIDDLEWARE = [
@@ -439,7 +440,8 @@ MIGRATION_MODULES = {
     "notifications": "migration_files.notifications",
     "locations": "migration_files.locations",
     "farms": "migration_files.farms",
-    "crops": "migration_files.crops"
+    "crops": "migration_files.crops",
+    "pest_control": "migration_files.pest_control"
 }
 
 SPECTACULAR_SETTINGS = {
@@ -464,6 +466,7 @@ SPECTACULAR_SETTINGS = {
         {"name": "Users", "description": "User registration and management endpoints"},
         {"name": "Profile", "description": "Profile management endpoints"},
         {"name": "Farm", "description": "Farm registration and management"},
+        {"name": "Farmer Account Registration", "description": "Farmer registration and management"},
         {"name": "Plantation", "description": "Plantation registration and management"},
         {"name": "Agrodealers", "description": "Agrodealer registration and management"},
         {"name": "Crop", "description": "Crops registration and management"},

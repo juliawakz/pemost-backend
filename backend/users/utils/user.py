@@ -16,10 +16,19 @@ otp_utils = OtpUtils()
 
 # ---------- User Helpers Functions ----------
 class UserUtils:
+    def invalidate_token(self, user, token: str):
+        Otp.objects.filter(
+            user=user,
+            token=token
+        ).update(
+            expiry_at=timezone.now()
+        )
+
     def verify_user(self, email: str):
         user = User.objects.filter(email=email).first()
         user.is_verified = True
         user.save()
+        return user
 
     def _derive_subcounties_and_counties_from_wards(self, wards_qs):
         # wards -> subcounties -> counties
@@ -29,11 +38,16 @@ class UserUtils:
 
     def _ensure_all_wards_in_counties(self, wards, counties):
         county_ids = set(counties.values_list("id", flat=True))
-        bad_wards = [{"id": str(w.id), "name": w.name} for w in wards if w.subcounty.county_id not in county_ids]
+        bad_wards = [
+            {"id": str(w.id), "name": w.name} for w in wards
+            if w.subcounty.county_id not in county_ids
+        ]
         return bad_wards
 
     def _ensure_wards_subset(self, wards, allowed_wards):
-        allowed_ids = set(allowed_wards.values_list("id", flat=True))
+        allowed_ids = set(
+            allowed_wards.values_list("id", flat=True)
+        )
         bad_wards = [
             {"id": str(w.id), "name": w.name}
             for w in wards if w.id not in allowed_ids
@@ -59,7 +73,7 @@ class UserUtils:
 
     def send_login_credentials_email(
             self, first_name: str, email: str, password: str):
-        login_url = f"{config('LOGIN_URL', default='http://127.0.0.1:8000')}/login/"
+        login_url = f"{config('LOGIN_URL',default='http://127.0.0.1:8000')}/login/"
         template = render_to_string(
             "user_registration.html",
             {
