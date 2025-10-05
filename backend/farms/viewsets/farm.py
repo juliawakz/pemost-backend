@@ -5,6 +5,8 @@ from farms.filtersets.farm import FarmFilterSet
 from farms.models.farm import Farm
 from farms.serializers.farm import FarmSerializer
 from rest_framework import status, viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from users.permissions.user import IsSuperExtensionOrEExtensionOwner
@@ -14,6 +16,7 @@ from users.permissions.user import IsSuperExtensionOrEExtensionOwner
 class FarmViewset(viewsets.ModelViewSet):
     queryset = Farm.objects.all()
     serializer_class = FarmSerializer
+    authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = FarmFilterSet
