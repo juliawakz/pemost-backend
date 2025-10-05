@@ -1,5 +1,4 @@
 from django.urls import include, path
-from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import DefaultRouter
 from users.views.choices import RoleChoicesView
 from users.views.login import LoginAPIView
@@ -11,7 +10,7 @@ from users.views.password import (
 )
 from users.views.profile import ProfileView
 from users.views.registration import RegisterAccountView, VerifyAccountView
-from users.views.token import CustomTokenRefreshView
+from users.views.token import CustomTokenRefreshView, ObtainAuthTokenView
 from users.viewset.user import UserViewSet
 
 app_name = "users"
@@ -22,7 +21,7 @@ router.register(r"", UserViewSet, basename="users")
 urlpatterns = [
     path(
         "apikey/",
-        obtain_auth_token,
+        ObtainAuthTokenView.as_view(),
         name='obtain-auth-token'
     ),
     path(

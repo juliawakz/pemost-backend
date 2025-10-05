@@ -30,7 +30,8 @@ class AgroDealerSerializer(serializers.ModelSerializer):
                 "Owner must have the role 'Agrodealer'."
             )
 
-        location_checks.check_ward(ward, user) # Add permissions based on assigned areas.
+        # Add permissions based on assigned areas
+        location_checks.check_ward(ward, user)
         location_checks.check_ward(ward, owner)
 
         return attrs
