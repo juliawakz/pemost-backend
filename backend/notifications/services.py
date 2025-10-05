@@ -12,7 +12,6 @@ class MessagingService:
     def send_email(to, from_email, subject, msg=None, html_content=None):
         """
         Sends an email with plain text and/or HTML content using SendGrid.
-
         :param to: Recipient email (str or list of str)
         :param from_email: Sender email (str)
         :param subject: Email subject (str)
@@ -40,7 +39,8 @@ class MessagingService:
         try:
             sg = SendGridAPIClient(config('SENDGRID_API_KEY'))
             response = sg.send(message)
-            logger.info("Email sent to %s, status: %s", to, response.status_code)
+            logger.info(
+                "Email sent to %s, status: %s", to, response.status_code)
             return response
         except Exception as e:
             logger.error("Error sending email: %s", e, exc_info=True)

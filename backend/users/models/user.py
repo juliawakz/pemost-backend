@@ -81,6 +81,8 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         default=False
     )
 
+    # created_by and updated_by
+
     objects = UserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [

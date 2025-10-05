@@ -14,7 +14,7 @@ def send_notification(
                 "id": instance.id.hex,
                 "read": instance.is_read,
                 "time": instance.created_at,
-                "destine": instance.message_to.get_full_name,
+                "destine": instance.message_to.full_name,
             },
             channel=instance.channel,
         )

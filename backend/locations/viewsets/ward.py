@@ -21,7 +21,7 @@ class WardViewSet(viewsets.ModelViewSet):
         Only system admin/superuser can create/update/delete.
         """
         if self.action in ["list", "retrieve"]:
-            permission_classes = [IsAuthenticated]
+            permission_classes = []
         else:
             permission_classes = [IsSystemAdminOrSuperUser]
         return [permission() for permission in permission_classes]
