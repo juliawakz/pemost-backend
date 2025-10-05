@@ -1,4 +1,5 @@
 # Ensure these imports exist in your file
+from drf_spectacular.utils import extend_schema
 from pest_control.serializers.pest_occurence import ProcessOccurrenceSerializer
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
@@ -7,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
+@extend_schema(tags=["Pest Control"])
 class ProcessOccurrenceApiView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]

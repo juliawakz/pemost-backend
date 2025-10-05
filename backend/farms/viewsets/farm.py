@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from users.permissions.user import IsSuperExtensionOrEExtensionOwner
 
 
-@extend_schema(tags=["Farm"])
+@extend_schema(tags=["Farms"])
 class FarmViewset(viewsets.ModelViewSet):
     queryset = Farm.objects.all()
     serializer_class = FarmSerializer
