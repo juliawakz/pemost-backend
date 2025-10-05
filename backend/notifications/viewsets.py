@@ -1,4 +1,6 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
+from notifications.filterset import NotificationFilterSet
 from notifications.models import Notification
 from notifications.serializers import NotificationSerializer
 from rest_framework import permissions, status, viewsets
@@ -14,6 +16,8 @@ class NotificationViewSet(viewsets.ModelViewSet):
     """
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = NotificationFilterSet
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):

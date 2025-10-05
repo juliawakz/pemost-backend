@@ -34,7 +34,7 @@ class VerifyAccountView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         if user_utils.check_token_is_valid(serializer.data):
             user = user_utils.verify_user(
-                serializer.data["email"], serializer.data["token"]
+                serializer.data["email"]
             )
             user_utils.invalidate_token(
                 user, serializer.data["token"]
