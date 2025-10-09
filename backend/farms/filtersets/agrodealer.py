@@ -2,7 +2,7 @@ import django_filters
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
-from farms.models.agrodealer import AgroDealer
+from backend.farms.models.agrovet import AgroDealer
 
 
 class AgroDealerFilterSet(django_filters.FilterSet):

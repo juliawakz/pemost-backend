@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from farms.models.agrodealer import AgroDealer
+from backend.farms.models.agrovet import AgroDealer
 from farms.utils.location_checks import LocationChecks
 from locations.models.ward import Ward
 from rest_framework import serializers

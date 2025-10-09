@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
-class AgroDealer(BaseModel):
+class AgroVet(BaseModel):
     name = models.CharField(
         max_length=30,
         blank=False,

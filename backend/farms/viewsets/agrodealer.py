@@ -2,7 +2,7 @@ from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from farms.filtersets.agrodealer import AgroDealerFilterSet
-from farms.models.agrodealer import AgroDealer
+from backend.farms.models.agrovet import AgroDealer
 from farms.serializers.agrodealer import AgroDealerSerializer
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated

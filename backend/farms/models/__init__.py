@@ -1,3 +1,3 @@
 from farms.models.farm import Farm
-from farms.models.agrodealer import AgroDealer
+from backend.farms.models.agrovet import AgroDealer
 from farms.models.plantation import Plantation

@@ -18,51 +18,35 @@ class IsSuperExtension(BasePermission):
         return bool(
             user
             and user.is_authenticated
-            and (
-                user.is_superuser or
-                user.is_system_admin() or
-                user.is_super_extension()
-            )
+            and user.is_super_extension()
         )
 
 
-class IsSuperExtensionOrEExtension(BasePermission):
+class IsEExtension(BasePermission):
     def has_permission(self, request, view):
         user = request.user
 
         return bool(
             user
             and user.is_authenticated
-            and (
-                user.is_superuser or
-                user.is_system_admin() or
-                user.is_super_extension() or
-                user.is_e_extension()
-            )
+            and user.is_e_extension()
         )
 
 
-class IsSuperExtensionOrEExtensionOwner(BasePermission):
+class IsFarmer(BasePermission):
     def has_permission(self, request, view):
         user = request.user
 
         return bool(
             user
             and user.is_authenticated
-            and (
-                user.is_superuser or
-                user.is_system_admin() or
-                user.is_super_extension() or
-                user.is_e_extension() or
-                user.is_farmer()
-            )
+            and user.is_farmer()
         )
 
     def has_object_permission(self, request, view, obj):
         user = request.user
 
-        if user.is_superuser or user.is_system_admin() or \
-                user.is_super_extension() or user.is_e_extension():
+        if user.is_superuser or user.is_system_admin():
             return True
 
         if obj.owner == user:
