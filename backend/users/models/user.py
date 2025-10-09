@@ -7,7 +7,6 @@ from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from locations.models import County, SubCounty, Ward
 from phonenumber_field.modelfields import PhoneNumberField
 from users.choices import RoleChoices
 from users.manager import UserManager
@@ -55,25 +54,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     )
     role = models.CharField(
         max_length=20,
-        choices=RoleChoices.choices,
-        default=RoleChoices.FARMER
-    )
-    counties = models.ManyToManyField(
-        County,
-        blank=True
-    )
-    subcounties = models.ManyToManyField(
-        SubCounty,
-        blank=True
-    )
-    wards = models.ManyToManyField(
-        Ward,
-        blank=True
-    )
-    is_managed = models.BooleanField(
-        blank=False,
-        null=False,
-        default=False
+        choices=RoleChoices.choices
     )
     is_verified = models.BooleanField(
         blank=False,
@@ -81,9 +62,8 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         default=False
     )
 
-    # created_by and updated_by
-
     objects = UserManager()
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [
         "first_name",
