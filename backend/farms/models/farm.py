@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from locations.models import Ward
+from users.models.e_extension import EExtensionOfficer
 
 User = get_user_model()
 
@@ -22,7 +23,13 @@ class Farm(BaseModel):
         null=False,
         blank=False
     )
-    size = models.FloatField(
+    user_size = models.FloatField(
+        default=0,
+        validators=[MinValueValidator(0)],
+        blank=True,
+        null=True
+    )
+    calc_size = models.FloatField(
         default=0,
         validators=[MinValueValidator(0)],
         blank=True,
@@ -38,23 +45,33 @@ class Farm(BaseModel):
         User,
         on_delete=models.SET_NULL,
         related_name="farms",
-        null=True
+        null=True,
+        limit_choices_to={'role': 'FARMER'}
+    )
+    e_extensions = models.ManyToManyField(
+        EExtensionOfficer,
+        related_name='managed_farmers',
+        blank=True
+    )
+    is_visible = models.BooleanField(
+        default=False,
+        help_text="If True, farmer is visible to allowed " \
+        "e-extension officers in their ward"
     )
 
     slug = None
     metadata = None
 
     def clean(self):
-        if self.owner and self.ward and self.ward not\
-                in self.owner.wards.all():
+        """Validate farm data"""
+        if self.owner and not self.owner.is_farmer():
             raise ValidationError(
-                "Farm ward must be one of the wards\
-                    where the owner is registered."
+                "Farm owner must have the role 'FARMER'."
             )
 
     def save(self, *args, **kwargs):
         self.clean()  # enforce validation on save
-        self.size = self.get_sqm_by_wgs84_polygon(self.boundary)
+        self.calc_size = self.get_sqm_by_wgs84_polygon(self.boundary)
         super().save(*args, **kwargs)
 
     def __str__(self):

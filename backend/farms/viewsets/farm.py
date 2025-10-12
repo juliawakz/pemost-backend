@@ -9,7 +9,6 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from users.permissions.user import IsSuperExtensionOrEExtensionOwner
 
 
 @extend_schema(tags=["Farms"])
@@ -24,27 +23,38 @@ class FarmViewset(viewsets.ModelViewSet):
     def get_queryset(self):
         u = self.request.user
 
-        if u.is_superuser or u.is_system_admin():
+        if getattr(self, "swagger_fake_view", False):
+            return Farm.objects.none()
+
+        if u.is_superuser or u.is_systemadmin():
             return self.queryset.all()
 
+        # Super Extension sees farms in their counties
         if u.is_super_extension():
+            super_ext_profile = u.super_extension_profile
             return self.queryset.filter(
-                ward__subcounty__county__in=u.counties.all(),
+                ward__subcounty__county__in=super_ext_profile.counties.all(),
                 is_archived=False,
-                owner__is_managed=True
+                is_visible=True
             ).distinct()
 
+        # E-Extension sees farms in their wards that they manage
         if u.is_e_extension():
+            e_ext_profile = u.e_extension_profile
             return self.queryset.filter(
-                ward__in=u.wards.all(),
-                is_archived=False,
-                owner__is_managed=True
+                Q(ward__in=e_ext_profile.wards.all(), is_visible=True) |
+                Q(e_extensions=e_ext_profile),
+                is_archived=False
             ).distinct()
 
-        return self.queryset.filter(
-            Q(owner=u),
-            is_archived=False
-        )
+        # Farmers see only their own farms
+        if u.is_farmer():
+            return self.queryset.filter(
+                owner=u,
+                is_archived=False
+            )
+
+        return self.queryset.none()
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -74,6 +84,6 @@ class FarmViewset(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [
-                IsSuperExtensionOrEExtensionOwner
+                IsAuthenticated
             ]
         return [permission() for permission in permission_classes]
