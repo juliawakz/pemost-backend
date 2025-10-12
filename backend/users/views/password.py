@@ -8,7 +8,10 @@ from users.serializers.password import (
     PasswordResetConfirmSerializer,
     PasswordResetSerializer,
 )
+from django.contrib.auth import get_user_model
 from users.utils.user import UserUtils
+
+User = get_user_model()
 
 
 @extend_schema(tags=["Password"])
@@ -19,9 +22,13 @@ class PasswordResetView(GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        UserUtils().send_email_otp(serializer.data["email"])
+        try:
+            user = User.objects.get(email=serializer.data["email"])
+            UserUtils().send_email_otp(user.email)
+        except User.DoesNotExist:
+            pass
         response = {
-            "message": "Reset OTP sent to email."
+            "message": "Check your email for reset otp."
         }
         return Response(response, status=status.HTTP_200_OK)
 

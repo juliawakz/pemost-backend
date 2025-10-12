@@ -8,7 +8,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from geopy.geocoders import Nominatim
 from locations.models.ward import Ward
-from phonenumber_field.modelfields import PhoneNumberField
 from users.choices import RoleChoices
 
 logger = logging.getLogger(__name__)

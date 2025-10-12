@@ -4,8 +4,8 @@ from locations.filterset.ward import WardFilter
 from locations.models.ward import Ward
 from locations.serializers.ward import WardSerializer
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from users.permissions.user import IsSystemAdminOrSuperUser
+from rest_framework.permissions import AllowAny
+from users.permissions import IsSystemAdminOrSuperUser
 
 
 @extend_schema(tags=["Locations - Wards"])

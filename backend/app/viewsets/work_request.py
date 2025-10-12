@@ -16,7 +16,7 @@ from users.serializers.work_request import (
     FarmerWorkRequestSerializer,
     AcceptRejectRequestSerializer,
 )
-from users.permissions.user import CanManageWorkRequest
+from backend.users.user import CanManageWorkRequest
 
 User = get_user_model()
 

@@ -27,7 +27,7 @@ class EExtensionOfficer(BaseModel):
     )
     is_visible = models.BooleanField(
         default=False,
-        help_text="If True, e-extension is visible to super extension" \
+        help_text="If True, e-extension is visible to super extension"
         "officers allowed in their county"
     )
 

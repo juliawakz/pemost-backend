@@ -8,7 +8,7 @@ from users.factory import (
     FarmerFactory,
     AgroDealerFactory,
 )
-from users.permissions.user import (
+from backend.users.user import (
     IsSystemAdminOrSuperUser,
     IsSuperadmin,
     IsSuperExtension,

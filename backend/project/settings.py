@@ -65,10 +65,7 @@ INSTALLED_APPS = [
     "migration_files",
     "users",
     "locations",
-    "notifications",
-    "farms",
-    "crops",
-    "pest_control"
+    "notifications"
 ]
 
 MIDDLEWARE = [
