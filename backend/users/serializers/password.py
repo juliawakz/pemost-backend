@@ -17,16 +17,6 @@ user_utils = UserUtils()
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 
-    def validate(self, attrs):
-        email = attrs.get("email")
-
-        try:
-            User.objects.get(email=email)
-        except User.DoesNotExist:
-            raise AccountNotRegisteredException()
-
-        return attrs
-
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)

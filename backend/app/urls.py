@@ -8,27 +8,59 @@ from users.views.password import (
     PasswordResetConfirmView,
     PasswordResetView,
 )
-from users.views.registration import VerifyAccountView, RegisterAccountView
-from users.views.token import CustomTokenRefreshView, ObtainAuthTokenView
 from users.views.profile import ProfileView
+from users.views.registration import (
+    EExtensionRegistrationView,
+    RegisterAccountView,
+    SuperExtensionRegistrationView,
+    VerifyAccountView,
+    AgrodealerRegistrationView
+)
+from users.views.token import CustomTokenRefreshView, ObtainAuthTokenView
+from users.viewset.user import UserViewSet
+from users.viewset.work_request import (
+    EExtensionWorkRequestViewSet,
+    FarmerWorkRequestViewSet,
+)
 
 app_name = "users"
 
 router = DefaultRouter()
-
+router.register(r"users", UserViewSet, basename="users")
+router.register(
+    r"work-requests/e-extension",
+    EExtensionWorkRequestViewSet,
+    basename="e-extension-work-requests"
+)
+router.register(
+    r"work-requests/farmer",
+    FarmerWorkRequestViewSet,
+    basename="farmer-work-requests"
+)
 
 urlpatterns = [
-    # Generate API key endpoint
+    # Generate 
+    # Farmer/Agrodealer registration
     path(
-        "generate/apikey/",
-        ObtainAuthTokenView.as_view(),
-        name="register-account"
-    ),
-    # Account verification
-    path(
-        "register/account/",
+        "register/",
         RegisterAccountView.as_view(),
         name="register-account"
+    ),
+    # Role-specific registration endpoints
+    path(
+        "register/agrodealer/",
+        AgrodealerRegistrationView.as_view(),
+        name="register-agrodealer"
+    ),
+    path(
+        "register/e-extension/",
+        EExtensionRegistrationView.as_view(),
+        name="register-e-extension"
+    ),
+    path(
+        "register/super-extension/",
+        SuperExtensionRegistrationView.as_view(),
+        name="register-super-extension"
     ),
     # Account verification
     path(
@@ -36,17 +68,15 @@ urlpatterns = [
         VerifyAccountView.as_view(),
         name="verify-account"
     ),
-    # Profile Management
-    path(
-        "profile/",
-        ProfileView.as_view(),
-        name="profile-management"
-    ),
-    # List Available roles
     path(
         "roles/",
         RoleChoicesView.as_view(),
         name="role-choices"
+    ),
+    path(
+        "profile/",
+        ProfileView.as_view(),
+        name="profile"
     ),
     path(
         "login/",
@@ -80,3 +110,4 @@ urlpatterns = [
     ),
     path("", include(router.urls)),
 ]
+

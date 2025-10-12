@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from users.permissions.user import IsSystemAdminOrSuperUser
+from backend.users.user import IsSystemAdminOrSuperUser
 
 
 @extend_schema(tags=["Crop Growth Stages"])

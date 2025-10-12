@@ -1,15 +1,9 @@
 from django.db import models
 
 
-class RoleChoices(models.TextChoices):
-    E_EXTENSION = 'E_EXTENSION', 'E-Extension Officer'
-    SYSTEMADMIN = 'SYSTEMADMIN', 'System Admin'
+class RoleChoices(models.TextChoices):    
+    SYSTEM_ADMIN = 'SYSTEM_ADMIN', 'System Admin'
     SUPER_EXTENSION = 'SUPER_EXTENSION', 'Super Extension Officer'
-    FARMER = 'FARMER', 'Farmer'
+    E_EXTENSION = 'E_EXTENSION', 'E-Extension Officer'
     AGRODEALER = 'AGRODEALER', 'Agrodealer'
-
-
-class WorkRequestStatusChoices(models.TextChoices):
-    PENDING = 'PENDING', 'Pending'
-    ACCEPTED = 'ACCEPTED', 'Accepted'
-    REJECTED = 'REJECTED', 'Rejected'
+    FARMER = 'FARMER', 'Farmer'

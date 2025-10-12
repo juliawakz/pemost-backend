@@ -6,6 +6,7 @@ from locations.models import County, Ward
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework_gis.serializers import GeometryField
 from users.choices import RoleChoices
 from users.models import (
     EExtensionOfficer,
@@ -125,7 +126,7 @@ class SuperExtensionRegistrationSerializer(BaseRegistrationSerializer):
     counties = serializers.PrimaryKeyRelatedField(
         queryset=County.objects.all(),
         many=True,
-        required=False,
+        required=True,
         help_text=_("Counties where this super extension officer operates")
     )
 
@@ -157,6 +158,15 @@ class SuperExtensionRegistrationSerializer(BaseRegistrationSerializer):
         return user
 
 
+class PointOnlyField(GeometryField):
+    """Restrict GeometryField to only accept POINT geometries."""
+    def to_internal_value(self, data):
+        geom = super().to_internal_value(data)
+        if geom.geom_type != "Point":
+            raise serializers.ValidationError("Only POINT geometries are allowed.")
+        return geom
+
+
 class AgrodealerRegistrationSerializer(BaseRegistrationSerializer):
     """Serializer for agrodealer registration"""
     ward = serializers.PrimaryKeyRelatedField(
@@ -169,11 +179,7 @@ class AgrodealerRegistrationSerializer(BaseRegistrationSerializer):
         required=True,
         help_text=_("Name of the agrovet"),
     )
-    location = serializers.CharField(
-        required=True,
-        allow_blank=False,
-        help_text=_("Location of the agrodealer in WKT format e.g. 'POINT (36.0038 -0.4683)'"),
-    )
+    location = PointOnlyField()
 
     def get_role(self):
         return RoleChoices.AGRODEALER
@@ -220,7 +226,7 @@ class RegisterAccountSerializer(BaseRegistrationSerializer):
         user_utils.send_email_otp(email=user.email)
 
         return user
-    
+
 
 class VerifyAccountSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)

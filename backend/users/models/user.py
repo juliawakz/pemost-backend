@@ -94,7 +94,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         return None
 
     def is_systemadmin(self):
-        return self.role == RoleChoices.SYSTEMADMIN
+        return self.role == RoleChoices.SYSTEM_ADMIN
 
     def is_superextension(self):
         return self.role == RoleChoices.SUPER_EXTENSION
@@ -107,10 +107,3 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     def is_farmer(self):
         return self.role == RoleChoices.FARMER
-
-    # Legacy aliases for backward compatibility
-    def is_super_extension(self):
-        return self.is_superextension()
-
-    def is_e_extension(self):
-        return self.is_eextension()
