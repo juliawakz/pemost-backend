@@ -23,7 +23,7 @@ class Agrodealer(BaseModel):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="agrodealers",
+        related_name="agrodealer_users",
         limit_choices_to={'role': 'AGRODEALER'}
     )
     ward = models.ForeignKey(

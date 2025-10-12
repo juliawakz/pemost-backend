@@ -30,10 +30,10 @@ urlpatterns = [
         "api/v2/notifications/",
         include("notifications.urls", namespace="notifications")
     ),
-    # path(
-    #     "api/v2/farms/",
-    #     include("farms.urls", namespace="farms")
-    # ),
+    path(
+        "api/v2/app/",
+        include("app.urls", namespace="app")
+    ),
     # path(
     #     "api/v2/crops/",
     #     include("crops.urls", namespace="crops")

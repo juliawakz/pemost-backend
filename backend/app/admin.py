@@ -1,54 +1,32 @@
 from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
-from users.models import (
+from app.models import (
     EExtensionWorkRequest,
     FarmerWorkRequest,
-    Otp,
-    User,
     EExtensionOfficer,
     SuperExtensionOfficer,
-    Agrodealer
+    Agrodealer,
+    Farm
 )
 
 
-class UserAdmin(admin.ModelAdmin):
+class FarmAdmin(admin.ModelAdmin):
     list_display = [
-        "first_name",
-        "last_name",
-        "email",
-        "phone_number",
-        "role",
-        "is_verified",
+        "name",
+        "calc_size",
+        "user_size",
+        "ward",
+        "user",
+        "is_visible",
         "is_archived",
         "created_at",
     ]
-    list_filter = ["created_at", "updated_at", "role", "is_verified"]
+    list_filter = ["created_at", "updated_at", "is_visible", "ward"]
     search_fields = [
-        "email",
+        "ward",
         "id",
-        "first_name",
-        "last_name",
-    ]
-    list_per_page = 50
-    formfield_overrides = {models.JSONField: {"widget": JSONEditorWidget}}
-    save_on_top = True
-
-
-class OtpAdmin(admin.ModelAdmin):
-    list_display = [
-        "id",
-        "user",
-        "token",
-        "expiry_at",
-        "created_at",
-    ]
-    list_filter = [
-        "created_at",
-    ]
-
-    search_fields = [
-        "user__email",
+        "name"
     ]
     list_per_page = 50
     formfield_overrides = {models.JSONField: {"widget": JSONEditorWidget}}
@@ -109,10 +87,9 @@ class AgrodealerAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-admin.site.register(User, UserAdmin)
-admin.site.register(Otp, OtpAdmin)
 admin.site.register(EExtensionWorkRequest, EExtensionWorkRequestAdmin)
 admin.site.register(FarmerWorkRequest, FarmerWorkRequestAdmin)
 admin.site.register(EExtensionOfficer, EExtensionOfficerAdmin)
 admin.site.register(SuperExtensionOfficer, SuperExtensionOfficerAdmin)
 admin.site.register(Agrodealer, AgrodealerAdmin)
+admin.site.register(Farm, FarmAdmin)

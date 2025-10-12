@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from locations.models import Ward
-from users.models.e_extension import EExtensionOfficer
+from app.models.e_extension import EExtensionOfficer
 
 User = get_user_model()
 
@@ -37,20 +37,18 @@ class Farm(BaseModel):
     )
     ward = models.ForeignKey(
         Ward,
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
         blank=False
     )
-    owner = models.ForeignKey(
+    user = models.ForeignKey(
         User,
-        on_delete=models.SET_NULL,
-        related_name="farms",
-        null=True,
+        on_delete=models.CASCADE,
+        related_name="farm_users",
         limit_choices_to={'role': 'FARMER'}
     )
     e_extensions = models.ManyToManyField(
         EExtensionOfficer,
-        related_name='managed_farmers',
+        related_name='managed_farms',
         blank=True
     )
     is_visible = models.BooleanField(
@@ -64,9 +62,9 @@ class Farm(BaseModel):
 
     def clean(self):
         """Validate farm data"""
-        if self.owner and not self.owner.is_farmer():
+        if self.user and not self.user.is_farmer():
             raise ValidationError(
-                "Farm owner must have the role 'FARMER'."
+                "Farm user must have the role 'FARMER'."
             )
 
     def save(self, *args, **kwargs):
@@ -75,8 +73,8 @@ class Farm(BaseModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name or 'Unnamed'} - {self.owner.first_name}\
-            {self.owner.last_name}"
+        return f"{self.name or 'Unnamed'} - {self.user.first_name}\
+            {self.user.last_name}"
 
     def get_sqm_by_wgs84_polygon(self, geom):
         """
