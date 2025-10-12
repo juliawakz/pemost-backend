@@ -56,39 +56,55 @@ class EExtensionWorkRequest(BaseModel):
         ordering = ("-created_at",)
         verbose_name = _("E-Extension Work Request")
         verbose_name_plural = _("E-Extension Work Requests")
-        unique_together = [['e_extension', 'super_extension', 'status']]
+        # Only one pending request per e-extension/super-extension pair
+        constraints = [
+            models.UniqueConstraint(
+                fields=['e_extension', 'super_extension'],
+                condition=models.Q(status='PENDING', is_archived=False),
+                name='unique_pending_e_extension_request'
+            )
+        ]
         indexes = [
             models.Index(fields=['status', '-created_at']),
             models.Index(fields=['e_extension', 'status']),
             models.Index(fields=['super_extension', 'status']),
+            models.Index(fields=['is_archived', 'status']),
         ]
 
     def __str__(self):
         return f"{self.e_extension.full_name} → {self.super_extension.full_name} ({self.status})"
 
     def accept(self, response_message=None):
-        """Accept the work request and establish relationship"""
+        """
+        Accept the work request and establish relationship.
+        Archives the request after acceptance.
+        """
         from django.utils import timezone
         self.status = WorkRequestStatusChoices.ACCEPTED
         self.responded_at = timezone.now()
         if response_message:
             self.response_message = response_message
+        self.is_archived = True  # Archive the request
         self.save()
 
         # Add e-extension to super extension's managed list
-        e_ext_profile = self.e_extension.e_extension_profile
-        super_ext_profile = self.super_extension.super_extension_profile
+        e_ext_profile = self.e_extension.e_extension_users
+        super_ext_profile = self.super_extension.super_extension_users
         e_ext_profile.super_extensions.add(super_ext_profile)
         e_ext_profile.is_visible = True
         e_ext_profile.save()
 
     def reject(self, response_message=None):
-        """Reject the work request"""
+        """
+        Reject the work request.
+        Archives the request after rejection.
+        """
         from django.utils import timezone
         self.status = WorkRequestStatusChoices.REJECTED
         self.responded_at = timezone.now()
         if response_message:
             self.response_message = response_message
+        self.is_archived = True  # Archive the request
         self.save()
 
 
@@ -141,40 +157,56 @@ class FarmerWorkRequest(BaseModel):
         ordering = ("-created_at",)
         verbose_name = _("Farmer Work Request")
         verbose_name_plural = _("Farmer Work Requests")
-        unique_together = [['farmer', 'e_extension', 'status']]
+        # Only one pending request per farmer/e-extension pair
+        constraints = [
+            models.UniqueConstraint(
+                fields=['farmer', 'e_extension'],
+                condition=models.Q(status='PENDING', is_archived=False),
+                name='unique_pending_farmer_request'
+            )
+        ]
         indexes = [
             models.Index(fields=['status', '-created_at']),
             models.Index(fields=['farmer', 'status']),
             models.Index(fields=['e_extension', 'status']),
+            models.Index(fields=['is_archived', 'status']),
         ]
 
     def __str__(self):
         return f"{self.farmer.full_name} → {self.e_extension.full_name} ({self.status})"
 
     def accept(self, response_message=None):
-        """Accept the work request and establish relationship"""
+        """
+        Accept the work request and establish relationship.
+        Archives the request after acceptance.
+        """
         from django.utils import timezone
-        from farms.models import Farm
+        from app.models.farm import Farm
 
         self.status = WorkRequestStatusChoices.ACCEPTED
         self.responded_at = timezone.now()
         if response_message:
             self.response_message = response_message
+        self.is_archived = True  # Archive the request
         self.save()
 
         # Add e-extension to farmer's farms
-        e_ext_profile = self.e_extension.e_extension_profile
-        farmer_farms = Farm.objects.filter(owner=self.farmer)
+        e_ext_profile = self.e_extension.e_extension_users
+        farmer_farms = Farm.objects.filter(user=self.farmer)
         for farm in farmer_farms:
             farm.e_extensions.add(e_ext_profile)
             farm.is_visible = True
             farm.save()
 
     def reject(self, response_message=None):
-        """Reject the work request"""
+        """
+        Reject the work request.
+        Archives the request after rejection.
+        """
         from django.utils import timezone
         self.status = WorkRequestStatusChoices.REJECTED
         self.responded_at = timezone.now()
         if response_message:
             self.response_message = response_message
+        self.is_archived = True  # Archive the request
         self.save()

@@ -1,0 +1,4533 @@
+openapi: 3.0.3
+info:
+  title: PEMOST SOLUTION
+  version: 2.0.0
+  description: PEMOST solution platform
+paths:
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v2/app/agrodealers/:
+    get:
+      operationId: api_v2_app_agrodealers_list
+      parameters:
+      - in: query
+        name: is_archived
+        schema:
+          type: boolean
+      - in: query
+        name: is_visible
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: user
+        schema:
+          type: string
+      - in: query
+        name: user_email
+        schema:
+          type: string
+      - in: query
+        name: ward
+        schema:
+          type: string
+      - in: query
+        name: ward_name
+        schema:
+          type: string
+      tags:
+      - App - Agrodealers
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAgrodealerReadList'
+          description: ''
+    post:
+      operationId: api_v2_app_agrodealers_create
+      description: Create a new agrodealer profile with proper validation.
+      tags:
+      - App - Agrodealers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgrodealerWriteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AgrodealerWriteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AgrodealerWriteRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgrodealerWrite'
+          description: ''
+  /api/v2/app/agrodealers/{id}/:
+    get:
+      operationId: api_v2_app_agrodealers_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Agro Dealer.
+        required: true
+      tags:
+      - App - Agrodealers
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgrodealerRead'
+          description: ''
+    put:
+      operationId: api_v2_app_agrodealers_update
+      description: |-
+        Update an agrodealer profile.
+        Allows updating: name, ward, location, is_visible.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Agro Dealer.
+        required: true
+      tags:
+      - App - Agrodealers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgrodealerUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AgrodealerUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AgrodealerUpdateRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgrodealerUpdate'
+          description: ''
+    patch:
+      operationId: api_v2_app_agrodealers_partial_update
+      description: Partially update an agrodealer profile (PATCH).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Agro Dealer.
+        required: true
+      tags:
+      - App - Agrodealers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAgrodealerUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAgrodealerUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAgrodealerUpdateRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgrodealerUpdate'
+          description: ''
+    delete:
+      operationId: api_v2_app_agrodealers_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Agro Dealer.
+        required: true
+      tags:
+      - App - Agrodealers
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v2/app/e-extension-officers/:
+    get:
+      operationId: api_v2_app_e_extension_officers_list
+      parameters:
+      - in: query
+        name: is_archived
+        schema:
+          type: boolean
+      - in: query
+        name: is_visible
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: user
+        schema:
+          type: string
+      - in: query
+        name: user_email
+        schema:
+          type: string
+      - in: query
+        name: user_first_name
+        schema:
+          type: string
+      - in: query
+        name: user_last_name
+        schema:
+          type: string
+      - in: query
+        name: ward
+        schema:
+          type: string
+      - in: query
+        name: ward_name
+        schema:
+          type: string
+      tags:
+      - App - E-Extension Officers
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEExtensionOfficerReadList'
+          description: ''
+    post:
+      operationId: api_v2_app_e_extension_officers_create
+      description: Create a new E-Extension officer profile with proper validation.
+      tags:
+      - App - E-Extension Officers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EExtensionOfficerWriteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EExtensionOfficerWriteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EExtensionOfficerWriteRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EExtensionOfficerWrite'
+          description: ''
+  /api/v2/app/e-extension-officers/{id}/:
+    get:
+      operationId: api_v2_app_e_extension_officers_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this E-Extension Officer.
+        required: true
+      tags:
+      - App - E-Extension Officers
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EExtensionOfficerRead'
+          description: ''
+    put:
+      operationId: api_v2_app_e_extension_officers_update
+      description: |-
+        Update an E-Extension officer profile.
+        Allows updating: wards, is_visible.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this E-Extension Officer.
+        required: true
+      tags:
+      - App - E-Extension Officers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EExtensionOfficerUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EExtensionOfficerUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EExtensionOfficerUpdateRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EExtensionOfficerUpdate'
+          description: ''
+    patch:
+      operationId: api_v2_app_e_extension_officers_partial_update
+      description: Partially update an E-Extension officer profile (PATCH).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this E-Extension Officer.
+        required: true
+      tags:
+      - App - E-Extension Officers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEExtensionOfficerUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEExtensionOfficerUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEExtensionOfficerUpdateRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EExtensionOfficerUpdate'
+          description: ''
+    delete:
+      operationId: api_v2_app_e_extension_officers_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this E-Extension Officer.
+        required: true
+      tags:
+      - App - E-Extension Officers
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v2/app/e-extension-work-requests/:
+    get:
+      operationId: api_v2_app_e_extension_work_requests_list
+      description: |-
+        ViewSet for E-Extension Officers to send work requests to
+        Super Extension Officers.
+
+        - E-Extensions can create requests to Super Extensions
+        - Super Extensions can accept/reject requests sent to them
+        - Both parties can view their requests
+        - Archived requests (accepted/rejected) are not shown
+      summary: List E-Extension work requests
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - App - E-Extension Work Requests
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEExtensionWorkRequestReadList'
+          description: ''
+    post:
+      operationId: api_v2_app_e_extension_work_requests_create
+      description: |-
+        ViewSet for E-Extension Officers to send work requests to
+        Super Extension Officers.
+
+        - E-Extensions can create requests to Super Extensions
+        - Super Extensions can accept/reject requests sent to them
+        - Both parties can view their requests
+        - Archived requests (accepted/rejected) are not shown
+      summary: Send work request to Super Extension
+      tags:
+      - App - E-Extension Work Requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EExtensionWorkRequestCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EExtensionWorkRequestCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EExtensionWorkRequestCreateRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EExtensionWorkRequestCreate'
+          description: ''
+  /api/v2/app/e-extension-work-requests/{id}/:
+    get:
+      operationId: api_v2_app_e_extension_work_requests_retrieve
+      description: |-
+        ViewSet for E-Extension Officers to send work requests to
+        Super Extension Officers.
+
+        - E-Extensions can create requests to Super Extensions
+        - Super Extensions can accept/reject requests sent to them
+        - Both parties can view their requests
+        - Archived requests (accepted/rejected) are not shown
+      summary: Get work request details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this E-Extension Work Request.
+        required: true
+      tags:
+      - App - E-Extension Work Requests
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EExtensionWorkRequestRead'
+          description: ''
+  /api/v2/app/e-extension-work-requests/{id}/accept/:
+    post:
+      operationId: api_v2_app_e_extension_work_requests_accept_create
+      description: |-
+        Accept a work request (Super Extension only).
+        Establishes the relationship between E-Extension and
+        Super Extension.
+        Archives the request after acceptance.
+      summary: Accept work request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this E-Extension Work Request.
+        required: true
+      tags:
+      - App - E-Extension Work Requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EExtensionWorkRequestRead'
+          description: ''
+  /api/v2/app/e-extension-work-requests/{id}/reject/:
+    post:
+      operationId: api_v2_app_e_extension_work_requests_reject_create
+      description: |-
+        Reject a work request (Super Extension only).
+        Archives the request after rejection.
+      summary: Reject work request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this E-Extension Work Request.
+        required: true
+      tags:
+      - App - E-Extension Work Requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EExtensionWorkRequestRead'
+          description: ''
+  /api/v2/app/farmer-work-requests/:
+    get:
+      operationId: api_v2_app_farmer_work_requests_list
+      description: |-
+        ViewSet for Farmers to send work requests to E-Extension Officers.
+
+        - Farmers can create requests to E-Extensions
+        - E-Extensions can accept/reject requests sent to them
+        - Both parties can view their requests
+        - Archived requests (accepted/rejected) are not shown
+      summary: List farmer work requests
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - App - Farmer Work Requests
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFarmerWorkRequestReadList'
+          description: ''
+    post:
+      operationId: api_v2_app_farmer_work_requests_create
+      description: |-
+        ViewSet for Farmers to send work requests to E-Extension Officers.
+
+        - Farmers can create requests to E-Extensions
+        - E-Extensions can accept/reject requests sent to them
+        - Both parties can view their requests
+        - Archived requests (accepted/rejected) are not shown
+      summary: Send work request to E-Extension
+      tags:
+      - App - Farmer Work Requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FarmerWorkRequestCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FarmerWorkRequestCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FarmerWorkRequestCreateRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmerWorkRequestCreate'
+          description: ''
+  /api/v2/app/farmer-work-requests/{id}/:
+    get:
+      operationId: api_v2_app_farmer_work_requests_retrieve
+      description: |-
+        ViewSet for Farmers to send work requests to E-Extension Officers.
+
+        - Farmers can create requests to E-Extensions
+        - E-Extensions can accept/reject requests sent to them
+        - Both parties can view their requests
+        - Archived requests (accepted/rejected) are not shown
+      summary: Get work request details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Farmer Work Request.
+        required: true
+      tags:
+      - App - Farmer Work Requests
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmerWorkRequestRead'
+          description: ''
+  /api/v2/app/farmer-work-requests/{id}/accept/:
+    post:
+      operationId: api_v2_app_farmer_work_requests_accept_create
+      description: |-
+        Accept a work request (E-Extension only).
+        Establishes the relationship between Farmer and E-Extension.
+        Archives the request after acceptance.
+      summary: Accept work request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Farmer Work Request.
+        required: true
+      tags:
+      - App - Farmer Work Requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmerWorkRequestRead'
+          description: ''
+  /api/v2/app/farmer-work-requests/{id}/reject/:
+    post:
+      operationId: api_v2_app_farmer_work_requests_reject_create
+      description: |-
+        Reject a work request (E-Extension only).
+        Archives the request after rejection.
+      summary: Reject work request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Farmer Work Request.
+        required: true
+      tags:
+      - App - Farmer Work Requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AcceptRejectRequestRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmerWorkRequestRead'
+          description: ''
+  /api/v2/app/farms/:
+    get:
+      operationId: api_v2_app_farms_list
+      parameters:
+      - in: query
+        name: calc_size_max
+        schema:
+          type: number
+          format: float
+      - in: query
+        name: calc_size_min
+        schema:
+          type: number
+          format: float
+      - in: query
+        name: is_archived
+        schema:
+          type: boolean
+      - in: query
+        name: is_visible
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: user
+        schema:
+          type: string
+      - in: query
+        name: user_email
+        schema:
+          type: string
+      - in: query
+        name: user_size_max
+        schema:
+          type: number
+          format: float
+      - in: query
+        name: user_size_min
+        schema:
+          type: number
+          format: float
+      - in: query
+        name: ward
+        schema:
+          type: string
+      - in: query
+        name: ward_name
+        schema:
+          type: string
+      tags:
+      - App - Farms
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFarmReadList'
+          description: ''
+    post:
+      operationId: api_v2_app_farms_create
+      description: Create a new farm with proper validation.
+      tags:
+      - App - Farms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FarmWriteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FarmWriteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FarmWriteRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmWrite'
+          description: ''
+  /api/v2/app/farms/{id}/:
+    get:
+      operationId: api_v2_app_farms_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this farm.
+        required: true
+      tags:
+      - App - Farms
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmRead'
+          description: ''
+    put:
+      operationId: api_v2_app_farms_update
+      description: |-
+        Update a farm (full update).
+        Only name, boundary, and user_size can be updated.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this farm.
+        required: true
+      tags:
+      - App - Farms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FarmUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FarmUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FarmUpdateRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmUpdate'
+          description: ''
+    patch:
+      operationId: api_v2_app_farms_partial_update
+      description: |-
+        Partially update a farm (PATCH).
+        Only name, boundary, and user_size can be updated.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this farm.
+        required: true
+      tags:
+      - App - Farms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedFarmUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedFarmUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedFarmUpdateRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmUpdate'
+          description: ''
+    delete:
+      operationId: api_v2_app_farms_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this farm.
+        required: true
+      tags:
+      - App - Farms
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v2/app/super-extension-officers/:
+    get:
+      operationId: api_v2_app_super_extension_officers_list
+      parameters:
+      - in: query
+        name: county
+        schema:
+          type: string
+      - in: query
+        name: county_name
+        schema:
+          type: string
+      - in: query
+        name: is_archived
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: user
+        schema:
+          type: string
+      - in: query
+        name: user_email
+        schema:
+          type: string
+      - in: query
+        name: user_first_name
+        schema:
+          type: string
+      - in: query
+        name: user_last_name
+        schema:
+          type: string
+      tags:
+      - App - Super Extension Officers
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSuperExtensionOfficerReadList'
+          description: ''
+    post:
+      operationId: api_v2_app_super_extension_officers_create
+      description: Create a new Super Extension officer profile.
+      tags:
+      - App - Super Extension Officers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuperExtensionOfficerWriteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SuperExtensionOfficerWriteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SuperExtensionOfficerWriteRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuperExtensionOfficerWrite'
+          description: ''
+  /api/v2/app/super-extension-officers/{id}/:
+    get:
+      operationId: api_v2_app_super_extension_officers_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Super-Extension Officer.
+        required: true
+      tags:
+      - App - Super Extension Officers
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuperExtensionOfficerRead'
+          description: ''
+    put:
+      operationId: api_v2_app_super_extension_officers_update
+      description: |-
+        Update a Super Extension officer profile.
+        Allows updating: counties.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Super-Extension Officer.
+        required: true
+      tags:
+      - App - Super Extension Officers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuperExtensionOfficerUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SuperExtensionOfficerUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SuperExtensionOfficerUpdateRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuperExtensionOfficerUpdate'
+          description: ''
+    patch:
+      operationId: api_v2_app_super_extension_officers_partial_update
+      description: Partially update a Super Extension officer profile (PATCH).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Super-Extension Officer.
+        required: true
+      tags:
+      - App - Super Extension Officers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSuperExtensionOfficerUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSuperExtensionOfficerUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSuperExtensionOfficerUpdateRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuperExtensionOfficerUpdate'
+          description: ''
+    delete:
+      operationId: api_v2_app_super_extension_officers_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Super-Extension Officer.
+        required: true
+      tags:
+      - App - Super Extension Officers
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v2/locations/counties/:
+    get:
+      operationId: api_v2_locations_counties_list
+      parameters:
+      - in: query
+        name: county_id
+        schema:
+          type: integer
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Locations - Counties
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCountyList'
+          description: ''
+    post:
+      operationId: api_v2_locations_counties_create
+      tags:
+      - Locations - Counties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CountyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CountyRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/County'
+          description: ''
+  /api/v2/locations/counties/{id}/:
+    get:
+      operationId: api_v2_locations_counties_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this County.
+        required: true
+      tags:
+      - Locations - Counties
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/County'
+          description: ''
+    put:
+      operationId: api_v2_locations_counties_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this County.
+        required: true
+      tags:
+      - Locations - Counties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CountyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CountyRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/County'
+          description: ''
+    patch:
+      operationId: api_v2_locations_counties_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this County.
+        required: true
+      tags:
+      - Locations - Counties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCountyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCountyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCountyRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/County'
+          description: ''
+    delete:
+      operationId: api_v2_locations_counties_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this County.
+        required: true
+      tags:
+      - Locations - Counties
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v2/locations/subcounties/:
+    get:
+      operationId: api_v2_locations_subcounties_list
+      parameters:
+      - in: query
+        name: county_id
+        schema:
+          type: integer
+      - in: query
+        name: county_name
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: subcounty_id
+        schema:
+          type: integer
+      tags:
+      - Locations - Subcounties
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSubCountyList'
+          description: ''
+    post:
+      operationId: api_v2_locations_subcounties_create
+      tags:
+      - Locations - Subcounties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubCountyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubCountyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubCountyRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubCounty'
+          description: ''
+  /api/v2/locations/subcounties/{id}/:
+    get:
+      operationId: api_v2_locations_subcounties_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this SubCounty.
+        required: true
+      tags:
+      - Locations - Subcounties
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubCounty'
+          description: ''
+    put:
+      operationId: api_v2_locations_subcounties_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this SubCounty.
+        required: true
+      tags:
+      - Locations - Subcounties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubCountyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubCountyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubCountyRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubCounty'
+          description: ''
+    patch:
+      operationId: api_v2_locations_subcounties_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this SubCounty.
+        required: true
+      tags:
+      - Locations - Subcounties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSubCountyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSubCountyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSubCountyRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubCounty'
+          description: ''
+    delete:
+      operationId: api_v2_locations_subcounties_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this SubCounty.
+        required: true
+      tags:
+      - Locations - Subcounties
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v2/locations/wards/:
+    get:
+      operationId: api_v2_locations_wards_list
+      parameters:
+      - in: query
+        name: county_id
+        schema:
+          type: integer
+      - in: query
+        name: county_name
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: subcounty_id
+        schema:
+          type: integer
+      - in: query
+        name: subcounty_name
+        schema:
+          type: string
+      - in: query
+        name: ward_id
+        schema:
+          type: integer
+      tags:
+      - Locations - Wards
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWardList'
+          description: ''
+    post:
+      operationId: api_v2_locations_wards_create
+      tags:
+      - Locations - Wards
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WardRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WardRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WardRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ward'
+          description: ''
+  /api/v2/locations/wards/{id}/:
+    get:
+      operationId: api_v2_locations_wards_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Ward.
+        required: true
+      tags:
+      - Locations - Wards
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ward'
+          description: ''
+    put:
+      operationId: api_v2_locations_wards_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Ward.
+        required: true
+      tags:
+      - Locations - Wards
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WardRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WardRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WardRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ward'
+          description: ''
+    patch:
+      operationId: api_v2_locations_wards_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Ward.
+        required: true
+      tags:
+      - Locations - Wards
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWardRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWardRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWardRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ward'
+          description: ''
+    delete:
+      operationId: api_v2_locations_wards_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Ward.
+        required: true
+      tags:
+      - Locations - Wards
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v2/notifications/:
+    get:
+      operationId: api_v2_notifications_list
+      description: |-
+        Users can fetch their notifications.
+        Only update allowed is marking as read (via custom actions).
+      parameters:
+      - in: query
+        name: channel
+        schema:
+          type: string
+      - in: query
+        name: is_read
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: subject
+        schema:
+          type: string
+      tags:
+      - Notifications
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedNotificationList'
+          description: ''
+    post:
+      operationId: api_v2_notifications_create
+      description: |-
+        Users can fetch their notifications.
+        Only update allowed is marking as read (via custom actions).
+      tags:
+      - Notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v2/notifications/{id}/:
+    get:
+      operationId: api_v2_notifications_retrieve
+      description: |-
+        Users can fetch their notifications.
+        Only update allowed is marking as read (via custom actions).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Notification.
+        required: true
+      tags:
+      - Notifications
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+    put:
+      operationId: api_v2_notifications_update
+      description: |-
+        Users can fetch their notifications.
+        Only update allowed is marking as read (via custom actions).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Notification.
+        required: true
+      tags:
+      - Notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+    patch:
+      operationId: api_v2_notifications_partial_update
+      description: |-
+        Users can fetch their notifications.
+        Only update allowed is marking as read (via custom actions).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Notification.
+        required: true
+      tags:
+      - Notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+    delete:
+      operationId: api_v2_notifications_destroy
+      description: |-
+        Users can fetch their notifications.
+        Only update allowed is marking as read (via custom actions).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Notification.
+        required: true
+      tags:
+      - Notifications
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v2/notifications/{id}/mark_as_read/:
+    post:
+      operationId: api_v2_notifications_mark_as_read_create
+      description: Mark a single notification as read
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Notification.
+        required: true
+      tags:
+      - Notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v2/notifications/mark_all_as_read/:
+    post:
+      operationId: api_v2_notifications_mark_all_as_read_create
+      description: Mark all notifications for the user as read and return them
+      tags:
+      - Notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v2/users/generate/apikey/:
+    post:
+      operationId: api_v2_users_generate_apikey_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthTokenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthTokenRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthTokenRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+          description: ''
+  /api/v2/users/login/:
+    post:
+      operationId: api_v2_users_login_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
+  /api/v2/users/logout/:
+    post:
+      operationId: api_v2_users_logout_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logout'
+          description: ''
+  /api/v2/users/password/change/:
+    post:
+      operationId: api_v2_users_password_change_create
+      tags:
+      - Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChangeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordChangeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordChangeRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v2/users/password/reset/:
+    post:
+      operationId: api_v2_users_password_reset_create
+      tags:
+      - Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordReset'
+          description: ''
+  /api/v2/users/password/reset/confirm/:
+    post:
+      operationId: api_v2_users_password_reset_confirm_create
+      tags:
+      - Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetConfirm'
+          description: ''
+  /api/v2/users/profile/:
+    get:
+      operationId: api_v2_users_profile_retrieve
+      tags:
+      - Profile
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+    put:
+      operationId: api_v2_users_profile_update
+      tags:
+      - Profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProfileRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+    patch:
+      operationId: api_v2_users_profile_partial_update
+      tags:
+      - Profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+  /api/v2/users/register/account/:
+    post:
+      operationId: api_v2_users_register_account_create
+      description: Use role-specific registration
+      tags:
+      - User Registration - Account Registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterAccountRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterAccountRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterAccountRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterAccount'
+          description: ''
+  /api/v2/users/roles/:
+    get:
+      operationId: api_v2_users_roles_retrieve
+      description: Endpoint to fetch all RoleChoices.
+      tags:
+      - Users
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleChoice'
+          description: ''
+  /api/v2/users/token/refresh/:
+    post:
+      operationId: api_v2_users_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v2/users/verify/account/:
+    post:
+      operationId: api_v2_users_verify_account_create
+      description: |-
+        API endpoint for email verification using OTP.
+        Users must verify their email address using the OTP sent during
+        registration. Once verified, users can log in to the system.
+      tags:
+      - User Registration - Account Verification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyAccountRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyAccountRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyAccountRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyAccount'
+          description: ''
+components:
+  schemas:
+    AcceptRejectRequestRequest:
+      type: object
+      description: Serializer for accepting or rejecting work requests.
+      properties:
+        response_message:
+          type: string
+          maxLength: 500
+    AgrodealerRead:
+      type: object
+      description: |-
+        Serializer for reading/retrieving agrodealer data.
+        Includes nested user and ward information, and location details.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 30
+        user:
+          allOf:
+          - $ref: '#/components/schemas/UserRead'
+          readOnly: true
+        ward:
+          allOf:
+          - $ref: '#/components/schemas/MiniWard'
+          readOnly: true
+        location:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Point
+            coordinates:
+              type: array
+              items:
+                type: number
+                format: float
+              example:
+              - 12.9721
+              - 77.5933
+              minItems: 2
+              maxItems: 3
+        latitude:
+          type: number
+          format: double
+          readOnly: true
+        longitude:
+          type: number
+          format: double
+          readOnly: true
+        address:
+          type: string
+          readOnly: true
+          nullable: true
+        is_visible:
+          type: boolean
+        is_archived:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - address
+      - created_at
+      - id
+      - is_archived
+      - latitude
+      - location
+      - longitude
+      - name
+      - updated_at
+      - user
+      - ward
+    AgrodealerUpdate:
+      type: object
+      description: |-
+        Serializer for updating agrodealer data.
+        Allows updating: name, ward, location, is_visible.
+      properties:
+        name:
+          type: string
+          maxLength: 30
+        ward:
+          type: string
+          format: uuid
+        location:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Point
+            coordinates:
+              type: array
+              items:
+                type: number
+                format: float
+              example:
+              - 12.9721
+              - 77.5933
+              minItems: 2
+              maxItems: 3
+        is_visible:
+          type: boolean
+      required:
+      - location
+      - name
+      - ward
+    AgrodealerUpdateRequest:
+      type: object
+      description: |-
+        Serializer for updating agrodealer data.
+        Allows updating: name, ward, location, is_visible.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        ward:
+          type: string
+          format: uuid
+        location:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Point
+            coordinates:
+              type: array
+              items:
+                type: number
+                format: float
+              example:
+              - 12.9721
+              - 77.5933
+              minItems: 2
+              maxItems: 3
+        is_visible:
+          type: boolean
+      required:
+      - location
+      - name
+      - ward
+    AgrodealerWrite:
+      type: object
+      description: |-
+        Serializer for creating new agrodealers.
+        Requires: name, user, ward, location.
+        Address is auto-generated from location.
+      properties:
+        name:
+          type: string
+          maxLength: 30
+        user:
+          type: string
+          format: uuid
+        ward:
+          type: string
+          format: uuid
+        location:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Point
+            coordinates:
+              type: array
+              items:
+                type: number
+                format: float
+              example:
+              - 12.9721
+              - 77.5933
+              minItems: 2
+              maxItems: 3
+      required:
+      - location
+      - name
+      - user
+      - ward
+    AgrodealerWriteRequest:
+      type: object
+      description: |-
+        Serializer for creating new agrodealers.
+        Requires: name, user, ward, location.
+        Address is auto-generated from location.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        user:
+          type: string
+          format: uuid
+        ward:
+          type: string
+          format: uuid
+        location:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Point
+            coordinates:
+              type: array
+              items:
+                type: number
+                format: float
+              example:
+              - 12.9721
+              - 77.5933
+              minItems: 2
+              maxItems: 3
+      required:
+      - location
+      - name
+      - user
+      - ward
+    AuthToken:
+      type: object
+      properties:
+        token:
+          type: string
+          readOnly: true
+      required:
+      - token
+    AuthTokenRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+      - username
+    County:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        county_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique number assigned to the county.
+        name:
+          type: string
+          description: The unique name assigned to the county.
+          maxLength: 100
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - county_id
+      - created_at
+      - id
+      - name
+      - updated_at
+    CountyRequest:
+      type: object
+      properties:
+        county_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique number assigned to the county.
+        name:
+          type: string
+          minLength: 1
+          description: The unique name assigned to the county.
+          maxLength: 100
+      required:
+      - county_id
+      - name
+    EExtensionOfficerRead:
+      type: object
+      description: |-
+        Serializer for reading/retrieving E-Extension officer data.
+        Includes nested user, wards, and super extension information.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/UserRead'
+          readOnly: true
+        wards:
+          type: array
+          items:
+            $ref: '#/components/schemas/MiniWard'
+          readOnly: true
+        super_extensions_count:
+          type: integer
+          readOnly: true
+        managed_farms_count:
+          type: integer
+          readOnly: true
+        is_visible:
+          type: boolean
+          description: If True, e-extension is visible to super extensionofficers
+            allowed in their county
+        is_archived:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - is_archived
+      - managed_farms_count
+      - super_extensions_count
+      - updated_at
+      - user
+      - wards
+    EExtensionOfficerUpdate:
+      type: object
+      description: |-
+        Serializer for updating E-Extension officer data.
+        Allows updating: wards, is_visible.
+      properties:
+        wards:
+          type: array
+          items:
+            type: string
+            format: uuid
+        is_visible:
+          type: boolean
+          description: If True, e-extension is visible to super extensionofficers
+            allowed in their county
+      required:
+      - wards
+    EExtensionOfficerUpdateRequest:
+      type: object
+      description: |-
+        Serializer for updating E-Extension officer data.
+        Allows updating: wards, is_visible.
+      properties:
+        wards:
+          type: array
+          items:
+            type: string
+            format: uuid
+        is_visible:
+          type: boolean
+          description: If True, e-extension is visible to super extensionofficers
+            allowed in their county
+      required:
+      - wards
+    EExtensionOfficerWrite:
+      type: object
+      description: |-
+        Serializer for creating new E-Extension officers.
+        Requires: user, wards.
+      properties:
+        user:
+          type: string
+          format: uuid
+        wards:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - user
+      - wards
+    EExtensionOfficerWriteRequest:
+      type: object
+      description: |-
+        Serializer for creating new E-Extension officers.
+        Requires: user, wards.
+      properties:
+        user:
+          type: string
+          format: uuid
+        wards:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - user
+      - wards
+    EExtensionWorkRequestCreate:
+      type: object
+      description: |-
+        Serializer for creating E-Extension work requests.
+        Only E-Extensions can create requests to Super Extensions.
+      properties:
+        super_extension:
+          type: string
+          format: uuid
+        message:
+          type: string
+          nullable: true
+          description: Optional message from e-extension to super extension
+      required:
+      - super_extension
+    EExtensionWorkRequestCreateRequest:
+      type: object
+      description: |-
+        Serializer for creating E-Extension work requests.
+        Only E-Extensions can create requests to Super Extensions.
+      properties:
+        super_extension:
+          type: string
+          format: uuid
+        message:
+          type: string
+          nullable: true
+          description: Optional message from e-extension to super extension
+      required:
+      - super_extension
+    EExtensionWorkRequestRead:
+      type: object
+      description: |-
+        Serializer for reading/retrieving E-Extension work requests.
+        Includes nested e-extension and super-extension user information.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        e_extension:
+          allOf:
+          - $ref: '#/components/schemas/UserRead'
+          readOnly: true
+        super_extension:
+          allOf:
+          - $ref: '#/components/schemas/UserRead'
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/WorkRequestStatusChoices'
+          readOnly: true
+        message:
+          type: string
+          nullable: true
+          description: Optional message from e-extension to super extension
+        response_message:
+          type: string
+          readOnly: true
+          nullable: true
+          description: Optional response message when accepting/rejecting
+        notification_sent:
+          type: boolean
+          readOnly: true
+          description: Whether email notification has been sent
+        responded_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          description: When the request was accepted or rejected
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - e_extension
+      - id
+      - notification_sent
+      - responded_at
+      - response_message
+      - status
+      - super_extension
+      - updated_at
+    FarmRead:
+      type: object
+      description: |-
+        Serializer for reading/retrieving farm data.
+        Includes nested user and ward information, and calculated size.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 250
+        boundary:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Polygon
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+                  example:
+                  - 12.9721
+                  - 77.5933
+                  minItems: 2
+                  maxItems: 3
+                example:
+                - - 22.4707
+                  - 70.0577
+                - - 12.9721
+                  - 77.5933
+                minItems: 4
+              example:
+              - - - 0.0
+                  - 0.0
+                - - 0.0
+                  - 50.0
+                - - 50.0
+                  - 50.0
+                - - 50.0
+                  - 0.0
+                - - 0.0
+                  - 0.0
+        user_size:
+          type: number
+          format: double
+          minimum: 0
+          nullable: true
+        calc_size:
+          type: number
+          format: double
+          readOnly: true
+          nullable: true
+        ward:
+          allOf:
+          - $ref: '#/components/schemas/MiniWard'
+          readOnly: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/UserRead'
+          readOnly: true
+        e_extensions_count:
+          type: integer
+          readOnly: true
+        is_visible:
+          type: boolean
+          description: If True, farmer is visible to allowed e-extension officers
+            in their ward
+        is_archived:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - boundary
+      - calc_size
+      - created_at
+      - e_extensions_count
+      - id
+      - is_archived
+      - name
+      - updated_at
+      - user
+      - ward
+    FarmUpdate:
+      type: object
+      description: |-
+        Serializer for updating farm data.
+        Only allows updating: name, boundary, and user_size.
+      properties:
+        name:
+          type: string
+          maxLength: 250
+        boundary:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Polygon
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+                  example:
+                  - 12.9721
+                  - 77.5933
+                  minItems: 2
+                  maxItems: 3
+                example:
+                - - 22.4707
+                  - 70.0577
+                - - 12.9721
+                  - 77.5933
+                minItems: 4
+              example:
+              - - - 0.0
+                  - 0.0
+                - - 0.0
+                  - 50.0
+                - - 50.0
+                  - 50.0
+                - - 50.0
+                  - 0.0
+                - - 0.0
+                  - 0.0
+        user_size:
+          type: number
+          format: double
+          minimum: 0
+          nullable: true
+      required:
+      - boundary
+      - name
+    FarmUpdateRequest:
+      type: object
+      description: |-
+        Serializer for updating farm data.
+        Only allows updating: name, boundary, and user_size.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 250
+        boundary:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Polygon
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+                  example:
+                  - 12.9721
+                  - 77.5933
+                  minItems: 2
+                  maxItems: 3
+                example:
+                - - 22.4707
+                  - 70.0577
+                - - 12.9721
+                  - 77.5933
+                minItems: 4
+              example:
+              - - - 0.0
+                  - 0.0
+                - - 0.0
+                  - 50.0
+                - - 50.0
+                  - 50.0
+                - - 50.0
+                  - 0.0
+                - - 0.0
+                  - 0.0
+        user_size:
+          type: number
+          format: double
+          minimum: 0
+          nullable: true
+      required:
+      - boundary
+      - name
+    FarmWrite:
+      type: object
+      description: |-
+        Serializer for creating new farms.
+        Requires: name, boundary, ward, user.
+        Optional: user_size (farmer's estimated size).
+      properties:
+        name:
+          type: string
+          maxLength: 250
+        boundary:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Polygon
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+                  example:
+                  - 12.9721
+                  - 77.5933
+                  minItems: 2
+                  maxItems: 3
+                example:
+                - - 22.4707
+                  - 70.0577
+                - - 12.9721
+                  - 77.5933
+                minItems: 4
+              example:
+              - - - 0.0
+                  - 0.0
+                - - 0.0
+                  - 50.0
+                - - 50.0
+                  - 50.0
+                - - 50.0
+                  - 0.0
+                - - 0.0
+                  - 0.0
+        user_size:
+          type: number
+          format: double
+          minimum: 0
+          nullable: true
+        ward:
+          type: string
+          format: uuid
+        user:
+          type: string
+          format: uuid
+      required:
+      - boundary
+      - name
+      - user
+      - ward
+    FarmWriteRequest:
+      type: object
+      description: |-
+        Serializer for creating new farms.
+        Requires: name, boundary, ward, user.
+        Optional: user_size (farmer's estimated size).
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 250
+        boundary:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Polygon
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+                  example:
+                  - 12.9721
+                  - 77.5933
+                  minItems: 2
+                  maxItems: 3
+                example:
+                - - 22.4707
+                  - 70.0577
+                - - 12.9721
+                  - 77.5933
+                minItems: 4
+              example:
+              - - - 0.0
+                  - 0.0
+                - - 0.0
+                  - 50.0
+                - - 50.0
+                  - 50.0
+                - - 50.0
+                  - 0.0
+                - - 0.0
+                  - 0.0
+        user_size:
+          type: number
+          format: double
+          minimum: 0
+          nullable: true
+        ward:
+          type: string
+          format: uuid
+        user:
+          type: string
+          format: uuid
+      required:
+      - boundary
+      - name
+      - user
+      - ward
+    FarmerWorkRequestCreate:
+      type: object
+      description: |-
+        Serializer for creating farmer work requests.
+        Only farmers can create requests to e-extensions.
+      properties:
+        e_extension:
+          type: string
+          format: uuid
+        message:
+          type: string
+          nullable: true
+          description: Optional message from farmer to e-extension
+      required:
+      - e_extension
+    FarmerWorkRequestCreateRequest:
+      type: object
+      description: |-
+        Serializer for creating farmer work requests.
+        Only farmers can create requests to e-extensions.
+      properties:
+        e_extension:
+          type: string
+          format: uuid
+        message:
+          type: string
+          nullable: true
+          description: Optional message from farmer to e-extension
+      required:
+      - e_extension
+    FarmerWorkRequestRead:
+      type: object
+      description: |-
+        Serializer for reading/retrieving farmer work requests.
+        Includes nested farmer and e-extension user information.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        farmer:
+          allOf:
+          - $ref: '#/components/schemas/UserRead'
+          readOnly: true
+        e_extension:
+          allOf:
+          - $ref: '#/components/schemas/UserRead'
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/WorkRequestStatusChoices'
+          readOnly: true
+        message:
+          type: string
+          nullable: true
+          description: Optional message from farmer to e-extension
+        response_message:
+          type: string
+          readOnly: true
+          nullable: true
+          description: Optional response message when accepting/rejecting
+        notification_sent:
+          type: boolean
+          readOnly: true
+          description: Whether email notification has been sent
+        responded_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          description: When the request was accepted or rejected
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - e_extension
+      - farmer
+      - id
+      - notification_sent
+      - responded_at
+      - response_message
+      - status
+      - updated_at
+    Login:
+      type: object
+      properties:
+        user:
+          allOf:
+          - $ref: '#/components/schemas/UserRead'
+          readOnly: true
+        token:
+          allOf:
+          - $ref: '#/components/schemas/Token'
+          readOnly: true
+      required:
+      - token
+      - user
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - password
+    Logout:
+      type: object
+      properties:
+        refresh:
+          type: string
+      required:
+      - refresh
+    LogoutRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    MessageTypeEnum:
+      enum:
+      - EMAIL
+      - PUSH
+      type: string
+      description: |-
+        * `EMAIL` - email
+        * `PUSH` - push
+    MiniWard:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        ward_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique id assigned to the ward.
+        name:
+          type: string
+          description: The unique name assigned to the ward.
+          maxLength: 100
+        subcounty:
+          allOf:
+          - $ref: '#/components/schemas/MinimalSubCounty'
+          readOnly: true
+      required:
+      - id
+      - name
+      - subcounty
+      - ward_id
+    MinimalCounty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        county_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique number assigned to the county.
+        name:
+          type: string
+          description: The unique name assigned to the county.
+          maxLength: 100
+      required:
+      - county_id
+      - id
+      - name
+    MinimalCountyRequest:
+      type: object
+      properties:
+        county_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique number assigned to the county.
+        name:
+          type: string
+          minLength: 1
+          description: The unique name assigned to the county.
+          maxLength: 100
+      required:
+      - county_id
+      - name
+    MinimalSubCounty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        subcounty_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique id assigned to the subcounty.
+        name:
+          type: string
+          description: The unique name assigned to the subcounty.
+          maxLength: 100
+        county:
+          allOf:
+          - $ref: '#/components/schemas/MinimalCounty'
+          readOnly: true
+      required:
+      - county
+      - id
+      - name
+      - subcounty_id
+    MinimalSubCountyRequest:
+      type: object
+      properties:
+        subcounty_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique id assigned to the subcounty.
+        name:
+          type: string
+          minLength: 1
+          description: The unique name assigned to the subcounty.
+          maxLength: 100
+      required:
+      - name
+      - subcounty_id
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        channel:
+          type: string
+          nullable: true
+          maxLength: 255
+        message:
+          type: object
+          additionalProperties: {}
+          nullable: true
+        subject:
+          type: string
+          nullable: true
+          maxLength: 200
+        message_type:
+          $ref: '#/components/schemas/MessageTypeEnum'
+        is_read:
+          type: boolean
+        message_to:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - message_to
+      - updated_at
+    NotificationRequest:
+      type: object
+      properties:
+        channel:
+          type: string
+          nullable: true
+          maxLength: 255
+        message:
+          type: object
+          additionalProperties: {}
+          nullable: true
+        subject:
+          type: string
+          nullable: true
+          maxLength: 200
+        message_type:
+          $ref: '#/components/schemas/MessageTypeEnum'
+        is_read:
+          type: boolean
+    PaginatedAgrodealerReadList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgrodealerRead'
+    PaginatedCountyList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/County'
+    PaginatedEExtensionOfficerReadList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EExtensionOfficerRead'
+    PaginatedEExtensionWorkRequestReadList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EExtensionWorkRequestRead'
+    PaginatedFarmReadList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FarmRead'
+    PaginatedFarmerWorkRequestReadList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FarmerWorkRequestRead'
+    PaginatedNotificationList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+    PaginatedSubCountyList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubCounty'
+    PaginatedSuperExtensionOfficerReadList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SuperExtensionOfficerRead'
+    PaginatedWardList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ward'
+    PasswordChangeRequest:
+      type: object
+      properties:
+        current_password:
+          type: string
+          writeOnly: true
+          minLength: 1
+        new_password1:
+          type: string
+          writeOnly: true
+          minLength: 1
+        new_password2:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - current_password
+      - new_password1
+      - new_password2
+    PasswordReset:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    PasswordResetConfirm:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        token:
+          type: string
+          maxLength: 6
+          minLength: 6
+      required:
+      - email
+      - token
+    PasswordResetConfirmRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        token:
+          type: string
+          minLength: 6
+          maxLength: 6
+        new_password1:
+          type: string
+          writeOnly: true
+          minLength: 1
+        new_password2:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - new_password1
+      - new_password2
+      - token
+    PasswordResetRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+      required:
+      - email
+    PatchedAgrodealerUpdateRequest:
+      type: object
+      description: |-
+        Serializer for updating agrodealer data.
+        Allows updating: name, ward, location, is_visible.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        ward:
+          type: string
+          format: uuid
+        location:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Point
+            coordinates:
+              type: array
+              items:
+                type: number
+                format: float
+              example:
+              - 12.9721
+              - 77.5933
+              minItems: 2
+              maxItems: 3
+        is_visible:
+          type: boolean
+    PatchedCountyRequest:
+      type: object
+      properties:
+        county_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique number assigned to the county.
+        name:
+          type: string
+          minLength: 1
+          description: The unique name assigned to the county.
+          maxLength: 100
+    PatchedEExtensionOfficerUpdateRequest:
+      type: object
+      description: |-
+        Serializer for updating E-Extension officer data.
+        Allows updating: wards, is_visible.
+      properties:
+        wards:
+          type: array
+          items:
+            type: string
+            format: uuid
+        is_visible:
+          type: boolean
+          description: If True, e-extension is visible to super extensionofficers
+            allowed in their county
+    PatchedFarmUpdateRequest:
+      type: object
+      description: |-
+        Serializer for updating farm data.
+        Only allows updating: name, boundary, and user_size.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 250
+        boundary:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - Polygon
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+                  example:
+                  - 12.9721
+                  - 77.5933
+                  minItems: 2
+                  maxItems: 3
+                example:
+                - - 22.4707
+                  - 70.0577
+                - - 12.9721
+                  - 77.5933
+                minItems: 4
+              example:
+              - - - 0.0
+                  - 0.0
+                - - 0.0
+                  - 50.0
+                - - 50.0
+                  - 50.0
+                - - 50.0
+                  - 0.0
+                - - 0.0
+                  - 0.0
+        user_size:
+          type: number
+          format: double
+          minimum: 0
+          nullable: true
+    PatchedNotificationRequest:
+      type: object
+      properties:
+        channel:
+          type: string
+          nullable: true
+          maxLength: 255
+        message:
+          type: object
+          additionalProperties: {}
+          nullable: true
+        subject:
+          type: string
+          nullable: true
+          maxLength: 200
+        message_type:
+          $ref: '#/components/schemas/MessageTypeEnum'
+        is_read:
+          type: boolean
+    PatchedProfileRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        id_number:
+          type: string
+          nullable: true
+        phone_number:
+          type: string
+          minLength: 1
+          maxLength: 128
+        profile_photo:
+          type: string
+          format: binary
+          nullable: true
+    PatchedSubCountyRequest:
+      type: object
+      properties:
+        subcounty_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique id assigned to the subcounty.
+        name:
+          type: string
+          minLength: 1
+          description: The unique name assigned to the subcounty.
+          maxLength: 100
+    PatchedSuperExtensionOfficerUpdateRequest:
+      type: object
+      description: |-
+        Serializer for updating Super Extension officer data.
+        Allows updating: counties.
+      properties:
+        counties:
+          type: array
+          items:
+            type: string
+            format: uuid
+    PatchedWardRequest:
+      type: object
+      properties:
+        ward_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique id assigned to the ward.
+        name:
+          type: string
+          minLength: 1
+          description: The unique name assigned to the ward.
+          maxLength: 100
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 30
+        last_name:
+          type: string
+          maxLength: 30
+        full_name:
+          type: string
+          readOnly: true
+        id_number:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        phone_number:
+          type: string
+          maxLength: 128
+        profile_photo:
+          type: string
+          format: uri
+          nullable: true
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleChoices'
+          readOnly: true
+        is_verified:
+          type: boolean
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - full_name
+      - id
+      - is_verified
+      - last_name
+      - phone_number
+      - role
+    ProfileRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        id_number:
+          type: string
+          nullable: true
+        phone_number:
+          type: string
+          minLength: 1
+          maxLength: 128
+        profile_photo:
+          type: string
+          format: binary
+          nullable: true
+      required:
+      - first_name
+      - last_name
+      - phone_number
+    RegisterAccount:
+      type: object
+      description: Base serializer for user registration with common fields
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+          maxLength: 30
+        last_name:
+          type: string
+          maxLength: 30
+        phone_number:
+          type: string
+        id_number:
+          type: string
+          nullable: true
+        profile_photo:
+          type: string
+          format: uri
+          nullable: true
+        role:
+          $ref: '#/components/schemas/RegisterAccountRoleEnum'
+      required:
+      - email
+      - first_name
+      - last_name
+      - phone_number
+      - role
+    RegisterAccountRequest:
+      type: object
+      description: Base serializer for user registration with common fields
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        phone_number:
+          type: string
+          minLength: 1
+        id_number:
+          type: string
+          nullable: true
+        password1:
+          type: string
+          writeOnly: true
+          minLength: 8
+        password2:
+          type: string
+          writeOnly: true
+          minLength: 8
+        profile_photo:
+          type: string
+          format: binary
+          nullable: true
+        role:
+          $ref: '#/components/schemas/RegisterAccountRoleEnum'
+      required:
+      - email
+      - first_name
+      - last_name
+      - password1
+      - password2
+      - phone_number
+      - role
+    RegisterAccountRoleEnum:
+      enum:
+      - SUPER_EXTENSION
+      - E_EXTENSION
+      - AGRODEALER
+      - FARMER
+      type: string
+      description: |-
+        * `SUPER_EXTENSION` - Super Extension Officer'
+        * `E_EXTENSION` - E-Extension Officer
+        * `AGRODEALER` - Agrodealer
+        * `FARMER` - Farmer
+    RoleChoice:
+      type: object
+      properties:
+        value:
+          type: string
+        label:
+          type: string
+      required:
+      - label
+      - value
+    RoleChoices:
+      enum:
+      - SYSTEM_ADMIN
+      - SUPER_EXTENSION
+      - E_EXTENSION
+      - AGRODEALER
+      - FARMER
+      type: string
+      description: |-
+        * `SYSTEM_ADMIN` - System Admin
+        * `SUPER_EXTENSION` - Super Extension Officer
+        * `E_EXTENSION` - E-Extension Officer
+        * `AGRODEALER` - Agrodealer
+        * `FARMER` - Farmer
+    SubCounty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        subcounty_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique id assigned to the subcounty.
+        name:
+          type: string
+          description: The unique name assigned to the subcounty.
+          maxLength: 100
+        county:
+          allOf:
+          - $ref: '#/components/schemas/MinimalCounty'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - county
+      - created_at
+      - id
+      - name
+      - subcounty_id
+      - updated_at
+    SubCountyRequest:
+      type: object
+      properties:
+        subcounty_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique id assigned to the subcounty.
+        name:
+          type: string
+          minLength: 1
+          description: The unique name assigned to the subcounty.
+          maxLength: 100
+      required:
+      - name
+      - subcounty_id
+    SuperExtensionOfficerRead:
+      type: object
+      description: |-
+        Serializer for reading/retrieving Super Extension officer data.
+        Includes nested user, counties, and managed E-Extension information.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/UserRead'
+          readOnly: true
+        counties:
+          type: array
+          items:
+            $ref: '#/components/schemas/MinimalCounty'
+          readOnly: true
+        managed_e_extensions_count:
+          type: integer
+          readOnly: true
+        is_archived:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - counties
+      - created_at
+      - id
+      - is_archived
+      - managed_e_extensions_count
+      - updated_at
+      - user
+    SuperExtensionOfficerUpdate:
+      type: object
+      description: |-
+        Serializer for updating Super Extension officer data.
+        Allows updating: counties.
+      properties:
+        counties:
+          type: array
+          items:
+            type: string
+            format: uuid
+    SuperExtensionOfficerUpdateRequest:
+      type: object
+      description: |-
+        Serializer for updating Super Extension officer data.
+        Allows updating: counties.
+      properties:
+        counties:
+          type: array
+          items:
+            type: string
+            format: uuid
+    SuperExtensionOfficerWrite:
+      type: object
+      description: |-
+        Serializer for creating new Super Extension officers.
+        Requires: user, counties.
+      properties:
+        user:
+          type: string
+          format: uuid
+        counties:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - user
+    SuperExtensionOfficerWriteRequest:
+      type: object
+      description: |-
+        Serializer for creating new Super Extension officers.
+        Requires: user, counties.
+      properties:
+        user:
+          type: string
+          format: uuid
+        counties:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - user
+    Token:
+      type: object
+      properties:
+        refresh_expiry_time:
+          type: string
+          format: date-time
+          readOnly: true
+        access_expiry_time:
+          type: string
+          format: date-time
+          readOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - access_expiry_time
+      - refresh
+      - refresh_expiry_time
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    UserRead:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 30
+        last_name:
+          type: string
+          maxLength: 30
+        phone_number:
+          type: string
+          maxLength: 128
+        id_number:
+          type: string
+          nullable: true
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleChoices'
+          readOnly: true
+        is_verified:
+          type: boolean
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        profile_photo:
+          type: string
+          format: uri
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - email
+      - first_name
+      - full_name
+      - id
+      - is_verified
+      - last_name
+      - phone_number
+      - role
+      - updated_at
+    UserReadRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 30
+        phone_number:
+          type: string
+          minLength: 1
+          maxLength: 128
+        id_number:
+          type: string
+          nullable: true
+        profile_photo:
+          type: string
+          format: binary
+          nullable: true
+      required:
+      - first_name
+      - last_name
+      - phone_number
+    VerifyAccount:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        token:
+          type: string
+          maxLength: 6
+          minLength: 6
+      required:
+      - email
+      - token
+    VerifyAccountRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        token:
+          type: string
+          minLength: 6
+          maxLength: 6
+      required:
+      - email
+      - token
+    Ward:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        ward_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique id assigned to the ward.
+        subcounty:
+          allOf:
+          - $ref: '#/components/schemas/MinimalSubCounty'
+          readOnly: true
+        name:
+          type: string
+          description: The unique name assigned to the ward.
+          maxLength: 100
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - subcounty
+      - updated_at
+      - ward_id
+    WardRequest:
+      type: object
+      properties:
+        ward_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: The unique id assigned to the ward.
+        name:
+          type: string
+          minLength: 1
+          description: The unique name assigned to the ward.
+          maxLength: 100
+      required:
+      - name
+      - ward_id
+    WorkRequestStatusChoices:
+      enum:
+      - PENDING
+      - ACCEPTED
+      - REJECTED
+      type: string
+      description: |-
+        * `PENDING` - Pending
+        * `ACCEPTED` - Accepted
+        * `REJECTED` - Rejected
+tags:
+- name: Authentication
+  description: Login, logout and refresh token handling
+- name: Password
+  description: Password management endpoints
+- name: Notifications
+  description: Notifications management
+- name: Users
+  description: User registration and management endpoints
+- name: Profile
+  description: Profile management endpoints
+- name: Locations - Counties
+  description: Counties management endpoints
+- name: Locations - Subcounties
+  description: Subcounties management endpoints
+- name: Locations - Wards
+  description: Wards management endpoints
