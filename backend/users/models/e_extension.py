@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext as _
 from locations.models.ward import Ward
 from users.choices import RoleChoices
 from base.models import BaseModel
@@ -12,7 +13,8 @@ class EExtensionOfficer(BaseModel):
     user = models.OneToOneField(
         'User',
         on_delete=models.CASCADE,
-        related_name='e_extension_profile'
+        related_name='e_extension_profile',
+        limit_choices_to={'role': 'E_EXTENSION'}
     )
     wards = models.ManyToManyField(
         Ward,
@@ -23,8 +25,10 @@ class EExtensionOfficer(BaseModel):
         related_name='managed_e_extensions',
         blank=True
     )
-    is_managed = models.BooleanField(
-        default=False
+    is_visible = models.BooleanField(
+        default=False,
+        help_text="If True, e-extension is visible to super extension" \
+        "officers allowed in their county"
     )
 
     slug = None

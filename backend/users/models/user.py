@@ -93,13 +93,13 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             return f"{settings.SERVER_HOST}{self.profile_photo.url}"
         return None
 
-    def is_system_admin(self):
-        return self.role == RoleChoices.SYSTEM_ADMIN or self.is_superuser
+    def is_systemadmin(self):
+        return self.role == RoleChoices.SYSTEMADMIN
 
-    def is_super_extension(self):
+    def is_superextension(self):
         return self.role == RoleChoices.SUPER_EXTENSION
 
-    def is_e_extension(self):
+    def is_eextension(self):
         return self.role == RoleChoices.E_EXTENSION
 
     def is_agrodealer(self):
@@ -107,3 +107,10 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     def is_farmer(self):
         return self.role == RoleChoices.FARMER
+
+    # Legacy aliases for backward compatibility
+    def is_super_extension(self):
+        return self.is_superextension()
+
+    def is_e_extension(self):
+        return self.is_eextension()

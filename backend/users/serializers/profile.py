@@ -15,8 +15,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "email",
             "phone_number",
             "profile_photo",
-            "role",
-            "is_managed"
+            "role"
         )
         extra_kwargs = {
             "id": {"read_only": True},

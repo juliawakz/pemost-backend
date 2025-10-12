@@ -4,7 +4,7 @@ from locations.filterset.subcounty import SubCountyFilter
 from locations.models.subcounty import SubCounty
 from locations.serializers.subcounty import SubCountySerializer
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from users.permissions.user import IsSystemAdminOrSuperUser
 
 
@@ -21,7 +21,7 @@ class SubCountyViewSet(viewsets.ModelViewSet):
         Only system admin/superuser can create/update/delete.
         """
         if self.action in ["list", "retrieve"]:
-            permission_classes = [IsAuthenticated]
+            permission_classes = [AllowAny]
         else:
             permission_classes = [IsSystemAdminOrSuperUser]
         return [permission() for permission in permission_classes]

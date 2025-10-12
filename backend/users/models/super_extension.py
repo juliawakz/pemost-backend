@@ -24,8 +24,8 @@ class SuperExtensionOfficer(BaseModel):
 
     class Meta:
         ordering = ("-created_at",)
-        verbose_name = _("Super Extension Officer")
-        verbose_name_plural = _("Super Extension Officers")
+        verbose_name = _("Super-Extension Officer")
+        verbose_name_plural = _("Super-Extension Officers")
         get_latest_by = ("-updated_at",)
 
     def __str__(self):
