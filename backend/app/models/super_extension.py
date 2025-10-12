@@ -10,9 +10,9 @@ User = get_user_model()
 
 class SuperExtensionOfficer(BaseModel):
     user = models.OneToOneField(
-        'User',
+        User,
         on_delete=models.CASCADE,
-        related_name='super_extension_profile'
+        related_name='super_extension_users'
     )
     counties = models.ManyToManyField(
         County,

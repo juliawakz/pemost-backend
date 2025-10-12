@@ -4,16 +4,16 @@ from django.utils.translation import gettext as _
 from locations.models.ward import Ward
 from users.choices import RoleChoices
 from base.models import BaseModel
-from users.models.super_extension import SuperExtensionOfficer
+from app.models.super_extension import SuperExtensionOfficer
 
 User = get_user_model()
 
 
 class EExtensionOfficer(BaseModel):
     user = models.OneToOneField(
-        'User',
+        User,
         on_delete=models.CASCADE,
-        related_name='e_extension_profile',
+        related_name='e_extension_users',
         limit_choices_to={'role': 'E_EXTENSION'}
     )
     wards = models.ManyToManyField(

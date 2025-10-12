@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 from base.models import BaseModel
-from users.choices import WorkRequestStatusChoices
+from app.choices import WorkRequestStatusChoices
 
 User = get_user_model()
 
