@@ -461,7 +461,7 @@ SPECTACULAR_SETTINGS = {
     },
     "ENUM_NAME_OVERRIDES": {
         "RoleChoices": "users.choices.RoleChoices",
-        "WorkRequestStatusChoices": "users.choices.WorkRequestStatusChoices",
+        "WorkRequestStatusChoices": "app.choices.WorkRequestStatusChoices",
     },
     "TAGS": [
         {"name": "Authentication", "description": "Login, logout and refresh token handling"},
@@ -472,6 +472,5 @@ SPECTACULAR_SETTINGS = {
         {"name": "Locations - Counties", "description": "Counties management endpoints"},
         {"name": "Locations - Subcounties", "description": "Subcounties management endpoints"},
         {"name": "Locations - Wards", "description": "Wards management endpoints"},
-        {"name": "App", "description": "App management"}
     ],
 }
