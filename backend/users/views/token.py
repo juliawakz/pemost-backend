@@ -26,7 +26,7 @@ class ObtainAuthTokenView(ObtainAuthToken):
         user = serializer.validated_data['user']
 
         # Check if user is system admin (or adjust field name)
-        if not (user.is_superuser or user.is_system_admin()):
+        if not (user.is_superuser or user.is_systemadmin()):
             return Response(
                 {
                     "detail": "You are not authorized to obtain a token."

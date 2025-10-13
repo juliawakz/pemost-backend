@@ -1,9 +1,9 @@
+from app.models.agrodealer import Agrodealer
+from django.contrib.auth import get_user_model
+from locations.serializers.ward import MiniWardSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from django.contrib.auth import get_user_model
-from app.models.agrodealer import Agrodealer
-from locations.serializers.ward import MiniWardSerializer
-from users.serializers.user import UserReadSerializer
+from users.serializers.user import MiniUserReadSerializer
 
 User = get_user_model()
 
@@ -13,7 +13,7 @@ class AgrodealerReadSerializer(serializers.ModelSerializer):
     Serializer for reading/retrieving agrodealer data.
     Includes nested user and ward information, and location details.
     """
-    user = UserReadSerializer(read_only=True)
+    user = MiniUserReadSerializer(read_only=True)
     ward = MiniWardSerializer(read_only=True)
     latitude = serializers.FloatField(read_only=True)
     longitude = serializers.FloatField(read_only=True)

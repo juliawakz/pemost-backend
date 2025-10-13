@@ -1,22 +1,24 @@
-import pytest
 from unittest.mock import Mock
+
+import pytest
 from users.factory import (
-    SystemAdminFactory,
-    SuperadminFactory,
-    SuperExtensionFactory,
+    AgroDealerFactory,
     EExtensionFactory,
     FarmerFactory,
-    AgroDealerFactory,
+    SuperadminFactory,
+    SuperExtensionFactory,
+    SystemAdminFactory,
 )
+
 from backend.users.user import (
-    IsSystemAdminOrSuperUser,
-    IsSuperadmin,
-    IsSuperExtension,
-    IsEExtension,
-    IsFarmer,
-    IsAgrodealer,
     CanGenerateApiKey,
     CanManageWorkRequest,
+    IsAgrodealer,
+    IsEExtension,
+    IsFarmer,
+    IsSuperadmin,
+    IsSuperExtension,
+    IsSystemAdminOrSuperUser,
 )
 
 

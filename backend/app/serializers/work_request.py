@@ -1,12 +1,9 @@
+from app.choices import WorkRequestStatusChoices
+from app.models.work_request import EExtensionWorkRequest, FarmerWorkRequest
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from django.contrib.auth import get_user_model
-from app.models.work_request import (
-    FarmerWorkRequest,
-    EExtensionWorkRequest
-)
-from app.choices import WorkRequestStatusChoices
-from users.serializers.user import UserReadSerializer
+from users.serializers.user import MiniUserReadSerializer
 
 User = get_user_model()
 
@@ -18,8 +15,8 @@ class FarmerWorkRequestReadSerializer(serializers.ModelSerializer):
     Serializer for reading/retrieving farmer work requests.
     Includes nested farmer and e-extension user information.
     """
-    farmer = UserReadSerializer(read_only=True)
-    e_extension = UserReadSerializer(read_only=True)
+    farmer = MiniUserReadSerializer(read_only=True)
+    e_extension = MiniUserReadSerializer(read_only=True)
 
     class Meta:
         model = FarmerWorkRequest
@@ -124,8 +121,8 @@ class EExtensionWorkRequestReadSerializer(serializers.ModelSerializer):
     Serializer for reading/retrieving E-Extension work requests.
     Includes nested e-extension and super-extension user information.
     """
-    e_extension = UserReadSerializer(read_only=True)
-    super_extension = UserReadSerializer(read_only=True)
+    e_extension = MiniUserReadSerializer(read_only=True)
+    super_extension = MiniUserReadSerializer(read_only=True)
 
     class Meta:
         model = EExtensionWorkRequest

@@ -1,10 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
-from users.models import (
-    Otp,
-    User
-)
+from users.models import Otp, User
 
 
 class UserAdmin(admin.ModelAdmin):

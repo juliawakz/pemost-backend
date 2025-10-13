@@ -1,14 +1,7 @@
 import factory
-from users.models import (
-    EExtensionWorkRequest,
-    FarmerWorkRequest,
-)
 from users.choices import WorkRequestStatusChoices
-from users.factory.user import (
-    FarmerFactory,
-    EExtensionFactory,
-    SuperExtensionFactory,
-)
+from users.factory.user import EExtensionFactory, FarmerFactory, SuperExtensionFactory
+from users.models import EExtensionWorkRequest, FarmerWorkRequest
 
 
 class EExtensionWorkRequestFactory(factory.django.DjangoModelFactory):

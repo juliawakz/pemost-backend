@@ -1,10 +1,10 @@
-from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
+from app.models.super_extension import SuperExtensionOfficer
 from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema_field
-from app.models.super_extension import SuperExtensionOfficer
 from locations.serializers.county import MinimalCountySerializer
-from users.serializers.user import UserReadSerializer
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from users.serializers.user import MiniUserReadSerializer
 
 User = get_user_model()
 
@@ -14,7 +14,7 @@ class SuperExtensionOfficerReadSerializer(serializers.ModelSerializer):
     Serializer for reading/retrieving Super Extension officer data.
     Includes nested user, counties, and managed E-Extension information.
     """
-    user = UserReadSerializer(read_only=True)
+    user = MiniUserReadSerializer(read_only=True)
     counties = MinimalCountySerializer(many=True, read_only=True)
     managed_e_extensions_count = serializers.SerializerMethodField()
 

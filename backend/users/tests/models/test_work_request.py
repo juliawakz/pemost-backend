@@ -1,17 +1,17 @@
 import pytest
 from django.utils import timezone
+from users.choices import WorkRequestStatusChoices
 from users.factory import (
     EExtensionFactory,
-    SuperExtensionFactory,
-    FarmerFactory,
-    EExtensionWorkRequestFactory,
-    FarmerWorkRequestFactory,
     EExtensionOfficerProfileFactory,
-    SuperExtensionOfficerProfileFactory,
+    EExtensionWorkRequestFactory,
+    FarmerFactory,
     FarmerProfileFactory,
+    FarmerWorkRequestFactory,
+    SuperExtensionFactory,
+    SuperExtensionOfficerProfileFactory,
 )
 from users.models import EExtensionWorkRequest, FarmerWorkRequest
-from users.choices import WorkRequestStatusChoices
 
 
 @pytest.mark.django_db

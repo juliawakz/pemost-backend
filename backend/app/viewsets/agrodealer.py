@@ -1,12 +1,12 @@
-from drf_spectacular.utils import extend_schema
+from app.filtersets.agrodealer import AgrodealerFilterSet
 from app.models.agrodealer import Agrodealer
 from app.permissions import CanManageAgrodealer
 from app.serializers.agrodealer import (
     AgrodealerReadSerializer,
+    AgrodealerUpdateSerializer,
     AgrodealerWriteSerializer,
-    AgrodealerUpdateSerializer
 )
-from app.filtersets.agrodealer import AgrodealerFilterSet
+from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
@@ -57,21 +57,21 @@ class AgrodealerViewset(viewsets.ModelViewSet):
         )
 
         if u.is_superuser or u.is_systemadmin():
-            return base_queryset.filter(is_archived=False)
+            return base_queryset.filter(is_archived=False).distinct()
 
         # Farmers can see all agrodealers
         if u.is_farmer():
             return base_queryset.filter(
                 is_archived=False,
                 is_visible=True
-            )
+            ).distinct()
 
         # Agrodealers can only see themselves
         if u.is_agrodealer():
             return base_queryset.filter(
                 user=u,
                 is_archived=False
-            )
+            ).distinct()
 
         return Agrodealer.objects.none()
 

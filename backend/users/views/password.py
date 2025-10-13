@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView
@@ -8,7 +9,6 @@ from users.serializers.password import (
     PasswordResetConfirmSerializer,
     PasswordResetSerializer,
 )
-from django.contrib.auth import get_user_model
 from users.utils.user import UserUtils
 
 User = get_user_model()

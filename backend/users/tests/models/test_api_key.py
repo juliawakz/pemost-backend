@@ -1,7 +1,8 @@
+from datetime import timedelta
+
 import pytest
 from django.utils import timezone
-from datetime import timedelta
-from users.factory import SuperadminFactory, ApiKeyFactory
+from users.factory import ApiKeyFactory, SuperadminFactory
 from users.models import ApiKey
 
 

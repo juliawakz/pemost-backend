@@ -1,8 +1,8 @@
-from django.db import models
-from django.contrib.auth import get_user_model
-from django.utils.translation import gettext as _
-from base.models import BaseModel
 from app.choices import WorkRequestStatusChoices
+from base.models import BaseModel
+from django.contrib.auth import get_user_model
+from django.db import models
+from django.utils.translation import gettext as _
 
 User = get_user_model()
 
@@ -180,8 +180,8 @@ class FarmerWorkRequest(BaseModel):
         Accept the work request and establish relationship.
         Archives the request after acceptance.
         """
-        from django.utils import timezone
         from app.models.farm import Farm
+        from django.utils import timezone
 
         self.status = WorkRequestStatusChoices.ACCEPTED
         self.responded_at = timezone.now()

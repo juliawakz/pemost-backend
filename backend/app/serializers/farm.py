@@ -1,10 +1,10 @@
-from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
+from app.models.farm import Farm
 from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema_field
-from app.models.farm import Farm
 from locations.serializers.ward import MiniWardSerializer
-from users.serializers.user import UserReadSerializer
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from users.serializers.user import MiniUserReadSerializer
 
 User = get_user_model()
 
@@ -14,7 +14,7 @@ class FarmReadSerializer(serializers.ModelSerializer):
     Serializer for reading/retrieving farm data.
     Includes nested user and ward information, and calculated size.
     """
-    user = UserReadSerializer(read_only=True)
+    user = MiniUserReadSerializer(read_only=True)
     ward = MiniWardSerializer(read_only=True)
     e_extensions_count = serializers.SerializerMethodField()
 

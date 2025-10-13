@@ -1,10 +1,10 @@
-from django.db import models
+from app.models.super_extension import SuperExtensionOfficer
+from base.models import BaseModel
 from django.contrib.auth import get_user_model
+from django.db import models
 from django.utils.translation import gettext as _
 from locations.models.ward import Ward
 from users.choices import RoleChoices
-from base.models import BaseModel
-from app.models.super_extension import SuperExtensionOfficer
 
 User = get_user_model()
 
@@ -14,7 +14,8 @@ class EExtensionOfficer(BaseModel):
         User,
         on_delete=models.CASCADE,
         related_name='e_extension_users',
-        limit_choices_to={'role': 'E_EXTENSION'}
+        limit_choices_to={'role': 'E_EXTENSION'},
+        unique=True
     )
     wards = models.ManyToManyField(
         Ward,

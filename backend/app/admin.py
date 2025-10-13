@@ -1,14 +1,14 @@
+from app.models import (
+    Agrodealer,
+    EExtensionOfficer,
+    EExtensionWorkRequest,
+    Farm,
+    FarmerWorkRequest,
+    SuperExtensionOfficer,
+)
 from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
-from app.models import (
-    EExtensionWorkRequest,
-    FarmerWorkRequest,
-    EExtensionOfficer,
-    SuperExtensionOfficer,
-    Agrodealer,
-    Farm
-)
 
 
 class FarmAdmin(admin.ModelAdmin):

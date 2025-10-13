@@ -1,22 +1,22 @@
 import pytest
-from rest_framework import status
-from rest_framework.test import APIClient
-from users.factory import (
-    SystemAdminFactory,
-    SuperadminFactory,
-    SuperExtensionFactory,
-    EExtensionFactory,
-    FarmerFactory,
-    AgroDealerFactory,
-    SuperExtensionOfficerProfileFactory,
-    EExtensionOfficerProfileFactory,
-    FarmerProfileFactory,
-)
 from locations.factory.county import CountyFactory
 from locations.factory.subcounty import SubCountyFactory
 from locations.factory.ward import WardFactory
-from users.models import EExtensionWorkRequest, FarmerWorkRequest
+from rest_framework import status
+from rest_framework.test import APIClient
 from users.choices import WorkRequestStatusChoices
+from users.factory import (
+    AgroDealerFactory,
+    EExtensionFactory,
+    EExtensionOfficerProfileFactory,
+    FarmerFactory,
+    FarmerProfileFactory,
+    SuperadminFactory,
+    SuperExtensionFactory,
+    SuperExtensionOfficerProfileFactory,
+    SystemAdminFactory,
+)
+from users.models import EExtensionWorkRequest, FarmerWorkRequest
 
 
 @pytest.mark.django_db
