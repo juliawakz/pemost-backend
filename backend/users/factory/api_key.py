@@ -1,8 +1,9 @@
+from datetime import timedelta
+
 import factory
 from django.utils import timezone
-from datetime import timedelta
-from users.models import ApiKey
 from users.factory.user import SuperadminFactory
+from users.models import ApiKey
 
 
 class ApiKeyFactory(factory.django.DjangoModelFactory):

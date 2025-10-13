@@ -1,26 +1,19 @@
+from app.choices import WorkRequestStatusChoices
+from app.models.work_request import EExtensionWorkRequest, FarmerWorkRequest
+from app.permissions import CanManageEExtensionWorkRequest, CanManageFarmerWorkRequest
+from app.serializers.work_request import (
+    AcceptRejectRequestSerializer,
+    EExtensionWorkRequestCreateSerializer,
+    EExtensionWorkRequestReadSerializer,
+    FarmerWorkRequestCreateSerializer,
+    FarmerWorkRequestReadSerializer,
+)
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
+from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
-from app.models.work_request import (
-    FarmerWorkRequest,
-    EExtensionWorkRequest
-)
-from app.permissions import (
-    CanManageFarmerWorkRequest,
-    CanManageEExtensionWorkRequest
-)
-from app.serializers.work_request import (
-    FarmerWorkRequestReadSerializer,
-    FarmerWorkRequestCreateSerializer,
-    EExtensionWorkRequestReadSerializer,
-    EExtensionWorkRequestCreateSerializer,
-    AcceptRejectRequestSerializer,
-)
-from app.choices import WorkRequestStatusChoices
 
 
 @extend_schema(tags=["App - Farmer Work Requests"])
@@ -65,7 +58,7 @@ class FarmerWorkRequestViewset(viewsets.ModelViewSet):
         if user.is_superuser or user.is_systemadmin():
             return FarmerWorkRequest.objects.filter(
                 is_archived=False
-            ).select_related('farmer', 'e_extension').order_by('-created_at')
+            ).select_related('farmer', 'e_extension').order_by('-created_at').distinct()
 
         # Farmers see their sent requests
         # E-Extensions see requests sent to them
@@ -81,7 +74,7 @@ class FarmerWorkRequestViewset(viewsets.ModelViewSet):
             'farmer', 'e_extension'
         ).filter(
             is_archived=False
-        ).order_by('-created_at')
+        ).order_by('-created_at').distinct()
 
     @extend_schema(
         summary="Accept work request",
@@ -212,7 +205,7 @@ class EExtensionWorkRequestViewset(viewsets.ModelViewSet):
                 is_archived=False
             ).select_related(
                 'e_extension', 'super_extension'
-            ).order_by('-created_at')
+            ).order_by('-created_at').distinct()
 
         # E-Extensions see their sent requests
         # Super Extensions see requests sent to them
@@ -228,7 +221,7 @@ class EExtensionWorkRequestViewset(viewsets.ModelViewSet):
             'e_extension', 'super_extension'
         ).filter(
             is_archived=False
-        ).order_by('-created_at')
+        ).order_by('-created_at').distinct()
 
     @extend_schema(
         summary="Accept work request",

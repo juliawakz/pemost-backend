@@ -1,5 +1,6 @@
 import math
 
+from app.models.e_extension import EExtensionOfficer
 from base.models import BaseModel
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -8,7 +9,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from locations.models import Ward
-from app.models.e_extension import EExtensionOfficer
 
 User = get_user_model()
 

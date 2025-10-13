@@ -1,21 +1,21 @@
 import pytest
+from locations.factory import CountyFactory, SubCountyFactory, WardFactory
 from rest_framework.test import APIRequestFactory
+from users.choices import WorkRequestStatusChoices
 from users.factory import (
     EExtensionFactory,
-    SuperExtensionFactory,
-    FarmerFactory,
     EExtensionOfficerProfileFactory,
-    SuperExtensionOfficerProfileFactory,
+    FarmerFactory,
     FarmerProfileFactory,
-)
-from locations.factory import CountyFactory, SubCountyFactory, WardFactory
-from users.serializers.work_request import (
-    EExtensionWorkRequestSerializer,
-    FarmerWorkRequestSerializer,
-    AcceptRejectRequestSerializer,
+    SuperExtensionFactory,
+    SuperExtensionOfficerProfileFactory,
 )
 from users.models import EExtensionWorkRequest, FarmerWorkRequest
-from users.choices import WorkRequestStatusChoices
+from users.serializers.work_request import (
+    AcceptRejectRequestSerializer,
+    EExtensionWorkRequestSerializer,
+    FarmerWorkRequestSerializer,
+)
 
 
 @pytest.mark.django_db

@@ -121,3 +121,18 @@ class UserReadSerializer(serializers.ModelSerializer):
             "full_name": {"read_only": True},
             "role": {"read_only": True}
         }
+
+
+class MiniUserReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id", "email", "full_name", "phone_number",
+            "role"
+        ]
+        extra_kwargs = {
+            "id": {"read_only": True},
+            "email": {"read_only": True},
+            "full_name": {"read_only": True},
+            "role": {"read_only": True}
+        }

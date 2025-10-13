@@ -1,9 +1,9 @@
-from django.db import models
-from django.contrib.auth import get_user_model
 from base.models import BaseModel
+from django.contrib.auth import get_user_model
+from django.db import models
+from django.utils.translation import gettext as _
 from locations.models.county import County
 from users.choices import RoleChoices
-from django.utils.translation import gettext as _
 
 User = get_user_model()
 
@@ -12,7 +12,9 @@ class SuperExtensionOfficer(BaseModel):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='super_extension_users'
+        related_name='super_extension_users',
+        limit_choices_to={'role': 'SUPER_EXTENSION'},
+        unique=True
     )
     counties = models.ManyToManyField(
         County,

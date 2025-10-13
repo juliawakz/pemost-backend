@@ -1,15 +1,11 @@
 import factory
-from users.models import (
-    EExtensionOfficer,
-    SuperExtensionOfficer,
-    Agrodealer,
-)
 from users.factory.user import (
-    FarmerFactory,
-    EExtensionFactory,
-    SuperExtensionFactory,
     AgroDealerFactory,
+    EExtensionFactory,
+    FarmerFactory,
+    SuperExtensionFactory,
 )
+from users.models import Agrodealer, EExtensionOfficer, SuperExtensionOfficer
 
 
 class EExtensionOfficerProfileFactory(factory.django.DjangoModelFactory):

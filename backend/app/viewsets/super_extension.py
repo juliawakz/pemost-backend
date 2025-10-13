@@ -1,12 +1,12 @@
-from drf_spectacular.utils import extend_schema
+from app.filtersets.super_extension import SuperExtensionOfficerFilterSet
 from app.models.super_extension import SuperExtensionOfficer
 from app.permissions import CanManageSuperExtensionOfficer
 from app.serializers.super_extension import (
     SuperExtensionOfficerReadSerializer,
+    SuperExtensionOfficerUpdateSerializer,
     SuperExtensionOfficerWriteSerializer,
-    SuperExtensionOfficerUpdateSerializer
 )
-from app.filtersets.super_extension import SuperExtensionOfficerFilterSet
+from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
@@ -57,20 +57,20 @@ class SuperExtensionOfficerViewset(viewsets.ModelViewSet):
         )
 
         if u.is_superuser or u.is_systemadmin():
-            return base_queryset.filter(is_archived=False)
+            return base_queryset.filter(is_archived=False).distinct()
 
         # E-Extensions can see all Super Extension officers
         if u.is_eextension():
             return base_queryset.filter(
                 is_archived=False
-            )
+            ).distinct()
 
         # Super Extensions can only see themselves
         if u.is_superextension():
             return base_queryset.filter(
                 user=u,
                 is_archived=False
-            )
+            ).distinct()
 
         return SuperExtensionOfficer.objects.none()
 

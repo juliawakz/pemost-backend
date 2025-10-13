@@ -1,13 +1,10 @@
+from datetime import timedelta
+
 import pytest
 from django.utils import timezone
-from datetime import timedelta
 from rest_framework import status
 from rest_framework.test import APIClient
-from users.factory import (
-    SuperadminFactory,
-    SystemAdminFactory,
-    FarmerFactory,
-)
+from users.factory import FarmerFactory, SuperadminFactory, SystemAdminFactory
 from users.models import ApiKey
 
 

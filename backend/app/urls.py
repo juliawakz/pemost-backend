@@ -1,13 +1,13 @@
-from django.urls import include, path
-from rest_framework.routers import DefaultRouter
-from app.viewsets.farm import FarmViewset
 from app.viewsets.agrodealer import AgrodealerViewset
 from app.viewsets.e_extension import EExtensionOfficerViewset
+from app.viewsets.farm import FarmViewset
 from app.viewsets.super_extension import SuperExtensionOfficerViewset
 from app.viewsets.work_request import (
+    EExtensionWorkRequestViewset,
     FarmerWorkRequestViewset,
-    EExtensionWorkRequestViewset
 )
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
 app_name = "app"
 
@@ -15,22 +15,22 @@ router = DefaultRouter()
 router.register(r"farms", FarmViewset, basename="farms")
 router.register(r"agrodealers", AgrodealerViewset, basename="agrodealers")
 router.register(
-    r"e-extension-officers",
+    r"e-extension",
     EExtensionOfficerViewset,
     basename="e-extension-officers"
 )
 router.register(
-    r"super-extension-officers",
+    r"super-extension",
     SuperExtensionOfficerViewset,
     basename="super-extension-officers"
 )
 router.register(
-    r"farmer-work-requests",
+    r"farmer/work-requests",
     FarmerWorkRequestViewset,
     basename="farmer-work-requests"
 )
 router.register(
-    r"e-extension-work-requests",
+    r"e-extension/work-requests",
     EExtensionWorkRequestViewset,
     basename="e-extension-work-requests"
 )

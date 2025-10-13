@@ -1,9 +1,10 @@
+from datetime import timedelta
+
 import pytest
 from django.utils import timezone
-from datetime import timedelta
 from rest_framework.test import APIRequestFactory
-from users.factory import SuperadminFactory, FarmerFactory
-from users.serializers.api_key import ApiKeySerializer, ApiKeyCreateSerializer
+from users.factory import FarmerFactory, SuperadminFactory
+from users.serializers.api_key import ApiKeyCreateSerializer, ApiKeySerializer
 
 
 @pytest.mark.django_db

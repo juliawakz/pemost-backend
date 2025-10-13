@@ -1,13 +1,13 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
+from app.filtersets.farm import FarmFilterSet
 from app.models.farm import Farm
 from app.permissions import CanManageFarm
 from app.serializers.farm import (
     FarmReadSerializer,
+    FarmUpdateSerializer,
     FarmWriteSerializer,
-    FarmUpdateSerializer
 )
-from app.filtersets.farm import FarmFilterSet
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
@@ -62,7 +62,7 @@ class FarmViewset(viewsets.ModelViewSet):
         ).prefetch_related('e_extensions')
 
         if u.is_superuser or u.is_systemadmin():
-            return base_queryset.filter(is_archived=False)
+            return base_queryset.filter(is_archived=False).distinct()
 
         # Super Extension sees farms managed by their E-Extensions
         if u.is_superextension():
@@ -89,7 +89,7 @@ class FarmViewset(viewsets.ModelViewSet):
             return base_queryset.filter(
                 user=u,
                 is_archived=False
-            )
+            ).distinct()
 
         return Farm.objects.none()
 
