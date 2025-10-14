@@ -206,19 +206,15 @@ class EExtensionWorkRequestViewset(viewsets.ModelViewSet):
 
         # E-Extensions see their sent requests
         # Super Extensions see requests sent to them
-        return EExtensionWorkRequest.objects.filter(
-            e_extension=user
-        ).select_related(
-            'e_extension', 'super_extension'
-        ).filter(
-            is_archived=False
-        ).order_by('-created_at') | EExtensionWorkRequest.objects.filter(
-            super_extension=user
-        ).select_related(
-            'e_extension', 'super_extension'
-        ).filter(
-            is_archived=False
-        ).order_by('-created_at').distinct()
+        return (
+            EExtensionWorkRequest.objects.filter(
+                Q(super_extension=user) | Q(e_extension=user),
+                is_archived=False
+            )
+            .select_related('e_extension', 'super_extension')
+            .order_by('-created_at')
+            .distinct()
+        )
 
     @extend_schema(
         summary="Accept work request",

@@ -25,12 +25,12 @@ router.register(
     basename="super-extension-officers"
 )
 router.register(
-    r"farmer/work-requests",
+    r"farmers/work-requests",
     FarmerWorkRequestViewset,
     basename="farmer-work-requests"
 )
 router.register(
-    r"e-extension/work-requests",
+    r"e-extensions/work-requests",
     EExtensionWorkRequestViewset,
     basename="e-extension-work-requests"
 )
