@@ -9,6 +9,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from locations.models import Ward
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -20,6 +21,7 @@ class Farm(BaseModel):
     )
     boundary = gis_models.PolygonField(
         srid=4326,
+        unique=True,
         null=False,
         blank=False
     )
@@ -38,7 +40,8 @@ class Farm(BaseModel):
     ward = models.ForeignKey(
         Ward,
         on_delete=models.CASCADE,
-        blank=False
+        blank=False,
+        related_name="farm_wards"
     )
     user = models.ForeignKey(
         User,
@@ -59,6 +62,12 @@ class Farm(BaseModel):
 
     slug = None
     metadata = None
+
+    class Meta:
+        verbose_name = _("Farm")
+        verbose_name_plural = _("Farms")
+        ordering = ("name",)
+        unique_together = ("user", "name", "boundary")
 
     def clean(self):
         """Validate farm data"""

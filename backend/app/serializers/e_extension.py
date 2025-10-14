@@ -5,6 +5,7 @@ from locations.serializers.ward import MiniWardSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from users.serializers.user import MiniUserReadSerializer
+from locations.models.ward import Ward
 
 User = get_user_model()
 
@@ -53,47 +54,65 @@ class EExtensionOfficerReadSerializer(serializers.ModelSerializer):
 class EExtensionOfficerWriteSerializer(serializers.ModelSerializer):
     """
     Serializer for creating new E-Extension officers.
-    Requires: user, wards.
+    E-Extension officers can self-register.
     """
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.filter(role='E_EXTENSION')
-    )
     wards = serializers.PrimaryKeyRelatedField(
         many=True,
-        queryset=__import__('locations.models.ward',
-                            fromlist=['Ward']).Ward.objects.all()
+        queryset=Ward.objects.all(),
+        required=True
     )
 
     class Meta:
         model = EExtensionOfficer
-        fields = [
-            "user",
-            "wards",
-        ]
+        fields = ["wards"]
 
-    def validate_user(self, value):
-        """Ensure user has E_EXTENSION role"""
-        if not hasattr(value, 'is_eextension') or not value.is_eextension():
+    # -----------------------------
+    # VALIDATION
+    # -----------------------------
+    def validate(self, attrs):
+        """
+        Validation logic:
+        - E_EXTENSION users can only create their own profile.
+        - Prevents duplicate officer profiles.
+        """
+        request = self.context.get("request")
+        if request is None:
+            raise ValidationError("Request context is missing.")
+        user = request.user
+        wards = attrs.get("wards")
+
+        if not user.is_eextension():
             raise ValidationError(
-                "User must have the role 'E_EXTENSION'."
+                "Only a user with eextension role can register."
             )
-        # Check if user already has an E-Extension profile
-        if EExtensionOfficer.objects.filter(user=value).exists():
+
+        # Ensure only one profile per user
+        if EExtensionOfficer.objects.filter(user=user).exists():
             raise ValidationError(
                 "This user already has an E-Extension officer profile."
             )
-        return value
 
-    def validate_wards(self, value):
-        """Ensure at least one ward is provided"""
-        if not value:
+        # Ensure at least one ward
+        if not wards:
             raise ValidationError(
-                "At least one ward must be assigned."
-            )
-        return value
+                "At least one ward must be assigned.")
 
+        attrs["user"] = user
+
+        return attrs
+
+    # -----------------------------
+    # CREATION
+    # -----------------------------
+    def create(self, validated_data):
+        """Attach user and create the E-Extension profile."""
+        return super().create(validated_data)
+
+    # -----------------------------
+    # REPRESENTATION
+    # -----------------------------
     def to_representation(self, instance):
-        """Return full E-Extension data after creation"""
+        """Return full E-Extension data after creation."""
         return EExtensionOfficerReadSerializer(
             instance, context=self.context
         ).data
@@ -106,8 +125,10 @@ class EExtensionOfficerUpdateSerializer(serializers.ModelSerializer):
     """
     wards = serializers.PrimaryKeyRelatedField(
         many=True,
-        queryset=__import__('locations.models.ward',
-                            fromlist=['Ward']).Ward.objects.all()
+        queryset=__import__(
+            'locations.models.ward',
+            fromlist=['Ward']
+        ).Ward.objects.all()
     )
 
     class Meta:

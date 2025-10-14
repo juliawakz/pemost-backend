@@ -19,7 +19,8 @@ class EExtensionOfficer(BaseModel):
     )
     wards = models.ManyToManyField(
         Ward,
-        blank=False
+        blank=False,
+        related_name="e_extension_wards"
     )
     super_extensions = models.ManyToManyField(
         SuperExtensionOfficer,
@@ -27,7 +28,7 @@ class EExtensionOfficer(BaseModel):
         blank=True
     )
     is_visible = models.BooleanField(
-        default=False,
+        default=True,
         help_text="If True, e-extension is visible to super extension"
         "officers allowed in their county"
     )

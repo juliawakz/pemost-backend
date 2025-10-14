@@ -47,36 +47,46 @@ class SuperExtensionOfficerWriteSerializer(serializers.ModelSerializer):
     Serializer for creating new Super Extension officers.
     Requires: user, counties.
     """
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.filter(role='SUPER_EXTENSION')
-    )
     counties = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=__import__('locations.models.county',
                             fromlist=['County']).County.objects.all(),
-        required=False
+        required=True
     )
 
     class Meta:
         model = SuperExtensionOfficer
         fields = [
-            "user",
             "counties",
         ]
 
-    def validate_user(self, value):
+    def validate(self, attrs):
         """Ensure user has SUPER_EXTENSION role"""
-        if (not hasattr(value, 'is_superextension') or
-                not value.is_superextension()):
+        request = self.context.get("request")
+        if request is None:
+            raise ValidationError("Request context is missing.")
+        user = request.user
+        counties = attrs.get("counties")
+
+        if not user.is_superextension():
             raise ValidationError(
-                "User must have the role 'SUPER_EXTENSION'."
+                "Only a user with super extension role can register."
             )
+
         # Check if user already has a Super Extension profile
-        if SuperExtensionOfficer.objects.filter(user=value).exists():
+        if SuperExtensionOfficer.objects.filter(user=user).exists():
             raise ValidationError(
                 "This user already has a Super Extension officer profile."
             )
-        return value
+
+        # Ensure at least one ward
+        if not counties:
+            raise ValidationError(
+                "At least one ward must be assigned.")
+
+        attrs["user"] = user
+
+        return attrs
 
     def to_representation(self, instance):
         """Return full Super Extension data after creation"""

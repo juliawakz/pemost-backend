@@ -15,8 +15,6 @@ class AgrodealerReadSerializer(serializers.ModelSerializer):
     """
     user = MiniUserReadSerializer(read_only=True)
     ward = MiniWardSerializer(read_only=True)
-    latitude = serializers.FloatField(read_only=True)
-    longitude = serializers.FloatField(read_only=True)
 
     class Meta:
         model = Agrodealer
@@ -26,8 +24,6 @@ class AgrodealerReadSerializer(serializers.ModelSerializer):
             "user",
             "ward",
             "location",
-            "latitude",
-            "longitude",
             "address",
             "is_visible",
             "is_archived",
@@ -46,33 +42,49 @@ class AgrodealerReadSerializer(serializers.ModelSerializer):
 class AgrodealerWriteSerializer(serializers.ModelSerializer):
     """
     Serializer for creating new agrodealers.
-    Requires: name, user, ward, location.
-    Address is auto-generated from location.
+    Requires: name, ward, and location.
+    The user is automatically assigned from the request.
     """
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.filter(role='AGRODEALER')
-    )
-
     class Meta:
         model = Agrodealer
-        fields = [
-            "name",
-            "user",
-            "ward",
-            "location",
-        ]
+        fields = ["name", "ward", "location"]
 
-    def validate_user(self, value):
-        """Ensure user has AGRODEALER role"""
-        if not hasattr(value, 'is_agrodealer') or not value.is_agrodealer():
-            raise ValidationError("User must have the role 'AGRODEALER'.")
-        return value
+    def validate(self, attrs):
+        """Ensure only AGRODEALER users can create."""
+        request = self.context.get("request")
+        if request is None:
+            raise ValidationError("Request context is missing.")
+        user = request.user
+        location = attrs.get("location")
+        name = attrs.get("name")
+
+        if not user.is_agrodealer():
+            raise ValidationError(
+                "Only a user with agrodealer role can register an agrodealer."
+            )
+
+        if Agrodealer.objects.filter(
+                name=name,
+                user=user,
+                location=location).exists():
+            raise ValidationError(
+                "You can only have one agrodealer in the same location"
+            )
+
+        attrs["user"] = user
+
+        return attrs
 
     def validate_location(self, value):
         """Ensure location is not empty"""
         if not value:
             raise ValidationError("Location cannot be empty.")
         return value
+
+    def create(self, validated_data):
+        """Attach the requesting user automatically"""
+        validated_data["user"] = self.context["request"].user
+        return super().create(validated_data)
 
     def to_representation(self, instance):
         """Return full agrodealer data after creation"""

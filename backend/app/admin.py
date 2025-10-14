@@ -80,7 +80,7 @@ class SuperExtensionOfficerAdmin(admin.ModelAdmin):
 
 
 class AgrodealerAdmin(admin.ModelAdmin):
-    list_display = ["user", "is_visible", "created_at"]
+    list_display = ["user", "name", "ward", "is_visible", "created_at"]
     list_filter = ["is_visible", "created_at"]
     search_fields = ["user__email", "user__first_name", "user__last_name"]
     list_per_page = 50
