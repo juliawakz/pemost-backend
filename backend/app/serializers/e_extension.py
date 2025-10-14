@@ -1,11 +1,11 @@
 from app.models.e_extension import EExtensionOfficer
 from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema_field
+from locations.models.ward import Ward
 from locations.serializers.ward import MiniWardSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from users.serializers.user import MiniUserReadSerializer
-from locations.models.ward import Ward
 
 User = get_user_model()
 

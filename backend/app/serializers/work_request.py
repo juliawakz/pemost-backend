@@ -1,8 +1,8 @@
 from app.choices import WorkRequestStatusChoices
 from app.models.work_request import EExtensionWorkRequest, FarmerWorkRequest
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
 from django.db.models import Q
+from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from users.serializers.user import MiniUserReadSerializer
 
