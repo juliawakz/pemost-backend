@@ -2,6 +2,7 @@ from app.choices import WorkRequestStatusChoices
 from app.models.work_request import EExtensionWorkRequest, FarmerWorkRequest
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 from users.serializers.user import MiniUserReadSerializer
 
@@ -74,17 +75,22 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
             farmer = request.user
             e_extension = attrs.get('e_extension')
 
-            # Check for existing pending request
-            existing = FarmerWorkRequest.objects.filter(
-                farmer=farmer,
-                e_extension=e_extension,
-                status=WorkRequestStatusChoices.PENDING,
-                is_archived=False
-            ).exists()
-
-            if existing:
+            # Check for existing pending/accepted request
+            if FarmerWorkRequest.objects.filter(
+                Q(
+                    e_extension=e_extension,
+                    farmer=farmer,
+                    status=WorkRequestStatusChoices.PENDING,
+                    is_archived=False
+                ) |
+                Q(
+                    e_extension=e_extension,
+                    farmer=farmer,
+                    status=WorkRequestStatusChoices.ACCEPTED
+                )
+            ).exists():
                 raise ValidationError(
-                    "You already have a pending request to this "
+                    "You already have a pending/accepted request to this "
                     "E-Extension officer."
                 )
 
@@ -182,14 +188,19 @@ class EExtensionWorkRequestCreateSerializer(serializers.ModelSerializer):
             super_extension = attrs.get('super_extension')
 
             # Check for existing pending request
-            existing = EExtensionWorkRequest.objects.filter(
-                e_extension=e_extension,
-                super_extension=super_extension,
-                status=WorkRequestStatusChoices.PENDING,
-                is_archived=False
-            ).exists()
-
-            if existing:
+            if EExtensionWorkRequest.objects.filter(
+                Q(
+                    e_extension=e_extension,
+                    super_extension=super_extension,
+                    status=WorkRequestStatusChoices.PENDING,
+                    is_archived=False
+                ) |
+                Q(
+                    e_extension=e_extension,
+                    super_extension=super_extension,
+                    status=WorkRequestStatusChoices.ACCEPTED
+                )
+            ).exists():
                 raise ValidationError(
                     "You already have a pending request to this "
                     "Super Extension officer."

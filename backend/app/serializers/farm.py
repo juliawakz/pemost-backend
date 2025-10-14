@@ -51,43 +51,59 @@ class FarmReadSerializer(serializers.ModelSerializer):
 class FarmWriteSerializer(serializers.ModelSerializer):
     """
     Serializer for creating new farms.
-    Requires: name, boundary, ward, user.
+    Requires: name, boundary, ward.
     Optional: user_size (farmer's estimated size).
+    The user is automatically assigned from the request.
     """
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.filter(role='FARMER')
-    )
-
     class Meta:
         model = Farm
-        fields = [
-            "name",
-            "boundary",
-            "user_size",
-            "ward",
-            "user",
-        ]
+        fields = ["name", "boundary", "user_size", "ward"]
 
+    # -----------------------------
+    # VALIDATION METHODS
+    # -----------------------------
     def validate_name(self, value):
-        """Ensure farm name is unique"""
+        """Ensure farm name is unique."""
         if Farm.objects.filter(name=value).exists():
             raise ValidationError("A farm with this name already exists.")
         return value
 
-    def validate_user(self, value):
-        """Ensure user has FARMER role"""
-        if not value.is_farmer():
-            raise ValidationError("User must have the role 'FARMER'.")
-        return value
-
     def validate_boundary(self, value):
-        """Ensure boundary is not empty"""
-        if not value or value.empty:
+        """Ensure boundary is not empty."""
+        if not value or getattr(value, "empty", False):
             raise ValidationError("Boundary cannot be empty.")
         return value
 
+    def validate(self, attrs):
+        """
+        Validate user permissions:
+        - Farmers can only create their own farms.
+        """
+        request = self.context.get("request")
+        if request is None:
+            raise ValidationError("Request context is missing.")
+        user = request.user
+
+        # Ensure the user creating a farm is a farmer
+        if getattr(user, "role", None) != "FARMER":
+            raise ValidationError("You must have the role 'FARMER'.")
+
+        attrs["user"] = user
+
+        return attrs
+
+    # -----------------------------
+    # CREATION LOGIC
+    # -----------------------------
+    def create(self, validated_data):
+        """Create a farm and attach the correct user."""
+        return super().create(validated_data)
+
+    # -----------------------------
+    # OUTPUT REPRESENTATION
+    # -----------------------------
     def to_representation(self, instance):
-        """Return full farm data after creation"""
+        """Return full farm data after creation."""
         return FarmReadSerializer(instance, context=self.context).data
 
 
@@ -96,7 +112,6 @@ class FarmUpdateSerializer(serializers.ModelSerializer):
     Serializer for updating farm data.
     Only allows updating: name, boundary, and user_size.
     """
-
     class Meta:
         model = Farm
         fields = [

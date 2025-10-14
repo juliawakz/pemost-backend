@@ -64,6 +64,7 @@ class EExtensionOfficerViewset(viewsets.ModelViewSet):
         # Farmers can see all E-Extension officers
         if u.is_farmer():
             return base_queryset.filter(
+                wards__in=u.farm_users.values_list('ward', flat=True),
                 is_archived=False,
                 is_visible=True
             ).distinct()

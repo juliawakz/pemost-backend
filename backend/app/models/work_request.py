@@ -157,13 +157,21 @@ class FarmerWorkRequest(BaseModel):
         ordering = ("-created_at",)
         verbose_name = _("Farmer Work Request")
         verbose_name_plural = _("Farmer Work Requests")
-        # Only one pending request per farmer/e-extension pair
+        # Only one pending/accepted request per farmer/e-extension pair
         constraints = [
+            # Only one pending request per pair
             models.UniqueConstraint(
                 fields=['farmer', 'e_extension'],
                 condition=models.Q(status='PENDING', is_archived=False),
                 name='unique_pending_farmer_request'
-            )
+            ),
+
+            # Once accepted, block any other request for that pair
+            models.UniqueConstraint(
+                fields=['farmer', 'e_extension'],
+                condition=models.Q(status='ACCEPTED'),
+                name='unique_accepted_farmer_request_global'
+            ),
         ]
         indexes = [
             models.Index(fields=['status', '-created_at']),

@@ -18,7 +18,8 @@ class SuperExtensionOfficer(BaseModel):
     )
     counties = models.ManyToManyField(
         County,
-        blank=True
+        blank=False,
+        related_name="super_extension_counties"
     )
 
     slug = None

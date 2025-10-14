@@ -8,6 +8,7 @@ from app.serializers.work_request import (
     FarmerWorkRequestCreateSerializer,
     FarmerWorkRequestReadSerializer,
 )
+from django.db.models import Q
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
@@ -62,19 +63,15 @@ class FarmerWorkRequestViewset(viewsets.ModelViewSet):
 
         # Farmers see their sent requests
         # E-Extensions see requests sent to them
-        return FarmerWorkRequest.objects.filter(
-            farmer=user
-        ).select_related(
-            'farmer', 'e_extension'
-        ).filter(
-            is_archived=False
-        ).order_by('-created_at') | FarmerWorkRequest.objects.filter(
-            e_extension=user
-        ).select_related(
-            'farmer', 'e_extension'
-        ).filter(
-            is_archived=False
-        ).order_by('-created_at').distinct()
+        return (
+            FarmerWorkRequest.objects.filter(
+                Q(farmer=user) | Q(e_extension=user),
+                is_archived=False
+            )
+            .select_related('farmer', 'e_extension')
+            .order_by('-created_at')
+            .distinct()
+        )
 
     @extend_schema(
         summary="Accept work request",

@@ -28,7 +28,8 @@ class Agrodealer(BaseModel):
     )
     ward = models.ForeignKey(
         Ward,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="agrodealer_wards"
     )
     location = gis_models.PointField(
         geography=True,
@@ -54,14 +55,6 @@ class Agrodealer(BaseModel):
 
     def __str__(self):
         return self.name
-
-    @property
-    def latitude(self):
-        return self.location.y if self.location else None
-
-    @property
-    def longitude(self):
-        return self.location.x if self.location else None
 
     def clean(self):
         if self.user and self.user.role != RoleChoices.AGRODEALER:
