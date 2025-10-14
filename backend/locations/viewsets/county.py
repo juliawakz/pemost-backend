@@ -5,7 +5,7 @@ from locations.models.county import County
 from locations.serializers.county import CountySerializer
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from users.permissions.user import IsSystemAdminOrSuperUser
+from users.permissions import IsSystemAdminOrSuperUser
 
 
 @extend_schema(tags=["Locations - Counties"])

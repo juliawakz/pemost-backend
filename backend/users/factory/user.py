@@ -49,9 +49,14 @@ class UserFactory(factory.django.DjangoModelFactory):
 # Specialized User Factories
 # -----------------------------
 class SystemAdminFactory(UserFactory):
-    role = RoleChoices.SYSTEM_ADMIN
+    role = RoleChoices.SYSTEMADMIN
     is_staff = True
     is_superuser = True
+
+
+class SuperadminFactory(UserFactory):
+    role = RoleChoices.SYSTEMADMIN
+    is_staff = True
 
 
 class SuperExtensionFactory(UserFactory):

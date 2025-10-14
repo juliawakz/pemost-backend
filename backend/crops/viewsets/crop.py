@@ -5,7 +5,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from users.permissions.user import IsSuperExtensionOrEExtension
+
+from backend.users.user import IsSystemAdminOrSuperUser
 
 
 @extend_schema(tags=["Crop"])
@@ -25,6 +26,6 @@ class CropViewset(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [
-                IsSuperExtensionOrEExtension
+                IsSystemAdminOrSuperUser
             ]
         return [permission() for permission in permission_classes]

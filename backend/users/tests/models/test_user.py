@@ -45,7 +45,7 @@ def test_superuser_creation():
     )
     assert admin.is_superuser is True
     assert admin.is_staff is True
-    assert admin.role == RoleChoices.SYSTEM_ADMIN
+    assert admin.role == RoleChoices.SYSTEMADMIN
 
 
 # -------------------------------
@@ -55,7 +55,7 @@ def test_superuser_creation():
 def test_full_name_and_str():
     user = UserFactory(first_name="Jane", last_name="Doe")
     assert user.full_name == "Jane Doe"
-    assert str(user) == "Jane Doe (FARMER)"  # matches __str__
+    assert str(user) == "Jane Doe"  # matches __str__
 
 
 @pytest.mark.django_db
@@ -73,14 +73,14 @@ def test_profile_photo_url(settings):
 @pytest.mark.django_db
 def test_role_helpers():
     admin = SystemAdminFactory()
-    assert admin.is_system_admin() is True
+    assert admin.is_systemadmin() is True
 
     super_ext = SuperExtensionFactory()
-    assert super_ext.is_super_extension() is True
-    assert super_ext.is_system_admin() is False
+    assert super_ext.is_superextension() is True
+    assert super_ext.is_systemadmin() is False
 
     e_ext = EExtensionFactory()
-    assert e_ext.is_e_extension() is True
+    assert e_ext.is_eextension() is True
 
 
 # -------------------------------
@@ -106,7 +106,7 @@ def test_user_with_location_relationships():
 @pytest.mark.parametrize(
     "factory_class, expected_role",
     [
-        (SystemAdminFactory, RoleChoices.SYSTEM_ADMIN),
+        (SystemAdminFactory, RoleChoices.SYSTEMADMIN),
         (SuperExtensionFactory, RoleChoices.SUPER_EXTENSION),
         (EExtensionFactory, RoleChoices.E_EXTENSION),
         (AgroDealerFactory, RoleChoices.AGRODEALER),

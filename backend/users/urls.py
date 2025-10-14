@@ -11,38 +11,42 @@ from users.views.password import (
 from users.views.profile import ProfileView
 from users.views.registration import RegisterAccountView, VerifyAccountView
 from users.views.token import CustomTokenRefreshView, ObtainAuthTokenView
-from users.viewset.user import UserViewSet
 
 app_name = "users"
 
 router = DefaultRouter()
-router.register(r"", UserViewSet, basename="users")
+
 
 urlpatterns = [
+    # Generate API key endpoint
     path(
-        "apikey/",
+        "generate/apikey/",
         ObtainAuthTokenView.as_view(),
-        name='obtain-auth-token'
+        name="register-account"
     ),
+    # Account verification
     path(
         "register/account/",
         RegisterAccountView.as_view(),
         name="register-account"
     ),
+    # Account verification
     path(
         "verify/account/",
         VerifyAccountView.as_view(),
         name="verify-account"
     ),
+    # Profile Management
+    path(
+        "profile/",
+        ProfileView.as_view(),
+        name="profile-management"
+    ),
+    # List Available roles
     path(
         "roles/",
         RoleChoicesView.as_view(),
         name="role-choices"
-    ),
-    path(
-        "profile/",
-        ProfileView.as_view(),
-        name="profile"
     ),
     path(
         "login/",
