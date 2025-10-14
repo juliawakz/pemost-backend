@@ -8,8 +8,8 @@ from django.contrib.gis.db import models as gis_models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
-from locations.models import Ward
 from django.utils.translation import gettext_lazy as _
+from locations.models import Ward
 
 User = get_user_model()
 
