@@ -8,7 +8,7 @@ from users.exceptions import (
     InactiveAccountException,
     InvalidCredentialsException,
 )
-from users.serializers.profile import ProfileSerializer
+from users.serializers.user import UserReadSerializer
 
 User = get_user_model()
 
@@ -31,7 +31,7 @@ class LoginSerializer(serializers.Serializer):
         style={"input_type": "password"},
         allow_blank=False
     )
-    user = ProfileSerializer(
+    user = UserReadSerializer(
         many=False,
         read_only=True
     )

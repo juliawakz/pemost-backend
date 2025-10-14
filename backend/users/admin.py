@@ -13,13 +13,14 @@ class UserAdmin(admin.ModelAdmin):
         "role",
         "is_verified",
         "is_archived",
-        "is_managed",
         "created_at",
     ]
-    list_filter = ["created_at", "updated_at", "role"]
+    list_filter = ["created_at", "updated_at", "role", "is_verified"]
     search_fields = [
         "email",
         "id",
+        "first_name",
+        "last_name",
     ]
     list_per_page = 50
     formfield_overrides = {models.JSONField: {"widget": JSONEditorWidget}}

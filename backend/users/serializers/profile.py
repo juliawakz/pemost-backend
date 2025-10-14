@@ -12,15 +12,17 @@ class ProfileSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "full_name",
+            "id_number",
             "email",
             "phone_number",
             "profile_photo",
             "role",
-            "is_managed"
+            "is_verified"
         )
         extra_kwargs = {
             "id": {"read_only": True},
             "email": {"read_only": True},
             "full_name": {"read_only": True},
-            "role": {"read_only": True}
+            "role": {"read_only": True},
+            "is_verified": {"read_only": True},
         }

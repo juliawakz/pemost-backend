@@ -5,7 +5,7 @@ from locations.models.ward import Ward
 from locations.serializers.ward import WardSerializer
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from users.permissions.user import IsSystemAdminOrSuperUser
+from users.permissions import IsSystemAdminOrSuperUser
 
 
 @extend_schema(tags=["Locations - Wards"])
@@ -21,7 +21,7 @@ class WardViewSet(viewsets.ModelViewSet):
         Only system admin/superuser can create/update/delete.
         """
         if self.action in ["list", "retrieve"]:
-            permission_classes = []
+            permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsSystemAdminOrSuperUser]
         return [permission() for permission in permission_classes]

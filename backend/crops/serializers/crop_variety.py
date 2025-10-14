@@ -17,7 +17,7 @@ class CropVarietySerializer(serializers.ModelSerializer):
         user = request.user
 
         # --- Permission checks ---
-        if not (user.is_superuser or user.is_system_admin() or
+        if not (user.is_superuser or user.is_systemadmin() or
                 user.is_super_extension() or user.is_e_extension()):
             raise PermissionDenied(
                 "You are not allowed to manage crop varieties."

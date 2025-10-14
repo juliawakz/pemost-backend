@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView
@@ -10,6 +11,8 @@ from users.serializers.password import (
 )
 from users.utils.user import UserUtils
 
+User = get_user_model()
+
 
 @extend_schema(tags=["Password"])
 class PasswordResetView(GenericAPIView):
@@ -19,9 +22,13 @@ class PasswordResetView(GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        UserUtils().send_email_otp(serializer.data["email"])
+        try:
+            user = User.objects.get(email=serializer.data["email"])
+            UserUtils().send_email_otp(user.email)
+        except User.DoesNotExist:
+            pass
         response = {
-            "message": "Reset OTP sent to email."
+            "message": "Check your email for reset otp."
         }
         return Response(response, status=status.HTTP_200_OK)
 

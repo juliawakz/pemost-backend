@@ -4,7 +4,7 @@ from rest_framework.exceptions import APIException
 
 class AccountNotRegisteredException(APIException):
     status_code = 404
-    default_detail = _("There is no account registered with this email.")
+    default_detail = _("Unable to log in with provided credentials.")
     default_code = "non-registered-account"
 
 

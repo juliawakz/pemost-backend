@@ -30,30 +30,6 @@ class UserUtils:
         user.save()
         return user
 
-    def _derive_subcounties_and_counties_from_wards(self, wards_qs):
-        # wards -> subcounties -> counties
-        subcounties = SubCounty.objects.filter(wards__in=wards_qs).distinct()
-        counties = County.objects.filter(subcounties__in=subcounties).distinct()
-        return subcounties, counties
-
-    def _ensure_all_wards_in_counties(self, wards, counties):
-        county_ids = set(counties.values_list("id", flat=True))
-        bad_wards = [
-            {"id": str(w.id), "name": w.name} for w in wards
-            if w.subcounty.county_id not in county_ids
-        ]
-        return bad_wards
-
-    def _ensure_wards_subset(self, wards, allowed_wards):
-        allowed_ids = set(
-            allowed_wards.values_list("id", flat=True)
-        )
-        bad_wards = [
-            {"id": str(w.id), "name": w.name}
-            for w in wards if w.id not in allowed_ids
-        ]
-        return bad_wards
-
     def check_token_is_valid(self, otp_details: dict):
         user = User.objects.filter(
             email=otp_details["email"]

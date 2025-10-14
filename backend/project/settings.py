@@ -66,9 +66,7 @@ INSTALLED_APPS = [
     "users",
     "locations",
     "notifications",
-    "farms",
-    "crops",
-    "pest_control"
+    "app"
 ]
 
 MIDDLEWARE = [
@@ -440,9 +438,7 @@ MIGRATION_MODULES = {
     "users": "migration_files.users",
     "notifications": "migration_files.notifications",
     "locations": "migration_files.locations",
-    "farms": "migration_files.farms",
-    "crops": "migration_files.crops",
-    "pest_control": "migration_files.pest_control"
+    "app": "migration_files.app"
 }
 
 SPECTACULAR_SETTINGS = {
@@ -463,22 +459,18 @@ SPECTACULAR_SETTINGS = {
             "bearerFormat": "JWT"
         }
     },
+    "ENUM_NAME_OVERRIDES": {
+        "RoleChoices": "users.choices.RoleChoices",
+        "WorkRequestStatusChoices": "app.choices.WorkRequestStatusChoices",
+    },
     "TAGS": [
+        {"name": "Authentication", "description": "Login, logout and refresh token handling"},
+        {"name": "Password", "description": "Password management endpoints"},
+        {"name": "Notifications", "description": "Notifications management"},
         {"name": "Users", "description": "User registration and management endpoints"},
         {"name": "Profile", "description": "Profile management endpoints"},
-        {"name": "Farms", "description": "Farm registration and management"},
-        {"name": "Farmer Account Registration", "description": "Farmer registration and management"},
-        {"name": "Plantation", "description": "Plantation registration and management"},
-        {"name": "Agrodealers", "description": "Agrodealer registration and management"},
-        {"name": "Crop", "description": "Crops registration and management"},
-        {"name": "Crop Varieties", "description": "Crop Varieties registration and management"},
-        {"name": "Growth Stages", "description": "Growth stages registration and management"},
-        {"name": "Pest Control", "description": "Pest control management"},
         {"name": "Locations - Counties", "description": "Counties management endpoints"},
         {"name": "Locations - Subcounties", "description": "Subcounties management endpoints"},
         {"name": "Locations - Wards", "description": "Wards management endpoints"},
-        {"name": "Notifications", "description": "Notifications management"},
-        {"name": "Authentication", "description": "Login, logout and refresh token handling"},
-        {"name": "Password", "description": "Password management endpoints"},
     ],
 }
