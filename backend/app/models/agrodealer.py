@@ -70,7 +70,7 @@ class Agrodealer(BaseModel):
             try:
                 geolocator = Nominatim(user_agent="agrodealer_app")
                 location = geolocator.reverse(
-                    (self.latitude, self.longitude),
+                    (self.location.y, self.location.x),
                     language="en"
                 )
                 if location and location.address:
