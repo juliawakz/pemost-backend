@@ -118,6 +118,7 @@ class FarmUpdateSerializer(serializers.ModelSerializer):
             "name",
             "boundary",
             "user_size",
+            "is_visible"
         ]
 
     def validate_name(self, value):
