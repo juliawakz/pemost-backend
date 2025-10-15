@@ -36,7 +36,7 @@ class Agrodealer(BaseModel):
         srid=4326
     )  # WGS84 lat/lon
     address = models.CharField(
-        max_length=100,
+        max_length=300,
         blank=True,
         null=True
     )
