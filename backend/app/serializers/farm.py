@@ -148,3 +148,10 @@ class FarmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farm
         fields = "__all__"
+
+
+class MiniFarmReadSerializer(serializers.ModelSerializer):
+    """Minimal representation of a Farm."""
+    class Meta:
+        model = Farm
+        fields = ["id", "name", "ward", "boundary"]

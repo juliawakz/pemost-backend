@@ -50,7 +50,6 @@ class EExtensionWorkRequestAdmin(admin.ModelAdmin):
 
 class FarmerWorkRequestAdmin(admin.ModelAdmin):
     list_display = [
-        "farmer",
         "e_extension",
         "status",
         "notification_sent",
@@ -58,7 +57,7 @@ class FarmerWorkRequestAdmin(admin.ModelAdmin):
         "responded_at",
     ]
     list_filter = ["status", "notification_sent", "created_at"]
-    search_fields = ["farmer__email", "e_extension__email"]
+    search_fields = ["e_extension__email"]
     list_per_page = 50
     save_on_top = True
 

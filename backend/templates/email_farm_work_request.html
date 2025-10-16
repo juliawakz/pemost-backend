@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Farm Work Request</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      background-color: #ffffff;
+      margin: 30px auto;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 600px;
+    }
+
+    h2 {
+      color: #2a7a3b;
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #2a7a3b;
+      color: white;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 18px;
+      background-color: #2a7a3b;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>New Farm Work Request Received</h2>
+    <p>Dear {{ eextension_name }},</p>
+
+    <p>
+      You have received a new farm work request from
+      <strong>{{ farmer_name }}</strong>. Below are the farms included in the request:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Farm Name</th>
+          <th>Ward</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for farm in farms %}
+        <tr>
+          <td>{{ farm.name }}</td>
+          <td>{{ farm.ward }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p>
+      To view more details or take action, please log in to your PEMOST account.
+    </p>
+
+    <p>
+      <a href="{{ login_url }}" class="button">Login to PEMOST</a>
+    </p>
+
+    <p>Thank you for your continued support in assisting our farmers.</p>
+
+    <div class="footer">
+      &copy; {{ current_year }} PEMOST Platform. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>

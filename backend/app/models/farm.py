@@ -56,7 +56,7 @@ class Farm(BaseModel):
     )
     is_visible = models.BooleanField(
         default=False,
-        help_text="If True, farmer is visible to allowed " \
+        help_text="If True, farmer is visible to allowed "
         "e-extension officers in their ward"
     )
 

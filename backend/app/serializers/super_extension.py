@@ -118,3 +118,13 @@ class SuperExtensionOfficerUpdateSerializer(serializers.ModelSerializer):
         return SuperExtensionOfficerReadSerializer(
             instance, context=self.context
         ).data
+
+
+class MiniSuperExtensionOfficerSerializer(
+        SuperExtensionOfficerReadSerializer):
+    class Meta:
+        model = SuperExtensionOfficer
+        fields = [
+            "id",
+            "user",
+        ]
