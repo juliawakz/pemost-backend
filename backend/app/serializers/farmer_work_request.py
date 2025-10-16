@@ -1,20 +1,19 @@
+from datetime import datetime
+
 from app.choices import WorkRequestStatusChoices
-from app.models.farmer_work_request import FarmerWorkRequest
+from app.models import EExtensionOfficer
 from app.models.farm import Farm
+from app.models.farmer_work_request import FarmerWorkRequest
+from app.serializers.e_extension import MiniEExtensionOfficerSerializer
+from app.serializers.farm import MiniFarmReadSerializer
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.template.loader import render_to_string
-from django.conf import settings
-from datetime import datetime
-from users.serializers.user import MiniUserReadSerializer
 from notifications.tasks import send_email_task
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from app.serializers.e_extension import MiniEExtensionOfficerSerializer
-from app.serializers.farm import MiniFarmReadSerializer
-from app.models import (
-    EExtensionOfficer
-)
+from users.serializers.user import MiniUserReadSerializer
 
 User = get_user_model()
 
@@ -95,8 +94,8 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
         invalid_farms = [farm for farm in farms if farm.user != farmer]
         if invalid_farms:
             raise ValidationError({
-                "farms": f"You cannot include farms that don't belong to you: "
-                         f"{', '.join([farm.name for farm in invalid_farms])}"
+                "message": f"You cannot include farms that don't belong to you: "
+                           f"{', '.join([farm.name for farm in invalid_farms])}"
             })
 
         # Ensure all farms fall within the wards the e-extension operates in
@@ -114,8 +113,8 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
 
         if farms_outside:
             raise ValidationError({
-                "farms": f"The following farms are outside the E-Extension's operational wards: "
-                         f"{', '.join([farm.name for farm in farms_outside])}"
+                "message": f"The following farm(s) are outside the E-Extension's operational wards: "
+                           f"{', '.join([farm.name for farm in farms_outside])}"
             })
 
         # Check for existing active requests for same farms and e-extension
@@ -132,7 +131,7 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
         if existing.exists():
             raise ValidationError({
                 "farms": "One or more of these farms already have a pending or"
-                "accepted request with this E-Extension officer."
+                " accepted request with this E-Extension officer."
             })
 
         return attrs
@@ -157,10 +156,9 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
         html_template = render_to_string(
             "email_farm_work_request.html",
             {
-                "eextension_name": getattr(eextension.user, "first_name"),
-                "farmer_name": getattr(work_request.farms.first().user, "first_name"),
+                "eextension_name": eextension.user.first_name,
+                "farmer_name": work_request.farms.first().user.first_name,
                 "farms": farms_data,
-                "login_url": f"{settings.LOGIN_URL}",
                 "current_year": datetime.now().year,
             },
         )

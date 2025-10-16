@@ -68,11 +68,11 @@ def test_create_user_with_ward():
     data["wards"] = [ward.id]
     request = type("MockRequest", (), {"user": admin})
 
-    with patch("users.utils.otp.OtpUtils.generate_random_password", return_value="TempPass123!"):
-        with patch("users.utils.user.UserUtils.send_login_credentials_email") as mock_email:
-            serializer = UserSerializer(data=data, context={"request": request})
-            assert serializer.is_valid()
-            user = serializer.save()
+    with patch("users.utils.otp.OtpUtils.generate_random_password", return_value="TempPass123!"), \
+            patch("users.utils.user.UserUtils.send_login_credentials_email") as mock_email:
+        serializer = UserSerializer(data=data, context={"request": request})
+        assert serializer.is_valid()
+        user = serializer.save()
 
     user.refresh_from_db()
     assert user.wards.count() == 1

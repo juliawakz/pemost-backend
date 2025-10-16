@@ -1,5 +1,3 @@
-from urllib.parse import parse_qs
-
 from channels.auth import AuthMiddlewareStack
 from channels.db import database_sync_to_async
 from channels.middleware import BaseMiddleware
@@ -8,7 +6,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.db import close_old_connections
 from jwt import decode as jwt_decode
-from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 # from rest_framework_simplejwt.state import
@@ -47,7 +44,7 @@ class JwtAuthMiddleware(BaseMiddleware):
             try:
                 # This will automatically validate the token and raise an error if token is invalid
                 UntypedToken(token)
-            except (InvalidToken, TokenError) as e:
+            except (InvalidToken, TokenError):
                 # Token is invalid
                 scope["user"] = AnonymousUser()
                 return await super().__call__(scope, receive, send)

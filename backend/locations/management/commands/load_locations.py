@@ -62,7 +62,7 @@ class Command(BaseCommand):
                     existing_wards = max(existing_wards, ward.ward_id)
 
         # Summary report
-        self.stdout.write(self.style.SUCCESS("\n✅ Data import complete!"))
-        self.stdout.write(f"📌 Counties: {created_counties} created, {existing_counties} already existed")
-        self.stdout.write(f"📌 Subcounties: {created_subcounties} created, {existing_subcounties} already existed")
-        self.stdout.write(f"📌 Wards: {created_wards} created, {existing_wards} already existed")
+        self.stdout.write(self.style.SUCCESS("\nData import complete!"))
+        self.stdout.write(f"Counties: {created_counties} created, {existing_counties} already existed")
+        self.stdout.write(f"Subcounties: {created_subcounties} created, {existing_subcounties} already existed")
+        self.stdout.write(f"Wards: {created_wards} created, {existing_wards} already existed")

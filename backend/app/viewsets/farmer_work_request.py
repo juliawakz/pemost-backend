@@ -6,7 +6,6 @@ from app.serializers.farmer_work_request import (
     FarmerWorkRequestCreateSerializer,
     FarmerWorkRequestReadSerializer,
 )
-from django.db.models import Q
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication

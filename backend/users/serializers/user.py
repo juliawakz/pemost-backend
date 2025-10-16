@@ -64,9 +64,9 @@ class RegisterAccountSerializer(serializers.Serializer):
             "email": validated_data["email"],
             "phone_number": validated_data["phone_number"],
             "password": validated_data["password1"],
-            "id_number": validated_data.get("id_number", None),
-            "role": validated_data.get("role", None),
-            "profile_photo": validated_data.get("profile_photo", None),
+            "id_number": validated_data.get("id_number"),
+            "role": validated_data.get("role"),
+            "profile_photo": validated_data.get("profile_photo"),
         }
         return User.objects.create_user(**user_data)
 

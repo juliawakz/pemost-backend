@@ -2,7 +2,6 @@ import factory
 from users.factory.user import (
     AgroDealerFactory,
     EExtensionFactory,
-    FarmerFactory,
     SuperExtensionFactory,
 )
 from users.models import Agrodealer, EExtensionOfficer, SuperExtensionOfficer

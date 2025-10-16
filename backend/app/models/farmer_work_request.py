@@ -1,11 +1,11 @@
 from app.choices import WorkRequestStatusChoices
+from app.models.e_extension import EExtensionOfficer
+from app.models.farm import Farm
 from base.models import BaseModel
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils.translation import gettext as _
-from app.models.farm import Farm
 from django.utils import timezone
-from app.models.e_extension import EExtensionOfficer
+from django.utils.translation import gettext as _
 
 User = get_user_model()
 

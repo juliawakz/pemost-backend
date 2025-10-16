@@ -1,13 +1,10 @@
 from app.choices import WorkRequestStatusChoices
+from app.models import EExtensionOfficer, SuperExtensionOfficer
 from base.models import BaseModel
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils.translation import gettext as _
 from django.utils import timezone
-from app.models import (
-    SuperExtensionOfficer,
-    EExtensionOfficer
-)
+from django.utils.translation import gettext as _
 
 User = get_user_model()
 
