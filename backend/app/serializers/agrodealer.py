@@ -108,7 +108,7 @@ class AgrodealerUpdateSerializer(serializers.ModelSerializer):
 
     def validate_location(self, value):
         """Ensure location is not empty"""
-        if value and not value:
+        if not value:
             raise ValidationError("Location cannot be empty.")
         return value
 

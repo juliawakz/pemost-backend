@@ -1,16 +1,17 @@
-from app.choices import WorkRequestStatusChoices
-from app.models.eextension_work_request import EExtensionWorkRequest
-from django.contrib.auth import get_user_model
-from django.db.models import Q
-from rest_framework import serializers
-from django.conf import settings
 from datetime import datetime
-from rest_framework.exceptions import ValidationError
+
+from app.choices import WorkRequestStatusChoices
+from app.models import SuperExtensionOfficer
+from app.models.eextension_work_request import EExtensionWorkRequest
 from app.serializers.e_extension import MiniEExtensionOfficerSerializer
 from app.serializers.super_extension import MiniSuperExtensionOfficerSerializer
-from app.models import SuperExtensionOfficer
-from notifications.tasks import send_email_task
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django.template.loader import render_to_string
+from notifications.tasks import send_email_task
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 User = get_user_model()
 
@@ -112,10 +113,9 @@ class EExtensionWorkRequestCreateSerializer(serializers.ModelSerializer):
         html_template = render_to_string(
             "email_e_extension_work_request.html",
             {
-                "super_extension_name":  getattr(super_extension.user, "first_name"),
-                "eextension_name": getattr(e_extension.user, "first_name"),
+                "super_extension_name": super_extension.user.first_name,
+                "eextension_name": e_extension.user.first_name,
                 "message": message,
-                "login_url": f"{settings.LOGIN_URL}",
                 "current_year": datetime.now().year,
             },
         )

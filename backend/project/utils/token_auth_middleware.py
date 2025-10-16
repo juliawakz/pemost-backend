@@ -40,7 +40,7 @@ class TokenAuthMiddleware:
         # Get the token
         try:
             token = parse_qs(scope["query_string"].decode("utf8"))["token"][0]
-        except Exception as e:
+        except Exception:
             scope["user"] = AnonymousUser()
             return await self.inner(scope, receive, send)
 
@@ -48,7 +48,7 @@ class TokenAuthMiddleware:
         try:
             # This will automatically validate the token and raise an error if token is invalid
             UntypedToken(token)
-        except (InvalidToken, TokenError) as e:
+        except (InvalidToken, TokenError):
             # Token is invalid
             return None
         else:

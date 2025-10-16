@@ -198,9 +198,8 @@ class CanManageAgrodealer(BasePermission):
             return True
 
         # Agrodealer owner can update their profile
-        if user.is_agrodealer() and obj.user == user:
-            if view.action in ['update', 'partial_update']:
-                return True
+        if user.is_agrodealer() and obj.user == user and view.action in ['update', 'partial_update']:
+            return True
 
         return False
 
@@ -244,9 +243,8 @@ class CanManageEExtensionOfficer(BasePermission):
             return True
 
         # E-Extension owner can update their profile
-        if user.is_eextension() and obj.user == user:
-            if view.action in ['update', 'partial_update']:
-                return True
+        if user.is_eextension() and obj.user == user and view.action in ['update', 'partial_update']:
+            return True
 
         return False
 
@@ -290,8 +288,7 @@ class CanManageSuperExtensionOfficer(BasePermission):
             return True
 
         # Super Extension owner can update their profile
-        if user.is_superextension() and obj.user == user:
-            if view.action in ['update', 'partial_update']:
-                return True
+        if user.is_superextension() and obj.user == user and view.action in ['update', 'partial_update']:
+            return True
 
         return False

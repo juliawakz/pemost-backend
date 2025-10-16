@@ -20,15 +20,12 @@ User = get_user_model()
 
 class PestOccurenceUtils:
     def get_occurence_and_classification(self, data):
-        counts = 0
-
         all_clipped_yellow_buffers = []
         all_clipped_green_buffers = []
         farms_with_occurrences = []
 
-        for occurence in data:
+        for _counts, occurence in enumerate(data):
             farm_object = Farm.objects.get(id=occurence['id'])
-            counts += 1
 
             farm_geometry = farm_object.farm_boundary
 
@@ -165,10 +162,6 @@ class PestOccurenceUtils:
                     [clipped_yellow_buffer_geom])
             else:
                 yellow_dissolved_buffer = clipped_yellow_buffer_geom
-        else:
-            # If there is no intersection, use the original
-            # green dissolved buffer
-            yellow_dissolved_buffer = yellow_dissolved_buffer
 
         # Check if the green dissolved buffer intersects with
         # the yellow dissolved buffer
@@ -185,10 +178,6 @@ class PestOccurenceUtils:
                     [clipped_green_buffer_geom])
             else:
                 green_dissolved_buffer = clipped_green_buffer_geom
-        else:
-            # If there is no intersection, use the original
-            # green dissolved buffer
-            green_dissolved_buffer = green_dissolved_buffer
 
         # Inside the lst_classification function
         yellow_dissolved_buffer_wkt = yellow_dissolved_buffer.wkt

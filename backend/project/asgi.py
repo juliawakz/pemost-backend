@@ -8,9 +8,9 @@ from django.core.asgi import get_asgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 django.setup()
 
-from pnotifications import routes
+from pnotifications import routes  # noqa: E402
 
-from .utils.token_auth_middleware import TokenAuthMiddleware
+from .utils.token_auth_middleware import TokenAuthMiddleware  # noqa: E402
 
 application = ProtocolTypeRouter({
     'http': get_asgi_application(),

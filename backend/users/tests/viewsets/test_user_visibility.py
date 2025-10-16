@@ -319,8 +319,8 @@ class TestUserVisibilityFiltering:
         superadmin = SuperadminFactory()
 
         # Create other users
-        farmer = FarmerFactory()
-        e_ext = EExtensionFactory()
+        FarmerFactory()
+        EExtensionFactory()
 
         self.client.force_authenticate(user=superadmin)
 
