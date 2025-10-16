@@ -119,6 +119,7 @@ DATABASES = {
 EMAIL_FROM = config("EMAIL_FROM", default="no-reply@pemost.co.ke")
 PROJECT_NAME = config("PROJECT_NAME")
 SERVER_HOST = config("SERVER_HOST")
+LOGIN_URL = config("LOGIN_URL")
 
 AT_USERNAME = config("AT_USERNAME")
 AT_API_KEY = config("AT_API_KEY")

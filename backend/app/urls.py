@@ -2,10 +2,8 @@ from app.viewsets.agrodealer import AgrodealerViewset
 from app.viewsets.e_extension import EExtensionOfficerViewset
 from app.viewsets.farm import FarmViewset
 from app.viewsets.super_extension import SuperExtensionOfficerViewset
-from app.viewsets.work_request import (
-    EExtensionWorkRequestViewset,
-    FarmerWorkRequestViewset,
-)
+from app.viewsets.farmer_work_request import FarmerWorkRequestViewset
+from app.viewsets.eextension_work_request import EExtensionWorkRequestViewset
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 

@@ -19,12 +19,13 @@ from app.serializers.super_extension import (
     SuperExtensionOfficerWriteSerializer,
     SuperExtensionOfficerUpdateSerializer,
 )
-from app.serializers.work_request import (
+from app.serializers.farmer_work_request import (
     FarmerWorkRequestReadSerializer,
-    FarmerWorkRequestCreateSerializer,
+    FarmerWorkRequestCreateSerializer
+)
+from app.serializers.eextension_work_request import (
     EExtensionWorkRequestReadSerializer,
-    EExtensionWorkRequestCreateSerializer,
-    AcceptRejectRequestSerializer,
+    EExtensionWorkRequestCreateSerializer
 )
 
 __all__ = [

@@ -151,3 +151,12 @@ class EExtensionOfficerUpdateSerializer(serializers.ModelSerializer):
         return EExtensionOfficerReadSerializer(
             instance, context=self.context
         ).data
+
+
+class MiniEExtensionOfficerSerializer(EExtensionOfficerReadSerializer):
+    class Meta:
+        model = EExtensionOfficer
+        fields = [
+            "id",
+            "user"
+        ]

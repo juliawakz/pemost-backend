@@ -35,11 +35,12 @@ class CanManageFarmerWorkRequest(BasePermission):
 
         # Read access - farmer (sender) or e-extension (recipient)
         if request.method in SAFE_METHODS:
-            return obj.farmer == user or obj.e_extension == user
+            return obj.farms.filter(user=user).exists() \
+                    or obj.e_extension.user == user
 
         # Only recipient can accept/reject
         if view.action in ['accept_request', 'reject_request']:
-            return obj.e_extension == user
+            return obj.e_extension.user == user
 
         return False
 
@@ -78,11 +79,12 @@ class CanManageEExtensionWorkRequest(BasePermission):
 
         # Read access - e-extension (sender) or super-extension (recipient)
         if request.method in SAFE_METHODS:
-            return obj.e_extension == user or obj.super_extension == user
+            return obj.e_extension.user == user or\
+                obj.super_extension.user == user
 
         # Only recipient can accept/reject
         if view.action in ['accept_request', 'reject_request']:
-            return obj.super_extension == user
+            return obj.super_extension.user == user
 
         return False
 

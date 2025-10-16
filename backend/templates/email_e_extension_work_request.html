@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New E-Extension Work Request</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      background-color: #ffffff;
+      margin: 30px auto;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 600px;
+    }
+
+    h2 {
+      color: #2a7a3b;
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 18px;
+      background-color: #2a7a3b;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>New Work Request from an E-Extension Officer</h2>
+
+    <p>Dear {{ super_extension_name }},</p>
+
+    <p>
+      {{ eextension_name }} e-extension officer has sent you a request to work with you.
+    </p>
+
+    {% if message %}
+    <p><strong>Message:</strong> {{ message }}</p>
+    {% endif %}
+
+    <p>
+      To review and take action on this request, please log in to your PEMOST account.
+    </p>
+
+    <p>
+      <a href="{{ login_url }}" class="button">Login to PEMOST</a>
+    </p>
+
+    <p>
+      Thank you for your collaboration and continued commitment to supporting our farmers.
+    </p>
+
+    <div class="footer">
+      &copy; {{ current_year }} PEMOST Platform. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
