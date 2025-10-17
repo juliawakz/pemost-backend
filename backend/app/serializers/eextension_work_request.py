@@ -146,8 +146,54 @@ class AcceptRejectRequestSerializer(serializers.Serializer):
     """
     Serializer for accepting or rejecting work requests.
     """
+    work_request = serializers.PrimaryKeyRelatedField(
+        queryset=EExtensionWorkRequest.objects.all()
+    )
+    status = serializers.CharField(
+        required=True,
+        max_length=10
+    )
     response_message = serializers.CharField(
         required=False,
         allow_blank=True,
         max_length=500
     )
+
+    def validate(self, attrs):
+        request = self.context["request"]
+        status = attrs.get("status")
+        work_request = attrs.get("work_request")
+        response_message = attrs.get("response_message")
+
+        allowed_status = ["accept", "reject"]
+
+        if status.lower() not in allowed_status:
+            raise serializers.ValidationError(
+                {
+                    "message":
+                    f"Status must be one of: {', '.join(allowed_status)}"
+                }
+            )
+
+        # Only the recipient can accept
+        if work_request.super_extension.user != request.user:
+            raise serializers.ValidationError(
+                {
+                    "message": "This request can only be accepted or rejected "
+                    "by its Super-Extension officer owner."
+                }
+            )
+
+        # Check if already accepted/rejected
+        if work_request.status != WorkRequestStatusChoices.PENDING:
+            raise serializers.ValidationError(
+                {
+                    "message":
+                    f"This request has already been {work_request.status.lower()}."
+                }
+            )
+
+        if not response_message:
+            attrs["response_message"] = ""
+
+        return attrs

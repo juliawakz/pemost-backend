@@ -94,8 +94,9 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
         invalid_farms = [farm for farm in farms if farm.user != farmer]
         if invalid_farms:
             raise ValidationError({
-                "message": f"You cannot include farms that don't belong to you: "
-                           f"{', '.join([farm.name for farm in invalid_farms])}"
+                "message":
+                f"You cannot include farms that don't belong to you: "
+                f"{', '.join([farm.name for farm in invalid_farms])}"
             })
 
         # Ensure all farms fall within the wards the e-extension operates in
@@ -103,7 +104,7 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
         if eext_wards is None:
             raise ValidationError(
                 {
-                    "e_extension": "E-Extension officer has no wards."
+                    "message": "E-Extension officer has no wards."
                 }
             )
 
@@ -113,8 +114,10 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
 
         if farms_outside:
             raise ValidationError({
-                "message": f"The following farm(s) are outside the E-Extension's operational wards: "
-                           f"{', '.join([farm.name for farm in farms_outside])}"
+                "message":
+                f"The following farm(s) are outside the E-Extension's"
+                f" operational wards: "
+                f"{', '.join([farm.name for farm in farms_outside])}"
             })
 
         # Check for existing active requests for same farms and e-extension
@@ -130,8 +133,8 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
 
         if existing.exists():
             raise ValidationError({
-                "farms": "One or more of these farms already have a pending or"
-                " accepted request with this E-Extension officer."
+                "message": "One or more of these farm(s) already has a pending"
+                " or accepted request with this E-Extension officer."
             })
 
         return attrs
@@ -188,8 +191,54 @@ class AcceptRejectRequestSerializer(serializers.Serializer):
     """
     Serializer for accepting or rejecting work requests.
     """
+    work_request = serializers.PrimaryKeyRelatedField(
+        queryset=FarmerWorkRequest.objects.all()
+    )
+    status = serializers.CharField(
+        required=True,
+        max_length=10
+    )
     response_message = serializers.CharField(
         required=False,
         allow_blank=True,
         max_length=500
     )
+
+    def validate(self, attrs):
+        request = self.context["request"]
+        status = attrs.get("status")
+        work_request = attrs.get("work_request")
+        response_message = attrs.get("response_message")
+
+        allowed_status = ["accept", "reject"]
+
+        if status.lower() not in allowed_status:
+            raise serializers.ValidationError(
+                {
+                    "message":
+                    f"Status must be one of: {', '.join(allowed_status)}"
+                }
+            )
+
+        # Only the recipient can accept
+        if work_request.e_extension.user != request.user:
+            raise serializers.ValidationError(
+                {
+                    "message": "This request can only be accepted or rejected "
+                    "by its E-Extension officer owner."
+                }
+            )
+
+        # Check if already accepted/rejected
+        if work_request.status != WorkRequestStatusChoices.PENDING:
+            raise serializers.ValidationError(
+                {
+                    "message":
+                    f"This request has already been {work_request.status.lower()}."
+                }
+            )
+
+        if not response_message:
+            attrs["response_message"] = ""
+
+        return attrs

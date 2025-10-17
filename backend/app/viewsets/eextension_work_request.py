@@ -11,6 +11,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -114,43 +115,43 @@ class EExtensionWorkRequestViewset(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
-    @extend_schema(
-        summary="Reject work request",
-        request=AcceptRejectRequestSerializer,
-        responses={200: EExtensionWorkRequestReadSerializer}
-    )
-    @action(detail=True, methods=['post'], url_path='reject')
-    def reject_request(self, request, pk=None):  # noqa: ARG002
-        """
-        Reject a work request (Super Extension only).
-        Archives the request after rejection.
-        """
-        work_request = self.get_object()
 
-        # Only the recipient can reject
-        if work_request.super_extension.user != request.user:
-            return Response(
-                {"detail": "Only the Super Extension officer can "
-                           "reject this request."},
-                status=status.HTTP_403_FORBIDDEN
-            )
+@extend_schema(
+    summary="Reject/Accept work request",
+    request=AcceptRejectRequestSerializer,
+    responses={200: EExtensionWorkRequestReadSerializer}
+)
+@action(detail=True, methods=['post'], url_path="accept/reject")
+class AcceptRejectEExtensionWorkRequestView(CreateAPIView):
+    """
+    Accept or reject a work request (Super-Extension only).
+    Establishes the relationship between Super-Extension and E-Extension.
+    Archives the request after acceptance.
+    """
+    serializer_class = AcceptRejectRequestSerializer
 
-        # Check if already accepted/rejected
-        if work_request.status != WorkRequestStatusChoices.PENDING:
-            return Response(
-                {"detail": f"This request has already been "
-                           f"{work_request.status.lower()}."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        serializer = AcceptRejectRequestSerializer(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        work_request.reject(
-            response_message=serializer.validated_data.get('response_message')
-        )
+        work_request_id = serializer.validated_data["work_request"].id
+        status_action = serializer.validated_data["status"]
+        response_message = serializer.validated_data["response_message"]
 
-        return Response(
-            self.get_serializer(work_request).data,
-            status=status.HTTP_200_OK
-        )
+        work_request = EExtensionWorkRequest.objects.filter(
+            id=work_request_id).first()
+
+        if not work_request:
+            return Response(
+                {"message": "Work request not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Accept or reject the request
+        if status_action.lower() == "accept":
+            work_request.accept(response_message=response_message)
+        else:
+            work_request.reject(response_message=response_message)
+
+        read_serializer = EExtensionWorkRequestReadSerializer(work_request)
+        return Response(read_serializer.data, status=status.HTTP_200_OK)

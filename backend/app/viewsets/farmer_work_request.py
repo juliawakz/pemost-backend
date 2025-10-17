@@ -1,4 +1,3 @@
-from app.choices import WorkRequestStatusChoices
 from app.models.farmer_work_request import FarmerWorkRequest
 from app.permissions import CanManageFarmerWorkRequest
 from app.serializers.farmer_work_request import (
@@ -10,6 +9,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -78,85 +78,42 @@ class FarmerWorkRequestViewset(viewsets.ModelViewSet):
         # Default
         return FarmerWorkRequest.objects.none()
 
-    @extend_schema(
-        summary="Accept work request",
-        request=AcceptRejectRequestSerializer,
-        responses={200: FarmerWorkRequestReadSerializer}
-    )
-    @action(detail=True, methods=['post'], url_path='accept')
-    def accept_request(self, request, pk=None):  # noqa: ARG002
-        """
-        Accept a work request (E-Extension only).
-        Establishes the relationship between Farmer and E-Extension.
-        Archives the request after acceptance.
-        """
-        work_request = self.get_object()
 
-        # Only the recipient can accept
-        if work_request.e_extension.user != request.user:
-            return Response(
-                {"detail": "Only the E-Extension officer can "
-                           "accept this request."},
-                status=status.HTTP_403_FORBIDDEN
-            )
+@extend_schema(
+    summary="Accept/Reject farm work request",
+    request=AcceptRejectRequestSerializer,
+    responses={200: FarmerWorkRequestReadSerializer}
+)
+@action(detail=True, methods=['post'], url_path="accept/reject")
+class AcceptRejectFarmWorkRequestView(CreateAPIView):
+    """
+    Accept or reject a work request (E-Extension only).
+    Establishes the relationship between Farmer and E-Extension.
+    Archives the request after acceptance.
+    """
+    serializer_class = AcceptRejectRequestSerializer
 
-        # Check if already accepted/rejected
-        if work_request.status != WorkRequestStatusChoices.PENDING:
-            return Response(
-                {"detail": f"This request has already been "
-                           f"{work_request.status.lower()}."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        serializer = AcceptRejectRequestSerializer(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        work_request.accept(
-            response_message=serializer.validated_data.get('response_message')
-        )
+        work_request_id = serializer.validated_data["work_request"].id
+        status_action = serializer.validated_data["status"]
+        response_message = serializer.validated_data["response_message"]
 
-        return Response(
-            self.get_serializer(work_request).data,
-            status=status.HTTP_200_OK
-        )
-
-    @extend_schema(
-        summary="Reject work request",
-        request=AcceptRejectRequestSerializer,
-        responses={200: FarmerWorkRequestReadSerializer}
-    )
-    @action(detail=True, methods=['post'], url_path='reject')
-    def reject_request(self, request, pk=None):  # noqa: ARG002
-        """
-        Reject a work request (E-Extension only).
-        Archives the request after rejection.
-        """
-        work_request = self.get_object()
-
-        # Only the recipient can reject
-        if work_request.e_extension.user != request.user:
+        work_request = FarmerWorkRequest.objects.filter(
+            id=work_request_id).first()
+        if not work_request:
             return Response(
-                {"detail": "Only the E-Extension officer can "
-                           "reject this request."},
-                status=status.HTTP_403_FORBIDDEN
+                {"detail": "Work request not found."},
+                status=status.HTTP_404_NOT_FOUND,
             )
 
-        # Check if already accepted/rejected
-        if work_request.status != WorkRequestStatusChoices.PENDING:
-            return Response(
-                {"detail": f"This request has already been "
-                           f"{work_request.status.lower()}."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        # Accept or reject the request
+        if status_action.lower() == "accept":
+            work_request.accept(response_message=response_message)
+        else:
+            work_request.reject(response_message=response_message)
 
-        serializer = AcceptRejectRequestSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        work_request.reject(
-            response_message=serializer.validated_data.get('response_message')
-        )
-
-        return Response(
-            self.get_serializer(work_request).data,
-            status=status.HTTP_200_OK
-        )
+        read_serializer = FarmerWorkRequestReadSerializer(work_request)
+        return Response(read_serializer.data, status=status.HTTP_200_OK)
