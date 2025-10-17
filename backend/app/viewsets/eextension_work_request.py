@@ -116,6 +116,7 @@ class EExtensionWorkRequestViewset(viewsets.ModelViewSet):
         )
 
 
+@extend_schema(tags=["App - E-Extension Work Requests"])
 @extend_schema(
     summary="Reject/Accept work request",
     request=AcceptRejectRequestSerializer,
