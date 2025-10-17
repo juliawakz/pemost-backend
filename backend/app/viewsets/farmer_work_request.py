@@ -1,7 +1,7 @@
 from app.models.farmer_work_request import FarmerWorkRequest
 from app.permissions import CanManageFarmerWorkRequest
 from app.serializers.farmer_work_request import (
-    AcceptRejectRequestSerializer,
+    AcceptRejectFarmRequestSerializer,
     FarmerWorkRequestCreateSerializer,
     FarmerWorkRequestReadSerializer,
 )
@@ -82,7 +82,7 @@ class FarmerWorkRequestViewset(viewsets.ModelViewSet):
 @extend_schema(tags=["App - Farmer Work Requests"])
 @extend_schema(
     summary="Accept/Reject farm work request",
-    request=AcceptRejectRequestSerializer,
+    request=AcceptRejectFarmRequestSerializer,
     responses={200: FarmerWorkRequestReadSerializer}
 )
 @action(detail=True, methods=['post'], url_path="accept/reject")
@@ -92,7 +92,7 @@ class AcceptRejectFarmWorkRequestView(CreateAPIView):
     Establishes the relationship between Farmer and E-Extension.
     Archives the request after acceptance.
     """
-    serializer_class = AcceptRejectRequestSerializer
+    serializer_class = AcceptRejectFarmRequestSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
