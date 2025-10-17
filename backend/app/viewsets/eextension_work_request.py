@@ -1,8 +1,7 @@
-from app.choices import WorkRequestStatusChoices
 from app.models.eextension_work_request import EExtensionWorkRequest
 from app.permissions import CanManageEExtensionWorkRequest
 from app.serializers.eextension_work_request import (
-    AcceptRejectRequestSerializer,
+    AcceptRejectEExtensionRequestSerializer,
     EExtensionWorkRequestCreateSerializer,
     EExtensionWorkRequestReadSerializer,
 )
@@ -72,54 +71,11 @@ class EExtensionWorkRequestViewset(viewsets.ModelViewSet):
             .distinct()
         )
 
-    @extend_schema(
-        summary="Accept work request",
-        request=AcceptRejectRequestSerializer,
-        responses={200: EExtensionWorkRequestReadSerializer}
-    )
-    @action(detail=True, methods=['post'], url_path='accept')
-    def accept_request(self, request, pk=None):  # noqa: ARG002
-        """
-        Accept a work request (Super Extension only).
-        Establishes the relationship between E-Extension and
-        Super Extension.
-        Archives the request after acceptance.
-        """
-        work_request = self.get_object()
-
-        # Only the recipient can accept
-        if work_request.super_extension.user != request.user:
-            return Response(
-                {"detail": "Only the Super Extension officer can "
-                           "accept this request."},
-                status=status.HTTP_403_FORBIDDEN
-            )
-
-        # Check if already accepted/rejected
-        if work_request.status != WorkRequestStatusChoices.PENDING:
-            return Response(
-                {"detail": f"This request has already been "
-                           f"{work_request.status.lower()}."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        serializer = AcceptRejectRequestSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        work_request.accept(
-            response_message=serializer.validated_data.get('response_message')
-        )
-
-        return Response(
-            self.get_serializer(work_request).data,
-            status=status.HTTP_200_OK
-        )
-
 
 @extend_schema(tags=["App - E-Extension Work Requests"])
 @extend_schema(
     summary="Reject/Accept work request",
-    request=AcceptRejectRequestSerializer,
+    request=AcceptRejectEExtensionRequestSerializer,
     responses={200: EExtensionWorkRequestReadSerializer}
 )
 @action(detail=True, methods=['post'], url_path="accept/reject")
@@ -129,7 +85,7 @@ class AcceptRejectEExtensionWorkRequestView(CreateAPIView):
     Establishes the relationship between Super-Extension and E-Extension.
     Archives the request after acceptance.
     """
-    serializer_class = AcceptRejectRequestSerializer
+    serializer_class = AcceptRejectEExtensionRequestSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

@@ -12,6 +12,7 @@ from django.db.models import Q
 from django.template.loader import render_to_string
 from notifications.tasks import send_email_task
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 from rest_framework.exceptions import ValidationError
 from users.serializers.user import MiniUserReadSerializer
 
@@ -45,6 +46,7 @@ class FarmerWorkRequestReadSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = fields  # All fields read-only for read serializer
 
+    @extend_schema_field(MiniUserReadSerializer)
     def get_farmer(self, obj):
         """Get farmer info (assumed from the first farm owner)."""
         first_farm = obj.farms.first()
@@ -187,7 +189,7 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
         ).data
 
 
-class AcceptRejectRequestSerializer(serializers.Serializer):
+class AcceptRejectFarmRequestSerializer(serializers.Serializer):
     """
     Serializer for accepting or rejecting work requests.
     """

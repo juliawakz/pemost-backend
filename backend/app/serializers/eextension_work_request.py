@@ -142,7 +142,7 @@ class EExtensionWorkRequestCreateSerializer(serializers.ModelSerializer):
         ).data
 
 
-class AcceptRejectRequestSerializer(serializers.Serializer):
+class AcceptRejectEExtensionRequestSerializer(serializers.Serializer):
     """
     Serializer for accepting or rejecting work requests.
     """
