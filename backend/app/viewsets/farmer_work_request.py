@@ -79,6 +79,7 @@ class FarmerWorkRequestViewset(viewsets.ModelViewSet):
         return FarmerWorkRequest.objects.none()
 
 
+@extend_schema(tags=["App - Farmer Work Requests"])
 @extend_schema(
     summary="Accept/Reject farm work request",
     request=AcceptRejectRequestSerializer,
