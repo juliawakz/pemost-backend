@@ -1,6 +1,6 @@
 Pemost Backend
 
-PeMost is built on django and postgis database
+PeMost is built on DRF and postgis database
 
 ## Quick Start
 - **Clone repository**
@@ -22,7 +22,7 @@ touch .env
 ```
 - **Add these variables to .env file lias with env.example**
 ```
-PROJECT_NAME=TerraTask V1.0.0
+PROJECT_NAME=project name
 ALLOWED_HOSTS=*
 DEBUG=True/False
 SECRET_KEY=your_secret
@@ -54,4 +54,8 @@ http://127.0.0.1:8000/admin
 - **Development Server**
 ```
 python manage.py runserver
+```
+- **Collection**
+```
+PEMOST.postman_collection.json can be found on the project folder
 ```
