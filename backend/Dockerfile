@@ -1,11 +1,9 @@
 FROM python:3.8.3
 FROM osgeo/gdal:ubuntu-small-3.6.3
 
-MAINTAINER Geospatial Institute
-
 # Python Domain
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 
 RUN apt-get update -y \
