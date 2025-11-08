@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from geopy.geocoders import Nominatim
 from locations.models.ward import Ward
 from users.choices import RoleChoices
+from django.contrib.postgres.fields import ArrayField
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -42,6 +43,11 @@ class Agrodealer(BaseModel):
     )
     is_visible = models.BooleanField(
         default=True
+    )
+    items_for_sale = ArrayField(
+        models.CharField(max_length=100),
+        blank=True,
+        default=list
     )
 
     slug = None

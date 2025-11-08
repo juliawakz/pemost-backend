@@ -20,7 +20,7 @@ pip3 install requirements/dev.txt
 ```
 touch .env
 ```
-- **Add these variables to .env file lias with env.example**
+- **Here are some of the variables. To add all variables to .env file lias with pemostv2-backend/backend/env.example file**
 ```
 PROJECT_NAME=project name
 ALLOWED_HOSTS=*
@@ -34,13 +34,15 @@ POSTGRES_HOST=your_db_host
 DB_PORT=your_db_port
 DATABASE=your_db_type
 
-ALLOWED_HOSTS=*
-
 ```
 
 - **Migrations**
 Make migrations and migrate, incase of any error about abscent folders ensure all modules have a migration folder in migration_files
 
+- **load location data**
+```
+python manage.py load_locations pemostv2-backend/backend/sample_data/locationscsv
+```
 
 - **Create a superuser Account and follow the prompts**
 ```
@@ -54,6 +56,10 @@ http://127.0.0.1:8000/admin
 - **Development Server**
 ```
 python manage.py runserver
+```
+- **Run redis worker**
+```
+celery -A project worker -l info
 ```
 - **Collection**
 ```

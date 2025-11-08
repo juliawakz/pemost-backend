@@ -7,3 +7,8 @@ class RoleChoices(models.TextChoices):
     E_EXTENSION = 'E_EXTENSION', 'E-Extension Officer'
     AGRODEALER = 'AGRODEALER', 'Agrodealer'
     FARMER = 'FARMER', 'Farmer'
+
+
+class LicenceChoices(models.TextChoices):
+    FREE = 'FREE', 'Free'
+    PREMIUM = 'PREMIUM', 'Premium'

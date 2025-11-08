@@ -8,7 +8,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from phonenumber_field.modelfields import PhoneNumberField
-from users.choices import RoleChoices
+from users.choices import LicenceChoices, RoleChoices
 from users.manager import UserManager
 
 logger = logging.getLogger(__name__)
@@ -38,8 +38,8 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         unique=True,
         max_length=50,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
     )
     profile_photo = models.ImageField(
         upload_to="profile",
@@ -49,6 +49,9 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(
         default=False,
     )
+    agree_to_terms = models.BooleanField(
+        default=False,
+    )
     last_login = models.DateTimeField(
         _("last login"), default=timezone.now
     )
@@ -56,10 +59,15 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         max_length=20,
         choices=RoleChoices.choices
     )
+    license_type = models.CharField(
+        max_length=20,
+        choices=LicenceChoices.choices,
+        default=LicenceChoices.FREE
+    )
     is_verified = models.BooleanField(
         blank=False,
         null=False,
-        default=False
+        default=True
     )
 
     objects = UserManager()
@@ -68,7 +76,6 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = [
         "first_name",
         "last_name",
-        "phone_number"
     ]
 
     slug = None

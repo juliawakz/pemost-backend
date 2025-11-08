@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "cc39e9ef-3e7c-480a-a486-335d3f0ef9bb",
-		"name": "PEMOST",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "17349709",
-		"_collection_link": "https://peapay-faranga.postman.co/workspace/My-Workspace~490b3c38-c13e-49d2-8230-97101a09e0ca/collection/17349709-cc39e9ef-3e7c-480a-a486-335d3f0ef9bb?action=share&source=collection_link&creator=17349709"
+		"_postman_id": "6610d577-1e66-4537-8992-046a639f8607",
+		"name": "PEMOSTV2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "14282495",
+		"_collection_link": "https://eigthteq.postman.co/workspace/0a056f06-a5c7-4356-942a-af8b4c88fcf9/collection/14282495-6610d577-1e66-4537-8992-046a639f8607?action=share&source=collection_link&creator=14282495"
 	},
 	"item": [
 		{
@@ -26,7 +26,8 @@
 											"pm.environment.set('ID', pm.response.json().user.id)"
 										],
 										"type": "text/javascript",
-										"packages": {}
+										"packages": {},
+										"requests": {}
 									}
 								}
 							],
@@ -38,26 +39,14 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    // \"email\": \"systemadmin@georesearch.co.ke\", // System Admin\n    // \"email\": \"superextension@georesearch.co.ke\", // Super Extension\n    // \"email\": \"eextension@georesearch.co.ke\", // E Extension\n    // \"email\": \"agrodealer@georesearch.co.ke\", // Agrodealer\n    // \"email\": \"farmerone@georesearch.co.ke\", // Farmer\n    \"email\": \"gitjulia658@gmail.com\", \n    \"password\": \"test1234\"\n}\n",
+									"raw": "{\n    \"phone_number\": \"0711111112\", \n    \"password\": \"test1234\"\n}\n",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/users/login/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"login",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/login/"
 							},
 							"response": []
 						},
@@ -66,13 +55,9 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{TOKEN}}",
-											"type": "string"
-										}
-									]
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
 								},
 								"method": "POST",
 								"header": [],
@@ -85,19 +70,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/users/logout/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"logout",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/logout/"
 							},
 							"response": []
 						},
@@ -115,20 +88,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/users/token/refresh/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"token",
-										"refresh",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/token/refresh/"
 							},
 							"response": []
 						},
@@ -161,20 +121,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/users/generate/apikey/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"generate",
-										"apikey",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/generate/apikey/"
 							},
 							"response": []
 						}
@@ -197,20 +144,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/users/password/reset/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"password",
-										"reset",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/password/reset/"
 							},
 							"response": []
 						},
@@ -228,21 +162,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/users/password/reset/confirm/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"password",
-										"reset",
-										"confirm",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/password/reset/confirm/"
 							},
 							"response": []
 						},
@@ -251,13 +171,9 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{TOKEN}}",
-											"type": "string"
-										}
-									]
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
 								},
 								"method": "POST",
 								"header": [],
@@ -270,20 +186,15 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/users/password/change/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"password",
-										"change",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/password/change/"
+							},
+							"response": []
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"method": "GET",
+								"header": []
 							},
 							"response": []
 						}
@@ -297,19 +208,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/users/profile/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"profile",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/profile/"
 							},
 							"response": []
 						},
@@ -348,19 +247,7 @@
 										}
 									]
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/users/profile/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"profile",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/profile/"
 							},
 							"response": []
 						}
@@ -379,27 +266,14 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"gitjulia650@gmail.com\",\n    \"first_name\": \"Git\",\n    \"last_name\": \"Julia\",\n    \"phone_number\": \"+254711111111\",\n    \"password1\": \"{{pass}}\",\n    \"password2\": \"{{pass}}\",\n    \"role\": \"FARMER\" // Available roles are: FARMER, AGRODEALER, E_EXTENSION, SUPER_EXTENSION\n}",
+									"raw": "// {\n//     \"email\": \"agrodealer@gmail.com\",\n//     \"first_name\": \"Agro\",\n//     \"last_name\": \"dealer\",\n//     \"phone_number\": \"+254711111112\",\n//     \"password1\": \"test1234\",\n//     \"password2\": \"test1234\",\n//     \"role\": \"AGRODEALER\", // Available roles are: FARMER, AGRODEALER, E_EXTENSION, SUPER_EXTENSION\n//     \"agree_to_terms\":\"true\",\n//     \"license_type\":\"FREE\" //FREE\n\n// }\n\n\n// {\n//     \"email\": \"extension@gmail.com\",\n//     \"first_name\": \"extension\",\n//     \"last_name\": \"e\",\n//     \"phone_number\": \"+254711111113\",\n//     \"password1\": \"test1234\",\n//     \"password2\": \"test1234\",\n//     \"role\": \"E_EXTENSION\", // Available roles are: FARMER, AGRODEALER, E_EXTENSION, SUPER_EXTENSION\n//     \"agree_to_terms\":\"true\",\n//     \"license_type\":\"FREE\" //FREE\n\n// }\n\n\n\n{\n    \"email\": \"superextension@gmail.com\",\n    \"first_name\": \"super\",\n    \"last_name\": \"extension\",\n    \"phone_number\": \"+254711111114\",\n    \"password1\": \"test1234\",\n    \"password2\": \"test1234\",\n    \"role\": \"SUPER_EXTENSION\", // Available roles are: FARMER, AGRODEALER, E_EXTENSION, SUPER_EXTENSION\n    \"agree_to_terms\":\"true\",\n    \"license_type\":\"FREE\" //FREE\n\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/users/register/account/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"register",
-										"account",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/register/account/"
 							},
 							"response": []
 						},
@@ -420,20 +294,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/users/verify/account/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users",
-										"verify",
-										"account",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/users/verify/account/"
 							},
 							"response": []
 						}
@@ -484,20 +345,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/counties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"counties",
-										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/counties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/"
 							},
 							"response": []
 						},
@@ -506,20 +354,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/counties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"counties",
-										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/counties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/"
 							},
 							"response": []
 						},
@@ -537,19 +372,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/counties/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"counties",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/counties/"
 							},
 							"response": []
 						},
@@ -567,20 +390,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/counties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"counties",
-										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/counties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/"
 							},
 							"response": []
 						}
@@ -637,20 +447,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/subcounties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"subcounties",
-										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/subcounties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/"
 							},
 							"response": []
 						},
@@ -659,20 +456,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/subcounties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"subcounties",
-										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/subcounties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/"
 							},
 							"response": []
 						},
@@ -690,19 +474,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/subcounties/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"subcounties",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/subcounties/"
 							},
 							"response": []
 						},
@@ -720,20 +492,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/subcounties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"subcounties",
-										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/subcounties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/"
 							},
 							"response": []
 						}
@@ -748,7 +507,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{URL}}/api/v2/locations/wards/?name=Lare",
+									"raw": "{{URL}}/api/v2/locations/wards/?name=molo",
 									"host": [
 										"{{URL}}"
 									],
@@ -782,7 +541,7 @@
 										},
 										{
 											"key": "name",
-											"value": "Lare"
+											"value": "molo"
 										},
 										{
 											"key": "ward_id",
@@ -799,20 +558,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/wards/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"wards",
-										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/wards/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/"
 							},
 							"response": []
 						},
@@ -830,19 +576,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/wards/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"wards",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/wards/"
 							},
 							"response": []
 						},
@@ -860,20 +594,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/wards/bb1d44e7-0e8d-48e4-bae6-b8c7d2143280/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"wards",
-										"bb1d44e7-0e8d-48e4-bae6-b8c7d2143280",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/wards/bb1d44e7-0e8d-48e4-bae6-b8c7d2143280/"
 							},
 							"response": []
 						},
@@ -882,20 +603,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/locations/wards/3162cb8a-a1ef-402a-bb67-6498c83074c7/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"locations",
-										"wards",
-										"3162cb8a-a1ef-402a-bb67-6498c83074c7",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/locations/wards/3162cb8a-a1ef-402a-bb67-6498c83074c7/"
 							},
 							"response": []
 						}
@@ -994,20 +702,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/farms/62923624-2ea3-4430-b805-6112fe02b830/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"farms",
-										"62923624-2ea3-4430-b805-6112fe02b830",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/farms/62923624-2ea3-4430-b805-6112fe02b830/"
 							},
 							"response": []
 						},
@@ -1016,20 +711,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/farms/b8730d81-4e20-407f-892a-d7805f429935/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"farms",
-										"b8730d81-4e20-407f-892a-d7805f429935",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/farms/b8730d81-4e20-407f-892a-d7805f429935/"
 							},
 							"response": []
 						},
@@ -1040,26 +722,14 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"ward\": \"7dc93b8c-a0a7-43be-bb9f-8eeaadfe5855\",\n    \"name\": \"Ainabkoi Farm\",\n    \"user_size\": 47,\n    \"boundary\": \"POLYGON ((35.412049081823795 0.1864153781947948, 35.413941547781434 0.1864153781947948, 35.413941547781434 0.18761966829762855, 35.412049081823795 0.18761966829762855, 35.412049081823795 0.1864153781947948))\"\n}",
+									"raw": "// {\n//     \"ward\": \"7dc93b8c-a0a7-43be-bb9f-8eeaadfe5855\",\n//     \"name\": \"Ainabkoi Farm\",\n//     \"user_size\": 47,\n//     \"boundary\": \"POLYGON ((35.412049081823795 0.1864153781947948, 35.413941547781434 0.1864153781947948, 35.413941547781434 0.18761966829762855, 35.412049081823795 0.18761966829762855, 35.412049081823795 0.1864153781947948))\"\n// }\n\n\n{\n    \"ward\": \"34d7bbfc-c708-4136-92e7-9aff3a5062ae\",\n    \"name\": \"Ainabkoi Farm\",\n    \"user_size\": 47,\n    \"boundary\": \"POLYGON ((35.7355138128697 -0.21897537535154754, 35.73558149020809 -0.21897537535154754, 35.73558149020809 -0.21891397780100874, 35.7355138128697 -0.21891397780100874, 35.7355138128697 -0.21897537535154754))\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/farms/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"farms",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/farms/"
 							},
 							"response": []
 						},
@@ -1077,20 +747,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/farms/a23f97e4-41f9-401e-b0ab-060f0f4cd3cc/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"farms",
-										"a23f97e4-41f9-401e-b0ab-060f0f4cd3cc",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/farms/a23f97e4-41f9-401e-b0ab-060f0f4cd3cc/"
 							},
 							"response": []
 						}
@@ -1104,19 +761,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/farms/plantations/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"farms",
-										"plantations",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/farms/plantations/"
 							},
 							"response": []
 						},
@@ -1125,20 +770,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/farms/plantations/b3bee4f9-8f74-4d63-bf84-6e583c19b6d5/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"farms",
-										"plantations",
-										"b3bee4f9-8f74-4d63-bf84-6e583c19b6d5",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/farms/plantations/b3bee4f9-8f74-4d63-bf84-6e583c19b6d5/"
 							},
 							"response": []
 						},
@@ -1147,20 +779,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/farms/plantations/879557f5-88de-46ce-8e71-66e58fe41b3b/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"farms",
-										"plantations",
-										"879557f5-88de-46ce-8e71-66e58fe41b3b",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/farms/plantations/879557f5-88de-46ce-8e71-66e58fe41b3b/"
 							},
 							"response": []
 						},
@@ -1178,19 +797,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/farms/plantations/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"farms",
-										"plantations",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/farms/plantations/"
 							},
 							"response": []
 						},
@@ -1208,19 +815,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/farms/879557f5-88de-46ce-8e71-66e58fe41b3b/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"farms",
-										"879557f5-88de-46ce-8e71-66e58fe41b3b",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/farms/879557f5-88de-46ce-8e71-66e58fe41b3b/"
 							},
 							"response": []
 						}
@@ -1277,20 +872,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/agrodealers/67ffb8a6-4be2-4fbc-915f-6bc1b590d859/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"agrodealers",
-										"67ffb8a6-4be2-4fbc-915f-6bc1b590d859",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/agrodealers/67ffb8a6-4be2-4fbc-915f-6bc1b590d859/"
 							},
 							"response": []
 						},
@@ -1301,26 +883,14 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Molo Outlet\",\n    \"ward\": \"c5f23cc6-cc49-41b3-a39e-257826115f89\",\n    \"location\": \"POINT (35.728386098073486 -0.2467102250980986)\"\n}",
+									"raw": "{\n    \"name\": \"Molo Outlet\",\n    \"ward\": \"34d7bbfc-c708-4136-92e7-9aff3a5062ae\",\n    \"location\": \"POINT (35.728386098073486 -0.2467102250980986)\",\n    \"items_for_sale\": [\"pesticides\", \"herbicides\"]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/agrodealers/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"agrodealers",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/agrodealers/"
 							},
 							"response": []
 						},
@@ -1338,20 +908,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/agrodealers/dffe6a11-1b06-4a0b-97d3-9d0dc218a094/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"agrodealers",
-										"dffe6a11-1b06-4a0b-97d3-9d0dc218a094",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/agrodealers/dffe6a11-1b06-4a0b-97d3-9d0dc218a094/"
 							},
 							"response": []
 						},
@@ -1360,20 +917,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/agrodealers/67ffb8a6-4be2-4fbc-915f-6bc1b590d859/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"agrodealers",
-										"67ffb8a6-4be2-4fbc-915f-6bc1b590d859",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/agrodealers/67ffb8a6-4be2-4fbc-915f-6bc1b590d859/"
 							},
 							"response": []
 						}
@@ -1415,20 +959,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/e-extension/67ffb8a6-4be2-4fbc-915f-6bc1b590d859/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"e-extension",
-										"67ffb8a6-4be2-4fbc-915f-6bc1b590d859",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/e-extension/67ffb8a6-4be2-4fbc-915f-6bc1b590d859/"
 							},
 							"response": []
 						},
@@ -1439,26 +970,14 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"wards\": [\n        \"bca6d4ce-d30f-47a7-9508-3344128737bb\"\n    ]\n}",
+									"raw": "{\n    \"wards\": [\n        \"34d7bbfc-c708-4136-92e7-9aff3a5062ae\"\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/e-extension/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"e-extension",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/e-extension/"
 							},
 							"response": []
 						},
@@ -1476,20 +995,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/e-extension/3b873112-6444-4ac8-9c49-671c6ac57680/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"e-extension",
-										"3b873112-6444-4ac8-9c49-671c6ac57680",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/e-extension/3b873112-6444-4ac8-9c49-671c6ac57680/"
 							},
 							"response": []
 						},
@@ -1498,20 +1004,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/e-extension/3b873112-6444-4ac8-9c49-671c6ac57680/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"e-extension",
-										"3b873112-6444-4ac8-9c49-671c6ac57680",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/e-extension/3b873112-6444-4ac8-9c49-671c6ac57680/"
 							},
 							"response": []
 						}
@@ -1525,19 +1018,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/super-extension/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"super-extension",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/super-extension/"
 							},
 							"response": []
 						},
@@ -1546,20 +1027,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/super-extension/b33f7144-3f2e-4629-9d68-fcfa18e944ca/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"super-extension",
-										"b33f7144-3f2e-4629-9d68-fcfa18e944ca",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/super-extension/b33f7144-3f2e-4629-9d68-fcfa18e944ca/"
 							},
 							"response": []
 						},
@@ -1577,19 +1045,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/super-extension/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"super-extension",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/super-extension/"
 							},
 							"response": []
 						},
@@ -1607,20 +1063,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/super-extension/07c69ae1-68f2-4786-a31c-a2e07b206457/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"super-extension",
-										"07c69ae1-68f2-4786-a31c-a2e07b206457",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/super-extension/07c69ae1-68f2-4786-a31c-a2e07b206457/"
 							},
 							"response": []
 						},
@@ -1629,20 +1072,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/super-extension/07c69ae1-68f2-4786-a31c-a2e07b206457/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"super-extension",
-										"07c69ae1-68f2-4786-a31c-a2e07b206457",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/super-extension/07c69ae1-68f2-4786-a31c-a2e07b206457/"
 							},
 							"response": []
 						}
@@ -1656,20 +1086,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/farmers/work-requests/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"farmers",
-										"work-requests",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/farmers/work-requests/"
 							},
 							"response": []
 						},
@@ -1678,21 +1095,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/farmers/work-requests/ae3fe67c-414e-4cfc-b1d2-aeed9cdd94f2/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"farmers",
-										"work-requests",
-										"ae3fe67c-414e-4cfc-b1d2-aeed9cdd94f2",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/farmers/work-requests/ae3fe67c-414e-4cfc-b1d2-aeed9cdd94f2/"
 							},
 							"response": []
 						},
@@ -1703,27 +1106,14 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"e_extension\": \"5e10f551-c2d5-483d-81d8-1b3f7ea882ae\", // Should be id of an e-extension\n    \"message\": \"Following our conversation we had when you visited my farm I would like us to work together. Thank you.\",\n    \"farms\": [\n       \"b8a47520-a841-4708-b7a4-436d1eb0fc27\"\n    ]\n}",
+									"raw": "{\n    \"e_extension\": \"728577de-7f6f-4d00-9021-8c3ee31d7d2d\", // Should be id of an e-extension\n    \"message\": \"Following our conversation we had when you visited my farm I would like us to work together. Thank you.\",\n    \"farms\": [\n       \"6edb3928-b530-4aca-86b0-e007f4f7ae03\"\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/farmers/work-requests/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"farmers",
-										"work-requests",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/farmers/work-requests/"
 							},
 							"response": []
 						},
@@ -1734,29 +1124,14 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"work_request\": \"9450577a-64a6-4039-a879-aba9d3604582\",\n    \"status\": \"ACCEPT\", // ACCEPT,REJECT\n    \"response_message\": \"Sure, lets work together\" // Optional\n}",
+									"raw": "{\n    \"work_request\": \"38c71f8a-377f-4367-8caf-e23e33001f94\",\n    \"status\": \"ACCEPT\", // ACCEPT,REJECT\n    \"response_message\": \"Sure, lets work together\" // Optional\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/farmers/work-requests/accept/reject/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"farmers",
-										"work-requests",
-										"accept",
-										"reject",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/farmers/work-requests/accept/reject/"
 							},
 							"response": []
 						}
@@ -1770,20 +1145,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/e-extensions/work-requests/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"e-extensions",
-										"work-requests",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/e-extensions/work-requests/"
 							},
 							"response": []
 						},
@@ -1792,21 +1154,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/app/e-extensions/work-requests//",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"e-extensions",
-										"work-requests",
-										"",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/e-extensions/work-requests//"
 							},
 							"response": []
 						},
@@ -1824,20 +1172,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/e-extensions/work-requests/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"e-extensions",
-										"work-requests",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/e-extensions/work-requests/"
 							},
 							"response": []
 						},
@@ -1855,22 +1190,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/app/e-extensions/work-requests/accept/reject/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"app",
-										"e-extensions",
-										"work-requests",
-										"accept",
-										"reject",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/app/e-extensions/work-requests/accept/reject/"
 							},
 							"response": []
 						}
@@ -1916,20 +1236,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/crops/69145c45-a200-4088-a2ef-d7f3714f62c2/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"crops",
-										"69145c45-a200-4088-a2ef-d7f3714f62c2",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/crops/69145c45-a200-4088-a2ef-d7f3714f62c2/"
 							},
 							"response": []
 						},
@@ -1938,20 +1245,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/crops/879557f5-88de-46ce-8e71-66e58fe41b3b/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"crops",
-										"879557f5-88de-46ce-8e71-66e58fe41b3b",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/crops/879557f5-88de-46ce-8e71-66e58fe41b3b/"
 							},
 							"response": []
 						},
@@ -1969,19 +1263,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/crops/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"crops",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/crops/"
 							},
 							"response": []
 						},
@@ -1999,20 +1281,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/crops/2925f258-3dba-4faa-95b7-b80b91d005e3/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"crops",
-										"2925f258-3dba-4faa-95b7-b80b91d005e3",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/crops/2925f258-3dba-4faa-95b7-b80b91d005e3/"
 							},
 							"response": []
 						}
@@ -2063,20 +1332,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/varieties/0cf3b972-ef52-448d-a3ac-e17e87394383/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"varieties",
-										"0cf3b972-ef52-448d-a3ac-e17e87394383",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/varieties/0cf3b972-ef52-448d-a3ac-e17e87394383/"
 							},
 							"response": []
 						},
@@ -2085,20 +1341,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/farms/plantations/879557f5-88de-46ce-8e71-66e58fe41b3b/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"farms",
-										"plantations",
-										"879557f5-88de-46ce-8e71-66e58fe41b3b",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/farms/plantations/879557f5-88de-46ce-8e71-66e58fe41b3b/"
 							},
 							"response": []
 						},
@@ -2116,19 +1359,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/varieties/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"varieties",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/varieties/"
 							},
 							"response": []
 						},
@@ -2146,20 +1377,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/varieties/0cf3b972-ef52-448d-a3ac-e17e87394383/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"varieties",
-										"0cf3b972-ef52-448d-a3ac-e17e87394383",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/varieties/0cf3b972-ef52-448d-a3ac-e17e87394383/"
 							},
 							"response": []
 						}
@@ -2176,20 +1394,7 @@
 									"request": {
 										"method": "GET",
 										"header": [],
-										"url": {
-											"raw": "{{URL}}/api/v2/crops/severity/choices/",
-											"host": [
-												"{{URL}}"
-											],
-											"path": [
-												"api",
-												"v2",
-												"crops",
-												"severity",
-												"choices",
-												""
-											]
-										}
+										"url": "{{URL}}/api/v2/crops/severity/choices/"
 									},
 									"response": []
 								},
@@ -2198,21 +1403,7 @@
 									"request": {
 										"method": "GET",
 										"header": [],
-										"url": {
-											"raw": "{{URL}}/api/v2/crops/growth/stages/choices/",
-											"host": [
-												"{{URL}}"
-											],
-											"path": [
-												"api",
-												"v2",
-												"crops",
-												"growth",
-												"stages",
-												"choices",
-												""
-											]
-										}
+										"url": "{{URL}}/api/v2/crops/growth/stages/choices/"
 									},
 									"response": []
 								}
@@ -2292,21 +1483,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/growth/stages/0cf3b972-ef52-448d-a3ac-e17e87394383/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"growth",
-										"stages",
-										"0cf3b972-ef52-448d-a3ac-e17e87394383",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/growth/stages/0cf3b972-ef52-448d-a3ac-e17e87394383/"
 							},
 							"response": []
 						},
@@ -2315,21 +1492,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/growth/stages/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"growth",
-										"stages",
-										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/growth/stages/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/"
 							},
 							"response": []
 						},
@@ -2347,20 +1510,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/growth/stages/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"growth",
-										"stages",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/growth/stages/"
 							},
 							"response": []
 						},
@@ -2378,21 +1528,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{URL}}/api/v2/crops/growth/stages/d50c6d12-5738-44d1-b0eb-d9ec6712a81a/",
-									"host": [
-										"{{URL}}"
-									],
-									"path": [
-										"api",
-										"v2",
-										"crops",
-										"growth",
-										"stages",
-										"d50c6d12-5738-44d1-b0eb-d9ec6712a81a",
-										""
-									]
-								}
+								"url": "{{URL}}/api/v2/crops/growth/stages/d50c6d12-5738-44d1-b0eb-d9ec6712a81a/"
 							},
 							"response": []
 						}
@@ -2449,19 +1585,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{URL}}/api/v2/notifications/adf54011-a89c-45b9-b7e3-6a07490df279/",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"v2",
-								"notifications",
-								"adf54011-a89c-45b9-b7e3-6a07490df279",
-								""
-							]
-						}
+						"url": "{{URL}}/api/v2/notifications/adf54011-a89c-45b9-b7e3-6a07490df279/"
 					},
 					"response": []
 				},
@@ -2470,20 +1594,7 @@
 					"request": {
 						"method": "POST",
 						"header": [],
-						"url": {
-							"raw": "{{URL}}/api/v2/notifications/adf54011-a89c-45b9-b7e3-6a07490df279/mark_as_read/",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"v2",
-								"notifications",
-								"adf54011-a89c-45b9-b7e3-6a07490df279",
-								"mark_as_read",
-								""
-							]
-						}
+						"url": "{{URL}}/api/v2/notifications/adf54011-a89c-45b9-b7e3-6a07490df279/mark_as_read/"
 					},
 					"response": []
 				},
@@ -2492,19 +1603,7 @@
 					"request": {
 						"method": "POST",
 						"header": [],
-						"url": {
-							"raw": "{{URL}}/api/v2/notifications/mark_all_as_read/",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"v2",
-								"notifications",
-								"mark_all_as_read",
-								""
-							]
-						}
+						"url": "{{URL}}/api/v2/notifications/mark_all_as_read/"
 					},
 					"response": []
 				}
@@ -2527,21 +1626,7 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "{{URL}}/api/v2/pest/control/process/occurence/",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"v2",
-								"pest",
-								"control",
-								"process",
-								"occurence",
-								""
-							]
-						}
+						"url": "{{URL}}/api/v2/pest/control/process/occurence/"
 					},
 					"response": []
 				}
@@ -2550,13 +1635,9 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{TOKEN}}",
-				"type": "string"
-			}
-		]
+		"bearer": {
+			"token": "{{TOKEN}}"
+		}
 	},
 	"event": [
 		{
