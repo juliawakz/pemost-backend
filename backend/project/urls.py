@@ -34,14 +34,14 @@ urlpatterns = [
         "api/v2/app/",
         include("app.urls", namespace="app")
     ),
-    # path(
-    #     "api/v2/crops/",
-    #     include("crops.urls", namespace="crops")
-    # ),
-    # path(
-    #     "api/v2/pest-control/",
-    #     include("pest_control.urls", namespace="pest-control")
-    # )
+    path(
+        "api/v2/crops/",
+        include("crops.urls", namespace="crops")
+    ),
+    path(
+        "api/v2/pest-control/",
+        include("pest_control.urls", namespace="pest-control")
+    )
 ]
 
 urlpatterns += static(
