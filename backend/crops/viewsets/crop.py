@@ -1,3 +1,4 @@
+from users.permissions import IsSystemAdminOrSuperUser
 from crops.filterset.crop import CropFilterSet
 from crops.models.crop import Crop
 from crops.serializers.crop import CropSerializer
@@ -6,7 +7,6 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from backend.users.user import IsSystemAdminOrSuperUser
 
 
 @extend_schema(tags=["Crop"])

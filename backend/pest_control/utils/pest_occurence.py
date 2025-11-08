@@ -1,10 +1,10 @@
 import datetime
 
+from app.models.farm import Farm
 import geojson
 from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import Union
 from django.contrib.gis.geos import GEOSGeometry
-from farms.models import Farm, Plantation
 from notifications.choices import MessageTypeChoices
 from notifications.models import Notification
 from notifications.signals import send_notification

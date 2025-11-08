@@ -66,7 +66,9 @@ INSTALLED_APPS = [
     "users",
     "locations",
     "notifications",
-    "app"
+    "app",
+    "crops",
+    "pest_control",
 ]
 
 MIDDLEWARE = [

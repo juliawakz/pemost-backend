@@ -1,3 +1,4 @@
+from users.permissions import IsSystemAdminOrSuperUser
 from crops.filterset.crop_growth_stage import CropGrowthStageFilterSet
 from crops.models.crop_growth_stage import CropGrowthStage
 from crops.serializers.growth_stage import CropGrowthStageSerializer
@@ -6,7 +7,6 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from backend.users.user import IsSystemAdminOrSuperUser
 
 
 @extend_schema(tags=["Crop Growth Stages"])
