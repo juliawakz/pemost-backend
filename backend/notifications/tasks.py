@@ -13,7 +13,7 @@ from project.celery import app
 
 User = get_user_model()
 
-cred = credentials.Certificate(f"{settings.BASE_DIR}/firebasefile.json")
+cred = credentials.Certificate(f"{settings.BASE_DIR}/pemostv2-firebase-adminsdk-fbsvc-7d33d9e9a1.json")
 
 firebase_admin.initialize_app(cred)
 

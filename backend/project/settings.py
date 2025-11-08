@@ -260,7 +260,7 @@ USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 TOKEN_LENGTH = config("TOKEN_LENGTH", default=6, cast=int)
-
+SITE_ID = 1
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
     "site_title": "Pemost Admin",
@@ -424,7 +424,10 @@ MIGRATION_MODULES = {
     "users": "migration_files.users",
     "notifications": "migration_files.notifications",
     "locations": "migration_files.locations",
-    "app": "migration_files.app"
+    "app": "migration_files.app",
+    "pest_control": "migration_files.pest_control",
+    "farms": "migration_files.farms",
+    "crops": "migration_files.crops"
 }
 
 SPECTACULAR_SETTINGS = {

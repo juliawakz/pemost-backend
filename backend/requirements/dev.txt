@@ -32,7 +32,7 @@ gevent==23.9.1
 
 # GIS and Geospatial
 django-leaflet==0.30.0
-GDAL==3.8.4
+GDAL
 geojson==3.0.1
 pyproj==3.6.0
 rasterio==1.4.0

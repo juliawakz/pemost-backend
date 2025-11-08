@@ -5,16 +5,15 @@ from django.utils.translation import gettext as _
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from users.choices import RoleChoices
+from users.choices import LicenceChoices, RoleChoices
 from users.utils.user import UserUtils
 
 User = get_user_model()
 user_utils = UserUtils()
 
-
 class RegisterAccountSerializer(serializers.Serializer):
     """Base serializer for user registration with common fields"""
-    email = serializers.EmailField(required=True)
+    email = serializers.EmailField(required=False, allow_blank=True, allow_null=True)
     first_name = serializers.CharField(required=True, max_length=30)
     last_name = serializers.CharField(required=True, max_length=30)
     phone_number = PhoneNumberField(required=True)
@@ -22,18 +21,26 @@ class RegisterAccountSerializer(serializers.Serializer):
     password1 = serializers.CharField(required=True, write_only=True, min_length=8)
     password2 = serializers.CharField(required=True, write_only=True, min_length=8)
     profile_photo = serializers.ImageField(required=False, allow_null=True)
+    agree_to_terms = serializers.BooleanField(required=True)
     role = serializers.ChoiceField(
         choices=[
-            (RoleChoices.SUPER_EXTENSION, "Super Extension Officer'"),
+            (RoleChoices.SUPER_EXTENSION, "Super Extension Officer"),
             (RoleChoices.E_EXTENSION, "E-Extension Officer"),
             (RoleChoices.AGRODEALER, "Agrodealer"),
             (RoleChoices.FARMER, "Farmer"),
         ],
         required=True
     )
+    license_type = serializers.ChoiceField(
+        choices=[
+            (LicenceChoices.FREE, "Free"),
+            (LicenceChoices.PREMIUM, "Premium"),
+        ],
+        required=True
+    )
 
     def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
+        if value and User.objects.filter(email=value).exists():
             raise ValidationError(_("A user with this email already exists."))
         return value
 
@@ -48,34 +55,31 @@ class RegisterAccountSerializer(serializers.Serializer):
         return value
 
     def validate(self, attrs):
-        password1 = attrs.get("password1")
-        password2 = attrs.get("password2")
-
-        if password1 != password2:
+        if attrs.get("password1") != attrs.get("password2"):
             raise ValidationError({"password2": _("The two password fields didn't match.")})
-
         return attrs
 
     def create_user(self, validated_data):
-        """Create the base user"""
-        user_data = {
-            "first_name": validated_data["first_name"],
-            "last_name": validated_data["last_name"],
-            "email": validated_data["email"],
-            "phone_number": validated_data["phone_number"],
-            "password": validated_data["password1"],
-            "id_number": validated_data.get("id_number"),
-            "role": validated_data.get("role"),
-            "profile_photo": validated_data.get("profile_photo"),
-        }
-        return User.objects.create_user(**user_data)
+        """Create a user correctly handling password and license_type"""
+        password = validated_data.pop("password1")
+        validated_data.pop("password2", None)
+
+        user = User.objects.create_user(
+            phone_number=validated_data["phone_number"],
+            password=password,
+            first_name=validated_data["first_name"],
+            last_name=validated_data["last_name"],
+            email=validated_data.get("email"),
+            id_number=validated_data.get("id_number"),
+            role=validated_data.get("role"),
+            profile_photo=validated_data.get("profile_photo"),
+            agree_to_terms=validated_data.get("agree_to_terms"),
+            license_type=validated_data.get("license_type", LicenceChoices.FREE)
+        )
+        return user
 
     @transaction.atomic
     def create(self, validated_data):
-        # Remove password fields from validated_data
-        validated_data.pop("password2")
-
-        # Create user
         user = self.create_user(validated_data)
 
         # Send OTP for email verification
@@ -128,7 +132,7 @@ class MiniUserReadSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id", "email", "full_name", "phone_number",
-            "role"
+            "role","agree_to_terms","license_type"
         ]
         extra_kwargs = {
             "id": {"read_only": True},

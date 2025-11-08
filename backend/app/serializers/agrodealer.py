@@ -15,6 +15,10 @@ class AgrodealerReadSerializer(serializers.ModelSerializer):
     """
     user = MiniUserReadSerializer(read_only=True)
     ward = MiniWardSerializer(read_only=True)
+    items_for_sale = serializers.ListField(
+        child=serializers.CharField(),
+        read_only=True
+    )
 
     class Meta:
         model = Agrodealer
@@ -25,6 +29,7 @@ class AgrodealerReadSerializer(serializers.ModelSerializer):
             "ward",
             "location",
             "address",
+            "items_for_sale",
             "is_visible",
             "is_archived",
             "created_at",
@@ -45,9 +50,15 @@ class AgrodealerWriteSerializer(serializers.ModelSerializer):
     Requires: name, ward, and location.
     The user is automatically assigned from the request.
     """
+    items_for_sale = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+        allow_empty=True
+    )
+
     class Meta:
         model = Agrodealer
-        fields = ["name", "ward", "location"]
+        fields = ["name", "ward", "location", "items_for_sale"]
 
     def validate(self, attrs):
         """Ensure only AGRODEALER users can create."""
@@ -97,6 +108,12 @@ class AgrodealerUpdateSerializer(serializers.ModelSerializer):
     Allows updating: name, ward, location, is_visible.
     """
 
+    items_for_sale = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+        allow_empty=True
+    )
+
     class Meta:
         model = Agrodealer
         fields = [
@@ -104,6 +121,7 @@ class AgrodealerUpdateSerializer(serializers.ModelSerializer):
             "ward",
             "location",
             "is_visible",
+            "items_for_sale"
         ]
 
     def validate_location(self, value):
