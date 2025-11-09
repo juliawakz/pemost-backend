@@ -9,6 +9,8 @@ from app.viewsets.farmer_work_request import (
     AcceptRejectFarmWorkRequestView,
     FarmerWorkRequestViewset,
 )
+from app.views.farm_import import FarmsImportView
+from app.viewsets.plantation import PlantationViewSet
 from app.viewsets.super_extension import SuperExtensionOfficerViewset
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
@@ -17,6 +19,7 @@ app_name = "app"
 
 router = DefaultRouter()
 router.register(r"farms", FarmViewset, basename="farms")
+router.register(r"plantations", PlantationViewSet, basename="plantations")
 router.register(r"agrodealers", AgrodealerViewset, basename="agrodealers")
 router.register(
     r"e-extension",
@@ -50,5 +53,11 @@ urlpatterns = [
         AcceptRejectEExtensionWorkRequestView.as_view(),
         name="accept-reject-farm-work-request"
     ),
+    path(
+        "upload/farm/",
+        FarmsImportView.as_view(),
+        name="upload_new_farms"
+    ),
+
     path("", include(router.urls)),
 ]

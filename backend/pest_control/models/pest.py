@@ -1,6 +1,5 @@
 from base.models import BaseModel
 from crops.choices import CropGrowthStageChoices
-from crops.models.crop_variety import CropVariety
 from django.core.validators import MinValueValidator
 from django.db import models
 from pest_control.choices import ACTION_THRESHOLD_RISK, PEST_STAGE
@@ -15,9 +14,9 @@ class Pest(BaseModel):
         max_length=250
     )
 
-    pest_stage = models.CharField(
+    stage = models.CharField(
         choices=PEST_STAGE.choices,
-        max_length=50
+        max_length=50,
     )
 
     action_threshold = models.CharField(
@@ -29,15 +28,10 @@ class Pest(BaseModel):
         max_length=50
     )
 
-    crop_variety = models.ForeignKey(
-        CropVariety,
-        on_delete=models.CASCADE,
-        related_name="pest_crop_variety"
-    )
-
-    growth_stage = models.CharField(
+    crop_growth_stage = models.CharField(
         choices=CropGrowthStageChoices.choices,
-        max_length=50
+        max_length=50,
+        default=CropGrowthStageChoices.VEGETATIVE
     )
 
     cultural = models.CharField()
@@ -48,7 +42,7 @@ class Pest(BaseModel):
 
     biological_description = models.TextField()
 
-    pest_presence_period = models.FloatField(
+    presence_period = models.FloatField(
         blank=True,
         null=True,
         default=0,
@@ -66,7 +60,7 @@ class Pest(BaseModel):
     metadata = None
 
     def __str__(self):
-        return f"{self.pest_type}"
+        return f"{self.name} - {self.scientific_name} ({self.stage})"
 
     class Meta:
         verbose_name = "Pest"

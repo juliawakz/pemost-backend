@@ -14,6 +14,7 @@ from shapely import wkt
 from shapely.geometry import MultiPolygon
 from shapely.ops import unary_union
 from shapely.wkt import loads as wkt_loads
+from app.models.plantation import Plantation
 
 User = get_user_model()
 
@@ -27,7 +28,7 @@ class PestOccurenceUtils:
         for _counts, occurence in enumerate(data):
             farm_object = Farm.objects.get(id=occurence['id'])
 
-            farm_geometry = farm_object.farm_boundary
+            farm_geometry = farm_object.boundary
 
             # Create a Feature with the polygon geometry
             geojson.loads(farm_geometry.geojson)
@@ -42,9 +43,9 @@ class PestOccurenceUtils:
 
                 # Create OGR geometry from the farm's boundary
                 farm_boundary_ogr = ogr.CreateGeometryFromWkt(
-                    farm_object.farm_boundary.wkt
+                    farm_object.boundary.wkt
                 )
-                farm_boundary_wkt = farm_object.farm_boundary.wkt
+                farm_boundary_wkt = farm_object.boundary.wkt
                 farm_boundary_shapely = wkt_loads(farm_boundary_wkt)
                 farms_with_occurrences.append(farm_boundary_shapely)
 
@@ -198,15 +199,15 @@ class PestOccurenceUtils:
 
         # Query farms that fall within the yellow buffer
         farms_within_yellow_buffer = Farm.objects.filter(
-            farm_boundary__within=yellow_buffer_geometry)
+            boundary__within=yellow_buffer_geometry)
         farms_within_red_buffer = Farm.objects.filter(
-            farm_boundary__within=red_buffer_geometry)
+            boundary__within=red_buffer_geometry)
         farms_within_green_buffer = Farm.objects.filter(
-            farm_boundary__within=green_buffer_geometry)
+            boundary__within=green_buffer_geometry)
 
         # Get the farm IDs of farms that fall within the green buffer
         farm_owners_within_green_buffer = \
-            farms_within_green_buffer.values_list('owner', flat=True)
+            farms_within_green_buffer.values_list('farmer', flat=True)
         unique_farm_owners_within_green_buffer = \
             list(set(farm_owners_within_green_buffer))
 
@@ -214,7 +215,7 @@ class PestOccurenceUtils:
         farm_ids_within_yellow_buffer = \
             farms_within_yellow_buffer.values_list('id', flat=True)
         farm_owners_within_yellow_buffer = \
-            farms_within_yellow_buffer.values_list('owner', flat=True)
+            farms_within_yellow_buffer.values_list('farmer', flat=True)
         unique_farm_owners_within_yellow_buffer = \
             list(set(farm_owners_within_yellow_buffer))
 
@@ -223,7 +224,7 @@ class PestOccurenceUtils:
             farm_ids_within_red_buffer = \
                 farms_within_red_buffer.values_list('id', flat=True)
             farm_owners_within_red_buffer = \
-                farms_within_red_buffer.values_list('owner', flat=True)
+                farms_within_red_buffer.values_list('farmer', flat=True)
             unique_farm_owners_within_red_buffer = \
                 list(set(farm_owners_within_red_buffer))
 
@@ -252,7 +253,7 @@ class PestOccurenceUtils:
             notifications_to_create = []
 
             farmer_ids = Plantation.objects.values_list(
-                'owner__id', flat=True).distinct()
+                'farm__farmer__id', flat=True).distinct()
             farmers_with_planting_info = list(farmer_ids)
 
             # Process green zone
@@ -313,13 +314,13 @@ class PestOccurenceUtils:
         else:
             farms = Farm.objects.all()
             unioned_farm = \
-                farms.aggregate(Union('farm_boundary'))['farm_boundary__union']
+                farms.aggregate(Union('boundary'))['boundary__union']
 
             # Get the farm IDs of farms that fall within the red buffer
             farm_ids_within_red_buffer = \
                 farms_within_red_buffer.values_list('id', flat=True)
             farm_owners_within_red_buffer = \
-                farms_within_red_buffer.values_list('owner', flat=True)
+                farms_within_red_buffer.values_list('farmer', flat=True)
             unique_farm_owners_within_red_buffer = \
                 list(set(farm_owners_within_red_buffer))
 
@@ -349,7 +350,7 @@ class PestOccurenceUtils:
             notifications_to_create = []
 
             for farm in Farm.objects.all():
-                farm_owner_uuid = farm.owner
+                farm_owner_uuid = farm.farmer
                 notification_message = 'You are in the green zone. \
                     This is a safe zone'
 
@@ -381,8 +382,8 @@ class PestOccurenceUtils:
         pest_info_dict = {
             "interventions": [
                 (
-                    f"{farm_object.owner.first_name} "
-                    f"{farm_object.owner.last_name}'s farm is currently in the"
+                    f"{farm_object.farmer.first_name} "
+                    f"{farm_object.farmer.last_name}'s farm is currently in the"
                     " green zone. No interventions needed."
                 )
             ]
@@ -398,8 +399,8 @@ class PestOccurenceUtils:
         if not plant_info:
             self.update_metadata(
                 farm_object,
-                f"{farm_object.owner.first_name} "
-                f"{farm_object.owner.last_name}'s farm has no planting "
+                f"{farm_object.farmer.first_name} "
+                f"{farm_object.farmer.last_name}'s farm has no planting "
                 f"information at the moment.")
             return
 
@@ -465,8 +466,8 @@ class PestOccurenceUtils:
         if not found_stage:
             self.update_metadata(
                 farm_object,
-                f"{farm_object.owner.first_name} "
-                f"{farm_object.owner.last_name}'s farm is currently in "
+                f"{farm_object.farmer.first_name} "
+                f"{farm_object.farmer.last_name}'s farm is currently in "
                 f"or past the harvesting stage. "
                 f"It is {total_days_after_transplant} days since the "
                 f"transplanting date: {transplanting_date}"
@@ -476,20 +477,20 @@ class PestOccurenceUtils:
 
     def get_pest_info(self, growth_stage):
         pests = Pest.objects.filter(
-            growth_stage=growth_stage.growth_stage
-        )
+            crop_growth_stage=growth_stage.growth_stage
+        ).distinct()
 
         pest_info_list = []
         for pest in pests:
             pest_info = {
-                'pest_stage': pest.pest_stage,
-                'pest_name': pest.name,
+                'stage': pest.stage,
+                'name': pest.name,
                 'scientific_name': pest.scientific_name,
-                'pest_presence_period': pest.pest_presence_period,
+                'presence_period': pest.presence_period,
                 'no_of_plants_affected': pest.no_of_plants_affected,
                 'action_threshold': pest.action_threshold,
                 'action_threshold_risk': pest.action_threshold_risk,
-                'growth_stage': pest.growth_stage,
+                'crop_growth_stage': pest.crop_growth_stage,
                 'cultural': pest.cultural,
                 'cultural_description': pest.cultural_description,
                 'biological': pest.biological,

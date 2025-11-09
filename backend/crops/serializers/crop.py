@@ -1,11 +1,12 @@
 from crops.models.crop import Crop
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
+from users.serializers.user import MiniUserReadSerializer
 
 
 class CropSerializer(serializers.ModelSerializer):
-    created_by = serializers.StringRelatedField(read_only=True)
-    updated_by = serializers.StringRelatedField(read_only=True)
+    created_by = MiniUserReadSerializer(read_only=True)
+    updated_by = MiniUserReadSerializer(read_only=True)
 
     class Meta:
         model = Crop
@@ -18,7 +19,7 @@ class CropSerializer(serializers.ModelSerializer):
 
         # --- Permission checks ---
         if not (user.is_superuser or user.is_systemadmin() or
-                user.is_super_extension() or user.is_e_extension()):
+                user.is_superextension() or user.is_eextension()):
             raise PermissionDenied("You are not allowed to manage crops.")
 
         return attrs

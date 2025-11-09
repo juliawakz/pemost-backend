@@ -1,11 +1,13 @@
 # Register your models here.
+from base.utils import ExportActionsMixin
 from crops.models import Crop, CropGrowthStage, CropVariety
 from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
 
 
-class CropAdmin(admin.ModelAdmin):
+class CropAdmin(ExportActionsMixin, admin.ModelAdmin):
+    actions = ['export_to_csv', 'download_sample_csv']
     list_display = [
         "name",
         "created_by",
@@ -25,7 +27,8 @@ class CropAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-class CropVarietyAdmin(admin.ModelAdmin):
+class CropVarietyAdmin(ExportActionsMixin, admin.ModelAdmin):
+    actions = ['export_to_csv', 'download_sample_csv']
     list_display = [
         "name",
         "crop",
@@ -52,7 +55,8 @@ class CropVarietyAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-class CropGrowthStageAdmin(admin.ModelAdmin):
+class CropGrowthStageAdmin(ExportActionsMixin, admin.ModelAdmin):
+    actions = ['export_to_csv', 'download_sample_csv']
     list_display = [
         "crop_variety",
         "growth_stage",

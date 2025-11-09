@@ -28,6 +28,7 @@ class EExtensionOfficerReadSerializer(serializers.ModelSerializer):
             "wards",
             "super_extensions_count",
             "managed_farms_count",
+            "managed_farms",
             "is_visible",
             "is_archived",
             "created_at",

@@ -1,11 +1,12 @@
 from crops.models.crop_variety import CropVariety
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
+from users.serializers.user import MiniUserReadSerializer
 
 
 class CropVarietySerializer(serializers.ModelSerializer):
-    created_by = serializers.StringRelatedField(read_only=True)
-    updated_by = serializers.StringRelatedField(read_only=True)
+    created_by = MiniUserReadSerializer(read_only=True)
+    updated_by = MiniUserReadSerializer(read_only=True)
 
     class Meta:
         model = CropVariety

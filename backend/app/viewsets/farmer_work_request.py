@@ -73,7 +73,7 @@ class FarmerWorkRequestViewset(viewsets.ModelViewSet):
         # Farmers
         # A farmer can see requests for any of their farms
         if hasattr(user, "farm_users"):
-            return base_qs.filter(farms__user=user)
+            return base_qs.filter(farms__farmer=user)
 
         # Default
         return FarmerWorkRequest.objects.none()

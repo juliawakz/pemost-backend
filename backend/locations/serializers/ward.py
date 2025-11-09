@@ -25,15 +25,12 @@ class WardSerializer(serializers.ModelSerializer):
 
 
 class MiniWardSerializer(serializers.ModelSerializer):
-    subcounty = MinimalSubCountySerializer(read_only=True)
-
     class Meta:
         model = Ward
         fields = [
             "id",
             "ward_id",
-            "name",
-            "subcounty"
+            "name"
         ]
         read_only_fields = [
             "id"

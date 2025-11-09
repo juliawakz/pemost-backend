@@ -1,8 +1,12 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
+from fcm_django.models import FCMDevice
 from notifications.filterset import NotificationFilterSet
 from notifications.models import Notification
-from notifications.serializers import NotificationSerializer
+from notifications.serializers import (
+    FCMDeviceSerializer,
+    NotificationSerializer
+)
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -61,4 +65,61 @@ class NotificationViewSet(viewsets.ModelViewSet):
         qs = self.get_queryset().filter(is_read=False)
         qs.update(is_read=True)
         serializer = self.get_serializer(self.get_queryset(), many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["post"], url_path="register-device")
+    def register_device(self, request):
+        """
+        Register FCM device for push notifications.
+        For mobile web, use device_type='web'
+        """
+        serializer = FCMDeviceSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        if serializer.is_valid():
+            device = serializer.save()
+            return Response(
+                {
+                    "detail": "Device registered successfully",
+                    "device": FCMDeviceSerializer(device).data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=["post"], url_path="unregister-device")
+    def unregister_device(self, request):
+        """
+        Unregister FCM device
+        """
+        registration_id = request.data.get("registration_id")
+        if not registration_id:
+            return Response(
+                {"detail": "registration_id is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        deleted_count, _ = FCMDevice.objects.filter(
+            user=request.user,
+            registration_id=registration_id
+        ).delete()
+
+        if deleted_count > 0:
+            return Response(
+                {"detail": "Device unregistered successfully"},
+                status=status.HTTP_200_OK
+            )
+        return Response(
+            {"detail": "Device not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    @action(detail=False, methods=["get"], url_path="my-devices")
+    def my_devices(self, request):
+        """
+        Get all registered devices for the authenticated user
+        """
+        devices = FCMDevice.objects.filter(user=request.user)
+        serializer = FCMDeviceSerializer(devices, many=True)
         return Response(serializer.data)

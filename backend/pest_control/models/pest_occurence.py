@@ -22,7 +22,6 @@ class PestOccurrence(BaseModel):
     )
 
     slug = None
-    metadata = None
 
     class Meta:
         verbose_name = "Occurrence"
