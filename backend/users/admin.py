@@ -1,10 +1,12 @@
+from base.utils import ExportActionsMixin
 from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
 from users.models import Otp, User
 
 
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(ExportActionsMixin, admin.ModelAdmin):
+    actions = ['export_to_csv', 'download_sample_csv']
     list_display = [
         "first_name",
         "last_name",
@@ -27,7 +29,8 @@ class UserAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-class OtpAdmin(admin.ModelAdmin):
+class OtpAdmin(ExportActionsMixin, admin.ModelAdmin):
+    actions = ['export_to_csv', 'download_sample_csv']
     list_display = [
         "id",
         "user",

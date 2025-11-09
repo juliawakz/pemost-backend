@@ -5,6 +5,8 @@ from locations.serializers.ward import MiniWardSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from users.serializers.user import MiniUserReadSerializer
+from app.serializers.e_extension import MiniEExtensionOfficerSerializer
+from locations.serializers.ward import MiniWardSerializer
 
 User = get_user_model()
 
@@ -14,9 +16,13 @@ class FarmReadSerializer(serializers.ModelSerializer):
     Serializer for reading/retrieving farm data.
     Includes nested user and ward information, and calculated size.
     """
-    user = MiniUserReadSerializer(read_only=True)
+    farmer = MiniUserReadSerializer(read_only=True)
     ward = MiniWardSerializer(read_only=True)
     e_extensions_count = serializers.SerializerMethodField()
+    e_extensions = MiniEExtensionOfficerSerializer(
+        read_only=True,
+        many=True
+    )
 
     class Meta:
         model = Farm
@@ -27,19 +33,24 @@ class FarmReadSerializer(serializers.ModelSerializer):
             "user_size",
             "calc_size",
             "ward",
-            "user",
+            "farmer",
             "e_extensions_count",
+            "e_extensions",
+            "alert_status",
             "is_visible",
             "is_archived",
+            "metadata",
             "created_at",
             "updated_at",
         ]
         read_only_fields = [
             "id",
             "calc_size",
+            "alert_status",
             "is_archived",
             "created_at",
             "updated_at",
+            "metadata"
         ]
 
     @extend_schema_field(serializers.IntegerField)
@@ -88,7 +99,7 @@ class FarmWriteSerializer(serializers.ModelSerializer):
         if getattr(user, "role", None) != "FARMER":
             raise ValidationError("You must have the role 'FARMER'.")
 
-        attrs["user"] = user
+        attrs["farmer"] = user
 
         return attrs
 
@@ -152,6 +163,8 @@ class FarmSerializer(serializers.ModelSerializer):
 
 class MiniFarmReadSerializer(serializers.ModelSerializer):
     """Minimal representation of a Farm."""
+    ward = MiniWardSerializer()
+
     class Meta:
         model = Farm
         fields = ["id", "name", "ward", "boundary"]

@@ -39,7 +39,7 @@ urlpatterns = [
         include("crops.urls", namespace="crops")
     ),
     path(
-        "api/v2/pest-control/",
+        "api/v2/pest/control/",
         include("pest_control.urls", namespace="pest-control")
     )
 ]

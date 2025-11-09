@@ -1,0 +1,89 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a>
+    &rsaquo; <a href="{% url 'admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    &rsaquo; Import CSV
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-file-upload"></i> Import {{ opts.verbose_name_plural|capfirst }} from CSV
+            </h3>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="csv_file"><i class="fas fa-file-csv"></i> CSV File:</label>
+                    <input type="file" name="csv_file" id="csv_file" accept=".csv" required class="form-control" style="max-width: 500px;">
+                    <small class="form-text text-muted">
+                        Upload a CSV file with the correct format. Download the sample CSV template if you need help with the format.
+                    </small>
+                </div>
+
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-upload"></i> Import CSV
+                    </button>
+                    <a href="{% url 'admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-info-circle"></i> Instructions
+            </h3>
+        </div>
+        <div class="card-body">
+            <ol class="mb-0">
+                <li>Download the sample CSV template to see the required format</li>
+                <li>Fill in your data following the sample format</li>
+                <li>Make sure all required fields are filled</li>
+                <li>Use the correct format for dates (DD/MM/YYYY)</li>
+                <li>For foreign key fields, use the ID of the related object</li>
+                <li>Upload your completed CSV file using the form above</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        margin-bottom: 1rem;
+    }
+    .card-header {
+        padding: 0.75rem 1.25rem;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .card-title {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    .card-body {
+        padding: 1.25rem;
+    }
+    .mt-3 {
+        margin-top: 1rem;
+    }
+    .mb-0 {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}

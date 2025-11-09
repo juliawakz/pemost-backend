@@ -14,6 +14,7 @@ from datetime import timedelta
 from pathlib import Path
 
 import redis
+from celery.schedules import crontab
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -257,6 +258,14 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+# Celery Beat Schedule
+CELERY_BEAT_SCHEDULE = {
+    'update-matured-plantations-daily': {
+        'task': 'app.tasks.update_matured_plantations',
+        'schedule': crontab(hour=0, minute=0),  # Run at midnight every day
+    },
+}
 
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

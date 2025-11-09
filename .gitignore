@@ -152,3 +152,4 @@ backend/environments/env.v2
 *.sqlite3
 static/**
 static/*
+.claude/

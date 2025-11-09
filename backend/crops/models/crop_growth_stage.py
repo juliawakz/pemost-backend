@@ -12,7 +12,7 @@ class CropGrowthStage(BaseModel):
     crop_variety = models.ForeignKey(
         CropVariety,
         on_delete=models.CASCADE,
-        related_name="%(class)s_growth_stage",
+        related_name="growth_stage_crop",
         null=True
     )
     growth_stage = models.CharField(

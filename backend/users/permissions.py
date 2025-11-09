@@ -44,7 +44,7 @@ class IsSuperExtension(BasePermission):
         return bool(
             user
             and user.is_authenticated
-            and user.is_super_extension()
+            and user.is_superextension()
         )
 
 
@@ -55,7 +55,7 @@ class IsEExtension(BasePermission):
         return bool(
             user
             and user.is_authenticated
-            and user.is_e_extension()
+            and user.is_eextension()
         )
 
 

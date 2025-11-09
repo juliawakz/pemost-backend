@@ -78,23 +78,21 @@ class EExtensionWorkRequestCreateSerializer(serializers.ModelSerializer):
 
         super_extension = attrs.get('super_extension')
 
-        # Prevent duplicate requests
-        if EExtensionWorkRequest.objects.filter(
-            Q(
-                e_extension=e_extension,
-                super_extension=super_extension,
-                status=WorkRequestStatusChoices.PENDING,
-                is_archived=False
-            ) |
-            Q(
-                e_extension=e_extension,
-                super_extension=super_extension,
-                status=WorkRequestStatusChoices.ACCEPTED
+        # Check if they're already working together
+        if super_extension in e_extension.super_extensions.all():
+            raise ValidationError(
+                "You are already working with this Super Extension officer."
             )
+
+        # Prevent duplicate pending requests
+        if EExtensionWorkRequest.objects.filter(
+            e_extension=e_extension,
+            super_extension=super_extension,
+            status=WorkRequestStatusChoices.PENDING,
+            is_archived=False
         ).exists():
             raise ValidationError(
-                "You already have a pending or accepted request"
-                "to this Super Extension officer."
+                "You already have a pending request to this Super Extension officer."
             )
 
         attrs["e_extension"] = e_extension

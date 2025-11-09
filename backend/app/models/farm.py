@@ -9,6 +9,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from app.choices import AlertStatusChoices
 from locations.models import Ward
 
 User = get_user_model()
@@ -43,7 +44,7 @@ class Farm(BaseModel):
         blank=False,
         related_name="farm_wards"
     )
-    user = models.ForeignKey(
+    farmer = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="farm_users",
@@ -59,19 +60,23 @@ class Farm(BaseModel):
         help_text="If True, farmer is visible to allowed "
         "e-extension officers in their ward"
     )
+    alert_status = models.CharField(
+        max_length=20,
+        choices=AlertStatusChoices.choices,
+        default=AlertStatusChoices.NONE
+    )
 
     slug = None
-    metadata = None
 
     class Meta:
         verbose_name = _("Farm")
         verbose_name_plural = _("Farms")
         ordering = ("name",)
-        unique_together = ("user", "name", "boundary")
+        unique_together = ("farmer", "name", "boundary")
 
     def clean(self):
         """Validate farm data"""
-        if self.user and not self.user.is_farmer():
+        if self.farmer and not self.farmer.is_farmer():
             raise ValidationError(
                 "Farm user must have the role 'FARMER'."
             )
@@ -82,8 +87,8 @@ class Farm(BaseModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name or 'Unnamed'} - {self.user.first_name}\
-            {self.user.last_name}"
+        return f"{self.name or 'Unnamed'} - {self.farmer.first_name}\
+            {self.farmer.last_name}"
 
     def get_sqm_by_wgs84_polygon(self, geom):
         """

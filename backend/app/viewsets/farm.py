@@ -55,7 +55,7 @@ class FarmViewset(viewsets.ModelViewSet):
 
         # Optimize queries with related data
         base_queryset = self.queryset.select_related(
-            'user',
+            'farmer',
             'ward',
             'ward__subcounty',
             'ward__subcounty__county'
@@ -66,28 +66,36 @@ class FarmViewset(viewsets.ModelViewSet):
 
         # Super Extension sees farms managed by their E-Extensions
         if u.is_superextension():
-            super_ext_profile = u.super_extension_users
-            # Get all E-Extensions managed by this Super Extension
-            managed_e_extensions = super_ext_profile.managed_e_extensions.all()
-            return base_queryset.filter(
-                e_extensions__in=managed_e_extensions,
-                is_archived=False,
-                is_visible=True
-            ).distinct()
+            try:
+                super_ext_profile = u.super_extension_users
+                # Get all E-Extensions managed by this Super Extension
+                managed_e_extensions = super_ext_profile.managed_e_extensions.all()
+                return base_queryset.filter(
+                    e_extensions__in=managed_e_extensions,
+                    is_archived=False,
+                    is_visible=True
+                ).distinct()
+            except AttributeError:
+                # Profile not created yet
+                return Farm.objects.none()
 
         # E-Extension sees farms they manage
         if u.is_eextension():
-            e_ext_profile = u.e_extension_users
-            return base_queryset.filter(
-                e_extensions=e_ext_profile,
-                is_archived=False,
-                is_visible=True
-            ).distinct()
+            try:
+                e_ext_profile = u.e_extension_users
+                return base_queryset.filter(
+                    e_extensions=e_ext_profile,
+                    is_archived=False,
+                    is_visible=True
+                ).distinct()
+            except AttributeError:
+                # Profile not created yet or wards not added
+                return Farm.objects.none()
 
         # Farmers see only their own farms
         if u.is_farmer():
             return base_queryset.filter(
-                user=u,
+                farmer=u,
                 is_archived=False
             ).distinct()
 

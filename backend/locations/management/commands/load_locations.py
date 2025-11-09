@@ -37,7 +37,7 @@ class Command(BaseCommand):
                 if c_created:
                     created_counties += 1
                 else:
-                    existing_counties = max(existing_counties, county.county_id)
+                    existing_counties += 1
 
                 # Create or get SubCounty
                 subcounty, s_created = SubCounty.objects.get_or_create(
@@ -48,7 +48,7 @@ class Command(BaseCommand):
                 if s_created:
                     created_subcounties += 1
                 else:
-                    existing_subcounties = max(existing_subcounties, subcounty.subcounty_id)
+                    existing_subcounties += 1
 
                 # Create or get Ward
                 ward, w_created = Ward.objects.get_or_create(
@@ -59,7 +59,7 @@ class Command(BaseCommand):
                 if w_created:
                     created_wards += 1
                 else:
-                    existing_wards = max(existing_wards, ward.ward_id)
+                    existing_wards += 1
 
         # Summary report
         self.stdout.write(self.style.SUCCESS("\nData import complete!"))

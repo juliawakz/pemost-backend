@@ -15,6 +15,9 @@ class PEST_STAGE(models.TextChoices):
 
 
 class ACTION_THRESHOLD_RISK(models.TextChoices):
+    """
+    Risk Levels
+    """
     HIGH = "high", _("High")
     LOW = "low", _("Low")
     MODERATE = "moderate", _("Moderate")

@@ -50,8 +50,8 @@ class FarmerWorkRequestReadSerializer(serializers.ModelSerializer):
     def get_farmer(self, obj):
         """Get farmer info (assumed from the first farm owner)."""
         first_farm = obj.farms.first()
-        if first_farm and hasattr(first_farm, "user"):
-            return MiniUserReadSerializer(first_farm.user).data
+        if first_farm and hasattr(first_farm, "farmer"):
+            return MiniUserReadSerializer(first_farm.farmer).data
         return None
 
 
@@ -93,7 +93,7 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
         farms = attrs.get("farms", [])
 
         # Ensure all farms belong to the requesting farmer
-        invalid_farms = [farm for farm in farms if farm.user != farmer]
+        invalid_farms = [farm for farm in farms if farm.farmer != farmer]
         if invalid_farms:
             raise ValidationError({
                 "message":
@@ -122,13 +122,23 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
                 f"{', '.join([farm.name for farm in farms_outside])}"
             })
 
-        # Check for existing active requests for same farms and e-extension
+        # Check if they're already working together (e_extension already manages farms)
+        farms_already_managed = [
+            farm for farm in farms
+            if e_extension in farm.e_extensions.all()
+        ]
+
+        if farms_already_managed:
+            raise ValidationError({
+                "message":
+                f"You are already working with this E-Extension officer on: "
+                f"{', '.join([farm.name for farm in farms_already_managed])}"
+            })
+
+        # Check for existing pending requests for same farms and e-extension
         existing = FarmerWorkRequest.objects.filter(
             Q(e_extension=e_extension),
-            Q(status__in=[
-                WorkRequestStatusChoices.PENDING,
-                WorkRequestStatusChoices.ACCEPTED
-            ]),
+            Q(status=WorkRequestStatusChoices.PENDING),
             is_archived=False,
             farms__in=farms
         ).distinct()
@@ -136,7 +146,7 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
         if existing.exists():
             raise ValidationError({
                 "message": "One or more of these farm(s) already has a pending"
-                " or accepted request with this E-Extension officer."
+                " request with this E-Extension officer."
             })
 
         return attrs
@@ -162,7 +172,7 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
             "email_farm_work_request.html",
             {
                 "eextension_name": eextension.user.first_name,
-                "farmer_name": work_request.farms.first().user.first_name,
+                "farmer_name": work_request.farms.first().farmer.first_name,
                 "farms": farms_data,
                 "current_year": datetime.now().year,
             },

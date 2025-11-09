@@ -1,4 +1,8 @@
-from users.permissions import IsSystemAdminOrSuperUser
+from users.permissions import (
+    IsSystemAdminOrSuperUser,
+    IsEExtension,
+    IsSuperExtension
+)
 from crops.filterset.crop import CropFilterSet
 from crops.models.crop import Crop
 from crops.serializers.crop import CropSerializer
@@ -26,6 +30,7 @@ class CropViewset(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [
-                IsSystemAdminOrSuperUser
+                IsSystemAdminOrSuperUser | IsSuperExtension | IsEExtension
             ]
+
         return [permission() for permission in permission_classes]

@@ -1,3 +1,4 @@
+from base.utils import ExportActionsMixin
 from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
@@ -6,7 +7,8 @@ from django_json_widget.widgets import JSONEditorWidget
 from locations.models import County, SubCounty, Ward
 
 
-class CountyAdmin(admin.ModelAdmin):
+class CountyAdmin(ExportActionsMixin, admin.ModelAdmin):
+    actions = ['export_to_csv', 'download_sample_csv']
     list_display = [
         "county_id",
         "name",
@@ -24,7 +26,8 @@ class CountyAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-class SubCountyAdmin(admin.ModelAdmin):
+class SubCountyAdmin(ExportActionsMixin, admin.ModelAdmin):
+    actions = ['export_to_csv', 'download_sample_csv']
     list_display = [
         "subcounty_id",
         "name",
@@ -43,7 +46,8 @@ class SubCountyAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-class WardAdmin(admin.ModelAdmin):
+class WardAdmin(ExportActionsMixin, admin.ModelAdmin):
+    actions = ['export_to_csv', 'download_sample_csv']
     list_display = [
         "ward_id",
         "name",

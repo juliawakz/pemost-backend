@@ -292,3 +292,68 @@ class CanManageSuperExtensionOfficer(BasePermission):
             return True
 
         return False
+
+
+class CanManagePlantation(BasePermission):
+    """
+    Permission to manage plantations.
+
+    - Read (GET): Any authenticated user can view plantations they have access to
+      (access controlled by get_queryset)
+    - Create (POST): Only farmers (farm owners), E-Extensions with farm access,
+      or system admins
+    - Update (PUT/PATCH): Farm owner (farmer), E-Extensions managing the farm,
+      or system admins
+    - Delete: Farm owner (farmer), E-Extensions managing the farm, or system admins
+    """
+    def has_permission(self, request, view):
+        user = request.user
+
+        if not user or not user.is_authenticated:
+            return False
+
+        # Everyone authenticated can read (filtered by get_queryset)
+        if request.method in SAFE_METHODS:
+            return True
+
+        # System admins and super users can do anything
+        if user.is_superuser or user.is_systemadmin():
+            return True
+
+        # Farmers and E-Extensions can create plantations
+        # (validated in serializer for specific farm access)
+        if view.action == 'create':
+            return user.is_farmer() or user.is_eextension()
+
+        # Update/Delete checked at object level
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+
+        # System admins can do anything
+        if user.is_superuser or user.is_systemadmin():
+            return True
+
+        # Read access - controlled by get_queryset
+        if request.method in SAFE_METHODS:
+            return True
+
+        # Farm owner (farmer) can update/delete their plantations
+        if user.is_farmer() and obj.farm and obj.farm.farmer == user:
+            return True
+
+        # E-Extension can update/delete plantations for farms they manage
+        if user.is_eextension():
+            try:
+                e_ext_profile = user.e_extension_users
+                # Check if they manage this farm
+                has_access = obj.farm and obj.farm.e_extensions.filter(
+                    id=e_ext_profile.id
+                ).exists()
+                if has_access and obj.farm.is_visible:
+                    return True
+            except AttributeError:
+                return False
+
+        return False
