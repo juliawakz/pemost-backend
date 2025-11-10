@@ -10,6 +10,8 @@ from notifications.serializers import (
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from firebase_admin.messaging import Message
+from firebase_admin.messaging import Notification as FCMNotification
 
 
 @extend_schema(tags=["Notifications"])
@@ -127,8 +129,9 @@ class NotificationViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["post"], url_path="test/push")
     def test_push_notification(self, request):
         """
-        Test endpoint to send push notifications to authenticated user's devices.
-        For testing purposes only - should be removed or restricted in production.
+        Test endpoint to send push notifications to authenticated user's
+        devices. For testing purposes only - should be removed or
+        restricted in production.
 
         Body params:
         - title: Notification title
@@ -150,19 +153,39 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
         # Send notification to all user devices
         try:
-            result = devices.send_message(
-                title=title,
-                body=body,
+            # Construct FCM message
+            message = Message(
+                notification=FCMNotification(
+                    title=title,
+                    body=body
+                ),
                 data=data
             )
-            return Response(
-                {
-                    "detail": "Notification sent successfully",
-                    "devices_count": devices.count(),
-                    "result": str(result)
-                },
-                status=status.HTTP_200_OK
-            )
+
+            result = devices.send_message(message)
+
+            # Handle different response types
+            response_data = {
+                "detail": "Notification sent successfully",
+                "devices_count": devices.count(),
+            }
+
+            # Result can be different types depending on single/batch send
+            if hasattr(result, 'success_count'):
+                # BatchResponse for multiple devices
+                response_data.update({
+                    "success_count": result.success_count,
+                    "failure_count": result.failure_count
+                })
+            elif isinstance(result, dict):
+                # Dict response
+                response_data["result"] = result
+            else:
+                # String message ID for single device
+                response_data["message_id"] = str(result)
+
+            return Response(response_data, status=status.HTTP_200_OK)
+
         except Exception as e:
             return Response(
                 {"detail": f"Error sending notification: {str(e)}"},

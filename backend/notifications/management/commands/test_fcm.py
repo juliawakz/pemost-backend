@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand
 from fcm_django.models import FCMDevice
 from django.contrib.auth import get_user_model
+from firebase_admin.messaging import Message
+from firebase_admin.messaging import Notification as FCMNotification
 
 User = get_user_model()
 
@@ -72,17 +74,34 @@ class Command(BaseCommand):
             return
 
         try:
-            result = devices.send_message(
-                title=title,
-                body=body,
+            # Construct FCM message
+            message = Message(
+                notification=FCMNotification(
+                    title=title,
+                    body=body
+                ),
                 data={"test": "true", "source": "management_command"}
             )
+
+            result = devices.send_message(message)
+
             self.stdout.write(
                 self.style.SUCCESS(
                     f'Successfully sent notification to {devices.count()} device(s)'
                 )
             )
-            self.stdout.write(f'Result: {result}')
+
+            # Handle different response types
+            if hasattr(result, 'success_count'):
+                self.stdout.write(
+                    f'Success: {result.success_count}, '
+                    f'Failures: {result.failure_count}'
+                )
+            elif isinstance(result, dict):
+                self.stdout.write(f'Result: {result}')
+            else:
+                self.stdout.write(f'Message ID: {result}')
+
         except Exception as e:
             self.stdout.write(
                 self.style.ERROR(f'Error sending notification: {str(e)}')
