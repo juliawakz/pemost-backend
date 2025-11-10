@@ -2525,6 +2525,37 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "test push notifications",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Hello from Backend!\",\n    \"body\": \"This is a test notification\",\n    \"data\": {\n      \"type\": \"test\",\n      \"timestamp\": \"2024-01-01\"\n      }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/notifications/test/push/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"notifications",
+										"test",
+										"push",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
