@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   db:
     image: postgis/postgis:latest
     container_name: pemost_db
     ports:
-      - 5432:5432
+      - 5437:5432
     env_file:
       - ./backend/environments/env.dev
     restart: unless-stopped
@@ -22,7 +20,7 @@ services:
     volumes:
       - ./backend:/pemostbackend:rw
     ports:
-      - 8000:8000
+      - 8082:8001
     env_file:
       - ./backend/environments/env.dev
     networks:
@@ -36,7 +34,7 @@ services:
      container_name: pemost_redis
      restart: unless-stopped
      ports:
-       - 6379:6379
+       - 6372:6379
      networks:
        - pemost_network
 
