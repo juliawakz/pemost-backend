@@ -14,6 +14,23 @@ services:
     networks:
       - pemost_network
 
+  backend:
+    build: ./backend
+    container_name: pemost_backend
+    command: gunicorn project.wsgi:application --workers 16 --timeout 1500 --worker-class gevent --bind 0.0.0.0:8001
+    restart: unless-stopped
+    volumes:
+      - ./backend:/pemostbackend:rw
+    ports:
+      - 8000:8000
+    env_file:
+      - ./backend/environments/env.dev
+    networks:
+      - pemost_network
+    depends_on:
+      - db
+      - redis
+
   redis:
      image: redis:latest
      container_name: pemost_redis
@@ -22,6 +39,38 @@ services:
        - 6379:6379
      networks:
        - pemost_network
+
+  celery_worker:
+    build: ./backend
+    container_name: pemost_celery_worker
+    restart: unless-stopped
+    env_file:
+      - ./backend/environments/env.dev
+    command: celery -A project worker -l info
+    volumes:
+      - ./backend:/pemostbackend:rw
+    networks:
+      - pemost_network
+    depends_on:
+      - backend
+      - redis
+      - db
+
+  celery_beat:
+    build: ./backend
+    container_name: pemost_celery_beat
+    restart: unless-stopped
+    env_file:
+      - ./backend/environments/env.dev
+    command: celery -A project beat -l info
+    volumes:
+      - ./backend:/pemostbackend:rw
+    networks:
+      - pemost_network
+    depends_on:
+      - backend
+      - redis
+      - db
 
 networks:
   pemost_network:

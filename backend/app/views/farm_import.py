@@ -16,10 +16,25 @@ class FarmsImportView(generics.GenericAPIView):
         serializer = self.get_serializer(
             data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
-        total_farms = serializer.save()
-        return Response(
-            {
-                "message": f"{total_farms} farms uploaded",
+        result = serializer.save()
+
+        # Handle both old and new return formats
+        if isinstance(result, dict):
+            message = (
+                f"{result['created']} farms created, "
+                f"{result['updated']} updated, "
+                f"{result['skipped']} skipped"
+            )
+            response_data = {
+                "message": message,
+                "status": status.HTTP_200_OK,
+                "details": result
+            }
+        else:
+            # Backward compatibility for old format
+            response_data = {
+                "message": f"{result} farms uploaded",
                 "status": status.HTTP_200_OK,
             }
-        )
+
+        return Response(response_data)
