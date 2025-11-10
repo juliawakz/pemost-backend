@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "cc39e9ef-3e7c-480a-a486-335d3f0ef9bb",
+		"_postman_id": "",
 		"name": "PEMOST",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "17349709",
-		"_collection_link": "https://peapay-faranga.postman.co/workspace/My-Workspace~490b3c38-c13e-49d2-8230-97101a09e0ca/collection/17349709-cc39e9ef-3e7c-480a-a486-335d3f0ef9bb?action=share&source=collection_link&creator=17349709"
+		"_exporter_id": "",
+		"_collection_link": ""
 	},
 	"item": [
 		{
@@ -379,7 +379,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"gitjulia650@gmail.com\",\n    \"first_name\": \"Git\",\n    \"last_name\": \"Julia\",\n    \"phone_number\": \"+254711111111\",\n    \"password1\": \"{{pass}}\",\n    \"password2\": \"{{pass}}\",\n    \"role\": \"FARMER\" // Available roles are: FARMER, AGRODEALER, E_EXTENSION, SUPER_EXTENSION\n}",
+									"raw": "// {\n//     \"email\": \"agrodealer@gmail.com\",\n//     \"first_name\": \"Agro\",\n//     \"last_name\": \"dealer\",\n//     \"phone_number\": \"+254711111112\",\n//     \"password1\": \"test1234\",\n//     \"password2\": \"test1234\",\n//     \"role\": \"AGRODEALER\", // Available roles are: FARMER, AGRODEALER, E_EXTENSION, SUPER_EXTENSION\n//     \"agree_to_terms\":\"true\",\n//     \"license_type\":\"FREE\" //FREE\n// }\n\n// {\n//     \"email\": \"extension@gmail.com\",\n//     \"first_name\": \"extension\",\n//     \"last_name\": \"e\",\n//     \"phone_number\": \"+254711111113\",\n//     \"password1\": \"test1234\",\n//     \"password2\": \"test1234\",\n//     \"role\": \"E_EXTENSION\", // Available roles are: FARMER, AGRODEALER, E_EXTENSION, SUPER_EXTENSION\n//     \"agree_to_terms\":\"true\",\n//     \"license_type\":\"FREE\" //FREE\n// }\n\n{\n    \"email\": \"superextension@gmail.com\",\n    \"first_name\": \"super\",\n    \"last_name\": \"extension\",\n    \"phone_number\": \"+254711111114\",\n    \"password1\": \"test1234\",\n    \"password2\": \"test1234\",\n    \"role\": \"SUPER_EXTENSION\", // Available roles are: FARMER, AGRODEALER, E_EXTENSION, SUPER_EXTENSION\n    \"agree_to_terms\":\"true\",\n    \"license_type\":\"FREE\" //FREE\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1077,7 +1077,7 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "/home/julia/Downloads/Kathaana Farmers Details/KathianiFarms.zip"
+											"src": "/home/julia/Documents/pemost_backend/backend/sample_data/farms.zip"
 										}
 									]
 								},
@@ -2481,7 +2481,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"registration_id\": \"fd8ioytreq76\",\n    \"type\": \"android\"\n}",
+									"raw": "{\n    \"registration_id\": \"fd8ioytreq76\",\n    \"type\": \"android\" // web, ios\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2712,169 +2712,6 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "OldEndpoints",
-			"item": [
-				{
-					"name": "fetch crops",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://api.pemost.georesearch.co.ke/api/v1/crop/type/",
-							"protocol": "https",
-							"host": [
-								"api",
-								"pemost",
-								"georesearch",
-								"co",
-								"ke"
-							],
-							"path": [
-								"api",
-								"v1",
-								"crop",
-								"type",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "fetch crops varieties",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://api.pemost.georesearch.co.ke/api/v1/variety/",
-							"protocol": "https",
-							"host": [
-								"api",
-								"pemost",
-								"georesearch",
-								"co",
-								"ke"
-							],
-							"path": [
-								"api",
-								"v1",
-								"variety",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "fetch crop growth stage",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://api.pemost.georesearch.co.ke/api/v1/stages/",
-							"protocol": "https",
-							"host": [
-								"api",
-								"pemost",
-								"georesearch",
-								"co",
-								"ke"
-							],
-							"path": [
-								"api",
-								"v1",
-								"stages",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "login",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.environment.set('Old_Token', pm.response.json().token.access)"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+254791049498\",\n    \"password\": \"test1234\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://api.pemost.georesearch.co.ke/api/v1/accounts/login/",
-							"protocol": "https",
-							"host": [
-								"api",
-								"pemost",
-								"georesearch",
-								"co",
-								"ke"
-							],
-							"path": [
-								"api",
-								"v1",
-								"accounts",
-								"login",
-								""
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "{{Old_Token}}",
-						"type": "string"
-					}
-				]
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"exec": [
-							""
-						]
-					}
 				}
 			]
 		}

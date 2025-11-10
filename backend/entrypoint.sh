@@ -25,7 +25,7 @@ echo "-------Creating a superuser-------"
 python manage.py shell -c "
 from django.contrib.auth import get_user_model;
 try:
-  get_user_model().objects.create_superuser(first_name='Julia',last_name='Wakaba',email='juliawakaba53@gmail.com',phone_number='+254791049498',password='test1234',role='SYSTEM_ADMIN')
+  get_user_model().objects.create_superuser(first_name='Admin',last_name='Strator',email='admin@admin.com',phone_number='+254712345678',password='admin',role='SYSTEM_ADMIN')
 except Exception as e:
   print(e)
   "

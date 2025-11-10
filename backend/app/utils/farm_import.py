@@ -19,7 +19,7 @@ User = get_user_model()
 
 class FarmImportUtil:
     # Function for shapefiles imports through rest api.
-    def import_farms(self, shapefile):
+    def import_farms(self, shapefile, mode='skip'):
         # This  function read the contents of the uploaded object
         # and store it into a temporary file on the disk so that we
         # can work with it.
@@ -88,6 +88,9 @@ class FarmImportUtil:
         # features = list()
         total_farms = layer.GetFeatureCount()
         fields = {}
+        created_count = 0
+        updated_count = 0
+        skipped_count = 0
 
         for i in range(layer.GetFeatureCount()):
             src_feature = layer.GetFeature(i)
@@ -145,13 +148,41 @@ class FarmImportUtil:
 
                 fields["farmer"] = user
 
-                feature = Farm(**fields)
-                # save to the database
-                feature.save()
+                # Handle different import modes
+                if mode == 'update':
+                    # Update or create farm
+                    farm, created = Farm.objects.update_or_create(
+                        name=fields["name"],
+                        defaults=fields
+                    )
+                    if created:
+                        created_count += 1
+                    else:
+                        updated_count += 1
+                elif mode == 'skip':
+                    # Skip if farm already exists
+                    if Farm.objects.filter(name=fields["name"]).exists():
+                        skipped_count += 1
+                        continue
+                    else:
+                        feature = Farm(**fields)
+                        feature.save()
+                        created_count += 1
+                else:
+                    # Default: create (will fail on duplicates)
+                    feature = Farm(**fields)
+                    feature.save()
+                    created_count += 1
 
         # delete the temporary files since data has been uploaded successfully
         os.remove(fname)
         shutil.rmtree(dir_name)
-        return total_farms
+
+        return {
+            'total': total_farms,
+            'created': created_count,
+            'updated': updated_count,
+            'skipped': skipped_count
+        }
 
     # https://gis.stackexchange.com/questions/421771/ogr-coordinatetransformation-appears-to-be-inverting-xy-coordinates
