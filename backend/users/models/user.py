@@ -76,6 +76,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = [
         "first_name",
         "last_name",
+        "phone_number",
     ]
 
     slug = None

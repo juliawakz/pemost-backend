@@ -323,7 +323,7 @@ class CanManagePlantation(BasePermission):
         # Farmers and E-Extensions can create plantations
         # (validated in serializer for specific farm access)
         if view.action == 'create':
-            return user.is_farmer() or user.is_eextension()
+            return user.is_farmer() # or user.is_eextension()
 
         # Update/Delete checked at object level
         return True

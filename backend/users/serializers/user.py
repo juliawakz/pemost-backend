@@ -24,6 +24,7 @@ class RegisterAccountSerializer(serializers.Serializer):
     agree_to_terms = serializers.BooleanField(required=True)
     role = serializers.ChoiceField(
         choices=[
+            (RoleChoices.SYSTEM_ADMIN, "System Admin"),
             (RoleChoices.SUPER_EXTENSION, "Super Extension Officer"),
             (RoleChoices.E_EXTENSION, "E-Extension Officer"),
             (RoleChoices.AGRODEALER, "Agrodealer"),
