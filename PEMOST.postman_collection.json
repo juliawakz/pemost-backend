@@ -1,0 +1,2881 @@
+{
+	"info": {
+		"_postman_id": "cc39e9ef-3e7c-480a-a486-335d3f0ef9bb",
+		"name": "PEMOST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17349709",
+		"_collection_link": "https://peapay-faranga.postman.co/workspace/My-Workspace~490b3c38-c13e-49d2-8230-97101a09e0ca/collection/17349709-cc39e9ef-3e7c-480a-a486-335d3f0ef9bb?action=share&source=collection_link&creator=17349709"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "token management",
+					"item": [
+						{
+							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set('REFRESH', pm.response.json().token.refresh)",
+											"pm.environment.set('TOKEN', pm.response.json().token.access)",
+											"pm.environment.set('REFRESH_TOKEN', pm.response.json().token.refresh)",
+											"pm.environment.set('ID', pm.response.json().user.id)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    // \"email\": \"systemadmin@georesearch.co.ke\", // System Admin\n    // \"email\": \"superextension@georesearch.co.ke\", // Super Extension\n    // \"email\": \"eextension@georesearch.co.ke\", // E Extension\n    // \"email\": \"agrodealer@georesearch.co.ke\", // Agrodealer\n    // \"email\": \"farmerone@georesearch.co.ke\", // Farmer\n    // \"email\": \"gitjulia658@gmail.com\", \n    // \"phone_number\": \"+254711111111\", // E-Extension Two\n    // \"phone_number\": \"+254787654321\", // Farmer\n    \"phone_number\": \"+254791049498\",\n    \"password\": \"test1234\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/users/login/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"login",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"refresh\": \"{{REFRESH_TOKEN}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/users/logout/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"logout",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "refresh token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"refresh\": \"{{REFRESH_TOKEN}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/users/token/refresh/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"token",
+										"refresh",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "obtain api key",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set('APIKEY', pm.response.json().token)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"juliawakaba53@gmail.com\",\n    \"password\": \"test1234\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/users/generate/apikey/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"generate",
+										"apikey",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "password managemnt",
+					"item": [
+						{
+							"name": "reset password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"gitjulia650@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/users/password/reset/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"password",
+										"reset",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "reset confirm password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"gitjulia650@gmail.com\",\n    \"token\": \"053011\",\n    \"new_password1\" : \"test12345\",\n    \"new_password2\" : \"test12345\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/users/password/reset/confirm/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"password",
+										"reset",
+										"confirm",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"current_password\": \"test12345\",\n    \"new_password1\" : \"test1234\",\n    \"new_password2\" : \"test1234\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/users/password/change/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"password",
+										"change",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "profile management",
+					"item": [
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/users/profile/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"profile",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "profile_photo",
+											"type": "file",
+											"src": []
+										},
+										{
+											"key": "first_name",
+											"value": "Tester",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Test",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "+254787654321",
+											"type": "text"
+										},
+										{
+											"key": "id_number",
+											"value": "12345678",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/users/profile/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"profile",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "account registration",
+					"item": [
+						{
+							"name": "register account",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"gitjulia650@gmail.com\",\n    \"first_name\": \"Git\",\n    \"last_name\": \"Julia\",\n    \"phone_number\": \"+254711111111\",\n    \"password1\": \"{{pass}}\",\n    \"password2\": \"{{pass}}\",\n    \"role\": \"FARMER\" // Available roles are: FARMER, AGRODEALER, E_EXTENSION, SUPER_EXTENSION\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/users/register/account/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"register",
+										"account",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "verify account",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"gitjulia650@gmail.com\",\n    \"token\": \"864605\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/users/verify/account/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"users",
+										"verify",
+										"account",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "locations",
+			"item": [
+				{
+					"name": "county",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/counties/?name=Uasin",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"counties",
+										""
+									],
+									"query": [
+										{
+											"key": "county_id",
+											"value": "16",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "Uasin"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/counties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"counties",
+										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/counties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"counties",
+										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"county_id\": 10,\n    \"name\": \"Makueni\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/counties/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"counties",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"county_id\": 1,\n    \"name\": \"Mombasa\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/counties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"counties",
+										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "subcounty",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/subcounties/?name=Kathiani",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"subcounties",
+										""
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Kathiani"
+										},
+										{
+											"key": "subcounty_id",
+											"value": "12",
+											"disabled": true
+										},
+										{
+											"key": "county_name",
+											"value": "Machakos",
+											"disabled": true
+										},
+										{
+											"key": "county_id",
+											"value": "23",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/subcounties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"subcounties",
+										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/subcounties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"subcounties",
+										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"subcounty_id\": 10,\n    \"name\": \"Makueni\",\n    \"county\": \"bb1d44e7-0e8d-48e4-bae6-b8c7d2143280\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/subcounties/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"subcounties",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"subcounty_id\": 1,\n    \"name\": \"Mombasa\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/subcounties/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"subcounties",
+										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ward",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/wards/?name=Mitaboni",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"wards",
+										""
+									],
+									"query": [
+										{
+											"key": "county_id",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "county_name",
+											"value": "Turka",
+											"disabled": true
+										},
+										{
+											"key": "subcounty_id",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "subcounty_name",
+											"value": "nJOro",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "Mitaboni"
+										},
+										{
+											"key": "ward_id",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/wards/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"wards",
+										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ward_id\": 10,\n    \"name\": \"Makueni\",\n    \"subcounty\": \"bb1d44e7-0e8d-48e4-bae6-b8c7d2143280\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/wards/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"wards",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"county_id\": 1,\n    \"name\": \"Mombasa\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/wards/bb1d44e7-0e8d-48e4-bae6-b8c7d2143280/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"wards",
+										"bb1d44e7-0e8d-48e4-bae6-b8c7d2143280",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/locations/wards/3162cb8a-a1ef-402a-bb67-6498c83074c7/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"locations",
+										"wards",
+										"3162cb8a-a1ef-402a-bb67-6498c83074c7",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "app",
+			"item": [
+				{
+					"name": "farm",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Token {{APIKEY}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/farms/?farmer_first_name=Ambrose",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"farms",
+										""
+									],
+									"query": [
+										{
+											"key": "ward",
+											"value": "6b5ce82c-5303-49dd-a847-95ed3b83e962",
+											"disabled": true
+										},
+										{
+											"key": "subcounty",
+											"value": "db992c85-b07b-4f32-8478-6c45c072fd8e",
+											"disabled": true
+										},
+										{
+											"key": "county",
+											"value": "767d848c-6841-42c7-86bf-4c375473261d",
+											"disabled": true
+										},
+										{
+											"key": "ward_name",
+											"value": "Lare",
+											"disabled": true
+										},
+										{
+											"key": "subcounty_name",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "county_name",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "farmer_first_name",
+											"value": "Ambrose"
+										},
+										{
+											"key": "farmer_last_name",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "owner",
+											"value": "6f8c4cb9-c954-4b87-ba09-3b133d410ad8",
+											"disabled": true
+										},
+										{
+											"key": "farmer_mobile_number",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "id",
+											"value": "b8a47520-a841-4708-b7a4-436d1eb0fc27",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/farms/b8a47520-a841-4708-b7a4-436d1eb0fc27/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"farms",
+										"b8a47520-a841-4708-b7a4-436d1eb0fc27",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/farms/b8730d81-4e20-407f-892a-d7805f429935/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"farms",
+										"b8730d81-4e20-407f-892a-d7805f429935",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ward\":  \"3162cb8a-a1ef-402a-bb67-6498c83074c7\",\n    \"name\": \"Ainabkoi Farm\",\n    \"user_size\": 47,\n    \"boundary\": \"POLYGON ((35.412049081823795 0.1864153781947948, 35.413941547781434 0.1864153781947948, 35.413941547781434 0.18761966829762855, 35.412049081823795 0.18761966829762855, 35.412049081823795 0.1864153781947948))\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/farms/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"farms",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Import Shapefile",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/home/julia/Downloads/Kathaana Farmers Details/KathianiFarms.zip"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/upload/farm/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"upload",
+										"farm",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"boundary\": \"POLYGON ((35.44587782552219 0.22204263820951553, 35.44587782552219 0.21426140021540618, 35.459122425485646 0.21426140021540618, 35.459122425485646 0.22204263820951553, 35.44587782552219 0.22204263820951553))\"\n}\n//     \"name\": \"Farm In Lare\",\n//     \"user_size\": 72,\n//     \"boundary\": \"POLYGON ((35.998522134969875 -0.46687173007660476, 35.999485758556034 -0.46867846408331104, 36.002304357543295 -0.46716080754880807, 36.00495432240399 -0.46573950986194745, 36.00743565313664 -0.4643182118871181, 36.01018198035581 -0.46284873402096594, 36.0096038062035 -0.46178878258329803, 36.00885699792471 -0.46236693793174766, 36.00627930483361 -0.4626078359812027, 36.00382206469132 -0.46395686489857724, 36.001148009241746 -0.46540225274030433, 35.998522134969875 -0.46687173007660476))\"\n// }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/farms/a23f97e4-41f9-401e-b0ab-060f0f4cd3cc/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"farms",
+										"a23f97e4-41f9-401e-b0ab-060f0f4cd3cc",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "plantation",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/plantations/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"plantations",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/plantations/b3bee4f9-8f74-4d63-bf84-6e583c19b6d5/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"plantations",
+										"b3bee4f9-8f74-4d63-bf84-6e583c19b6d5",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/plantations/879557f5-88de-46ce-8e71-66e58fe41b3b/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"plantations",
+										"879557f5-88de-46ce-8e71-66e58fe41b3b",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"transplanting_date\": \"2025-11-09\",\n    \"farm\": \"56e9b875-9d33-43a8-aafb-1bbc1138a1a0\",\n    \"crop_variety\": \"022cc8c8-0796-4f0e-9fca-c09f7c63410a\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/plantations/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"plantations",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Farm One 1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/879557f5-88de-46ce-8e71-66e58fe41b3b/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"879557f5-88de-46ce-8e71-66e58fe41b3b",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "agrodealer",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/agrodealers/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"agrodealers",
+										""
+									],
+									"query": [
+										{
+											"key": "lon",
+											"value": "36.01466789377466",
+											"disabled": true
+										},
+										{
+											"key": "lat",
+											"value": "-0.48832656766222726",
+											"disabled": true
+										},
+										{
+											"key": "distance",
+											"value": "5",
+											"disabled": true
+										},
+										{
+											"key": "ward_name",
+											"value": "Lare",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/agrodealers/67ffb8a6-4be2-4fbc-915f-6bc1b590d859/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"agrodealers",
+										"67ffb8a6-4be2-4fbc-915f-6bc1b590d859",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Molo Outlet\",\n    \"ward\": \"c5f23cc6-cc49-41b3-a39e-257826115f89\",\n    \"location\": \"POINT (35.728386098073486 -0.2467102250980986)\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/agrodealers/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"agrodealers",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Lare Agrovet\",\n    \"location\": \"POINT (36.038023921657015 -0.48675953589950893)\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/agrodealers/dffe6a11-1b06-4a0b-97d3-9d0dc218a094/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"agrodealers",
+										"dffe6a11-1b06-4a0b-97d3-9d0dc218a094",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/agrodealers/67ffb8a6-4be2-4fbc-915f-6bc1b590d859/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"agrodealers",
+										"67ffb8a6-4be2-4fbc-915f-6bc1b590d859",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "e-extension",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/e-extension/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"e-extension",
+										""
+									],
+									"query": [
+										{
+											"key": "ward_name",
+											"value": "lare",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/e-extension/67ffb8a6-4be2-4fbc-915f-6bc1b590d859/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"e-extension",
+										"67ffb8a6-4be2-4fbc-915f-6bc1b590d859",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"wards\": [\n        \"3162cb8a-a1ef-402a-bb67-6498c83074c7\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/e-extension/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"e-extension",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"wards\": [\n        \"3162cb8a-a1ef-402a-bb67-6498c83074c7\",\n        \"47092026-483a-4df1-86be-5898f13bdd5e\"\n    ],\n    \"is_visible\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/e-extension/3b873112-6444-4ac8-9c49-671c6ac57680/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"e-extension",
+										"3b873112-6444-4ac8-9c49-671c6ac57680",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/e-extension/3b873112-6444-4ac8-9c49-671c6ac57680/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"e-extension",
+										"3b873112-6444-4ac8-9c49-671c6ac57680",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "superextension",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/super-extension/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"super-extension",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/super-extension/b33f7144-3f2e-4629-9d68-fcfa18e944ca/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"super-extension",
+										"b33f7144-3f2e-4629-9d68-fcfa18e944ca",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"counties\": [\n        \"d2bb5e8d-02ca-45d7-9012-7b96ba725ce0\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/super-extension/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"super-extension",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"counties\": [\n        \"a62f9105-9a46-41ed-8107-889b091a5eef\",\n        \"92f935dc-06a8-4ebe-ba10-5ae7633c464b\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/super-extension/07c69ae1-68f2-4786-a31c-a2e07b206457/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"super-extension",
+										"07c69ae1-68f2-4786-a31c-a2e07b206457",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/super-extension/07c69ae1-68f2-4786-a31c-a2e07b206457/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"super-extension",
+										"07c69ae1-68f2-4786-a31c-a2e07b206457",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "farm -> e-extenison request",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/farmers/work-requests/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"farmers",
+										"work-requests",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/farmers/work-requests/ae3fe67c-414e-4cfc-b1d2-aeed9cdd94f2/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"farmers",
+										"work-requests",
+										"ae3fe67c-414e-4cfc-b1d2-aeed9cdd94f2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"e_extension\": \"f8747321-962f-4629-80d9-3fabdf361d36\", // Should be id of an e-extension\n    \"message\": \"Following our conversation we had when you visited my farm I would like us to work together. Thank you.\",\n    \"farms\": [\n       \"b8a47520-a841-4708-b7a4-436d1eb0fc27\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/farmers/work-requests/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"farmers",
+										"work-requests",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "accept/reject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"work_request\": \"c1a586d4-bb72-455a-890b-c30768bfc81c\",\n    \"status\": \"ACCEPT\", // ACCEPT,REJECT\n    \"response_message\": \"Sure, lets work together\" // Optional\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/farmers/work-requests/accept/reject/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"farmers",
+										"work-requests",
+										"accept",
+										"reject",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "e_extension->superextension request",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/e-extensions/work-requests/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"e-extensions",
+										"work-requests",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/app/e-extensions/work-requests//",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"e-extensions",
+										"work-requests",
+										"",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"super_extension\": \"07c69ae1-68f2-4786-a31c-a2e07b206457\",\n    \"message\": \"I liked your presentation Lare field day. Can we work together.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/e-extensions/work-requests/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"e-extensions",
+										"work-requests",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "accept/reject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"work_request\": \"40f438d7-d6e8-4e74-84a8-c15c2964ed21\",\n    \"status\": \"ACCEPT\", // ACCEPT,REJECT,\n    \"response_message\": \"Sure, lets work together\" // Optional\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/app/e-extensions/work-requests/accept/reject/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"app",
+										"e-extensions",
+										"work-requests",
+										"accept",
+										"reject",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "crops",
+			"item": [
+				{
+					"name": "crops",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/crops/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"crops",
+										""
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Tomato",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/crops/69145c45-a200-4088-a2ef-d7f3714f62c2/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"crops",
+										"69145c45-a200-4088-a2ef-d7f3714f62c2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/crops/879557f5-88de-46ce-8e71-66e58fe41b3b/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"crops",
+										"879557f5-88de-46ce-8e71-66e58fe41b3b",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Tomatoes\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/crops/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"crops",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Tomato 1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/crops/2925f258-3dba-4faa-95b7-b80b91d005e3/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"crops",
+										"2925f258-3dba-4faa-95b7-b80b91d005e3",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "crop_varieties",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/varieties/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"varieties",
+										""
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "F one",
+											"disabled": true
+										},
+										{
+											"key": "crop_name",
+											"value": "Tomato",
+											"disabled": true
+										},
+										{
+											"key": "crop",
+											"value": "69145c45-a200-4088-a2ef-d7f3714f62c2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/varieties/0cf3b972-ef52-448d-a3ac-e17e87394383/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"varieties",
+										"0cf3b972-ef52-448d-a3ac-e17e87394383",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/farms/plantations/879557f5-88de-46ce-8e71-66e58fe41b3b/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"farms",
+										"plantations",
+										"879557f5-88de-46ce-8e71-66e58fe41b3b",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"F One\",\n    \"min_maturity_days\": 45,\n    \"max_maturity_days\": 60,\n    \"min_yield\": 200,\n    \"max_yield\": 250,\n    \"climate\": \"High Rainfall\",\n    \"min_rainfall_mm\": 0.0,\n    \"max_rainfall_mm\": 0.0,\n    \"min_altitude_masl\": 0.0,\n    \"max_altitude_masl\": 0.0,\n    \"row_spacing_cm\": 0,\n    \"plant_spacing_hill\": 0,\n    \"fertilizer_dap_kg\": 0,\n    \"fertilizer_can_kg\": 0,\n    \"fertilizer_17_17_17_kg\": 0,\n    \"disease_tolerance\": null,\n    \"pest_tolerance\": null,\n    \"pest_susceptibility\": null,\n    \"disease_susceptibility\": null,\n    \"seed_source\": null,\n    \"seed_rate_g_per_acre\": 0,\n    \"crop\": \"fcadc2f3-93c4-4586-8fc8-a0ac59462d7e\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/varieties/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"varieties",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"0cf3b972-ef52-448d-a3ac-e17e87394383\",\n    \"name\": \"F One\",\n    \"min_maturity_days\": 90,\n    \"max_maturity_days\": 120,\n    \"min_yield\": 40.0,\n    \"max_yield\": 60.0,\n    \"climate\": \"High Rainfall\",\n    \"min_rainfall_mm\": 0.0,\n    \"max_rainfall_mm\": 1500.0,\n    \"min_altitude_masl\": 800.0,\n    \"max_altitude_masl\": 2500.0,\n    \"row_spacing_cm\": 20,\n    \"plant_spacing_hill\": 10,\n    \"fertilizer_dap_kg\": 10,\n    \"fertilizer_can_kg\": 5,\n    \"fertilizer_17_17_17_kg\": 7,\n    \"disease_tolerance\": null,\n    \"pest_tolerance\": null,\n    \"pest_susceptibility\": null,\n    \"disease_susceptibility\": null,\n    \"seed_source\": null,\n    \"seed_rate_g_per_acre\": 25000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/varieties/0cf3b972-ef52-448d-a3ac-e17e87394383/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"varieties",
+										"0cf3b972-ef52-448d-a3ac-e17e87394383",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "growth_stages",
+					"item": [
+						{
+							"name": "choices",
+							"item": [
+								{
+									"name": "list severity choices",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/api/v2/crops/severity/choices/",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"crops",
+												"severity",
+												"choices",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "list growth stage choices",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/api/v2/crops/growth/stages/choices/",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"crops",
+												"growth",
+												"stages",
+												"choices",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/growth/stages/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"growth",
+										"stages",
+										""
+									],
+									"query": [
+										{
+											"key": "crop_name",
+											"value": "Tomato",
+											"disabled": true
+										},
+										{
+											"key": "crop_variety",
+											"value": "0cf3b972-ef52-448d-a3ac-e17e87394383",
+											"disabled": true
+										},
+										{
+											"key": "crop_variety_name",
+											"value": "F One",
+											"disabled": true
+										},
+										{
+											"key": "growth_stage",
+											"value": "vegetative",
+											"disabled": true
+										},
+										{
+											"key": "severity",
+											"value": "not_critical",
+											"disabled": true
+										},
+										{
+											"key": "max_days_gte",
+											"value": "40",
+											"disabled": true
+										},
+										{
+											"key": "max_days_lte",
+											"value": "60",
+											"disabled": true
+										},
+										{
+											"key": "min_days_gte",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "min_days_lte",
+											"value": "20",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "retrieve",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/growth/stages/0cf3b972-ef52-448d-a3ac-e17e87394383/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"growth",
+										"stages",
+										"0cf3b972-ef52-448d-a3ac-e17e87394383",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/growth/stages/d5fea0c9-010f-4569-8ee0-4c1f58c84bcc/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"growth",
+										"stages",
+										"d5fea0c9-010f-4569-8ee0-4c1f58c84bcc",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"growth_stage\": \"vegetative\",\n    \"severity\": \"not_critical\",\n    \"minimum_days\": 0,\n    \"maximum_days\": 45,\n    \"crop_variety\": \"0cf3b972-ef52-448d-a3ac-e17e87394383\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/growth/stages/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"growth",
+										"stages",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"growth_stage\": \"vegetative\",\n    \"severity\": \"not_critical\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/crops/growth/stages/d50c6d12-5738-44d1-b0eb-d9ec6712a81a/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"crops",
+										"growth",
+										"stages",
+										"d50c6d12-5738-44d1-b0eb-d9ec6712a81a",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "notifications",
+			"item": [
+				{
+					"name": "Push Notifications",
+					"item": [
+						{
+							"name": "unregister device",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"registration_id\": \"fd8ioytreq76\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/notifications/unregister/device/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"notifications",
+										"unregister",
+										"device",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "register device",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"registration_id\": \"fd8ioytreq76\",\n    \"type\": \"android\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/notifications/register/device/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"notifications",
+										"register",
+										"device",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list devices",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/api/v2/notifications/devices/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"notifications",
+										"devices",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/notifications/?is_read=True",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"notifications",
+								""
+							],
+							"query": [
+								{
+									"key": "is_read",
+									"value": "True"
+								},
+								{
+									"key": "channel",
+									"value": "EMAIL",
+									"disabled": true
+								},
+								{
+									"key": "subject",
+									"value": "Pemost Verification Code",
+									"disabled": true
+								},
+								{
+									"key": " message_type",
+									"value": "EMAIL",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "retrieve",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/notifications/adf54011-a89c-45b9-b7e3-6a07490df279/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"notifications",
+								"adf54011-a89c-45b9-b7e3-6a07490df279",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mark single as read",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/notifications/adf54011-a89c-45b9-b7e3-6a07490df279/mark/read/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"notifications",
+								"adf54011-a89c-45b9-b7e3-6a07490df279",
+								"mark",
+								"read",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mark all as read",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/notifications/mark/read/all/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"notifications",
+								"mark",
+								"read",
+								"all",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pest Occurrence",
+			"item": [
+				{
+					"name": "Create Occurences",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{APIKEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\":\n    [\n    {\n    \"id\": \"56e9b875-9d33-43a8-aafb-1bbc1138a1a0\",\n    \"Temperatures\": [\n      31.9,\n      32,\n      31.7,\n      31.9,\n      31.8,\n      31.5,\n      31.4,\n      31.7,\n      31.5,\n      31.5,\n      31.4,\n      31.6,\n      31.6,\n      31.5,\n      31.5,\n      31.5,\n      31.6,\n      31.6,\n      31.4,\n      31.4,\n      31.5,\n      31.6,\n      31.6,\n      31.6,\n      31.4,\n      31.4,\n      31.5,\n      31.6,\n      31.5,\n      31.5\n    ],\n    \"Date\": \"2024_03_17\",\n    \"Occurence\": true\n  },\n  {\n    \"id\": \"dffd88e9-fc50-4f4c-84fd-16f7258ad47a\",\n    \"Temperatures\": [\n      33.6,\n      33.8,\n      33.9,\n      33.7,\n      33.7,\n      33.8,\n      33.9,\n      33.7,\n      33.8,\n      33.9,\n      33.9,\n      33.7,\n      32.6,\n      32.3\n    ],\n    \"Date\": \"2024_03_17\",\n    \"Occurence\": false\n  },\n  {\n    \"id\": \"ab144452-7048-43a3-923c-d3a910c6e71e\",\n    \"Temperatures\": [\n      33,\n      33.2,\n      33.3,\n      32.2,\n      32.4,\n      32.5,\n      32.3,\n      32.4\n    ],\n    \"Date\": \"2024_03_17\",\n    \"Occurence\": false\n  },\n  {\n    \"id\": \"cd49acee-0f8b-407c-800a-e610bbc9241a\",\n    \"Temperatures\": [\n      32.8,\n      33,\n      32.4,\n      32.4,\n      32.2,\n      32.3,\n      32.3,\n      32.3\n    ],\n    \"Date\": \"2024_03_17\",\n    \"Occurence\": false\n  },\n  {\n    \"id\": \"dacab37b-7b4a-4e04-8e91-621e1fed5319\",\n    \"Temperatures\": [\n      32.5,\n      32.8,\n      32.2,\n      32.4,\n      32.2,\n      32.3,\n      32.2,\n      32.2\n    ],\n    \"Date\": \"2024_03_17\",\n    \"Occurence\": false\n  },\n  {\n    \"id\": \"5e3403c8-f391-4a7c-b4e1-7c3fdb1b7a99\",\n    \"Temperatures\": [\n      32.1,\n      32,\n      31.9,\n      31.9,\n      31.6,\n      31.6,\n      31.5,\n      31.7,\n      31.5,\n      31.4,\n      31.3,\n      31.5,\n      31.4,\n      31.4,\n      31.4,\n      31.6\n    ],\n    \"Date\": \"2024_03_17\",\n    \"Occurence\": false\n  },\n  {\n    \"id\": \"18f702ed-6eae-469b-80a5-4d18f3fb202e\",\n    \"Temperatures\": [\n      24.9,\n      24.9,\n      24.9,\n      24.9,\n      24.9,\n      24.9,\n      24.9,\n      24.9,\n      24.9,\n      24.9\n    ],\n    \"Date\": \"2024_03_17\",\n    \"Occurence\": false\n  },\n  {\n    \"id\": \"5d042ee4-efe5-4f4a-b1ca-e36df261a2e1\",\n    \"Temperatures\": [\n      24.8,\n      31.1,\n      31.2,\n      24.9,\n      24.9,\n      24.9,\n      24.9,\n      24.9,\n      24.9,\n      24.9,\n      24.9\n    ],\n    \"Date\": \"2024_03_17\",\n    \"Occurence\": false\n  }\n]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/pest/control/process/occurence/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"pest",
+								"control",
+								"process",
+								"occurence",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OldEndpoints",
+			"item": [
+				{
+					"name": "fetch crops",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.pemost.georesearch.co.ke/api/v1/crop/type/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"pemost",
+								"georesearch",
+								"co",
+								"ke"
+							],
+							"path": [
+								"api",
+								"v1",
+								"crop",
+								"type",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch crops varieties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.pemost.georesearch.co.ke/api/v1/variety/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"pemost",
+								"georesearch",
+								"co",
+								"ke"
+							],
+							"path": [
+								"api",
+								"v1",
+								"variety",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch crop growth stage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.pemost.georesearch.co.ke/api/v1/stages/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"pemost",
+								"georesearch",
+								"co",
+								"ke"
+							],
+							"path": [
+								"api",
+								"v1",
+								"stages",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set('Old_Token', pm.response.json().token.access)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone_number\": \"+254791049498\",\n    \"password\": \"test1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.pemost.georesearch.co.ke/api/v1/accounts/login/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"pemost",
+								"georesearch",
+								"co",
+								"ke"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{Old_Token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
