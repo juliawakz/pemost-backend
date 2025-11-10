@@ -4,8 +4,7 @@ import firebase_admin
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from fcm_django.models import FCMDevice
-from firebase_admin import credentials, messaging
+from firebase_admin import credentials
 from notifications.choices import MessageTypeChoices
 from notifications.models import Notification
 from notifications.services import MessagingService
@@ -52,20 +51,33 @@ def send_notification_via_push(msg, channel):
 
 @app.task
 def send_fb_push_notification(
-        user_id, notification_title, notification_msg):
-    try:
-        user = User.objects.get(id=user_id)
-        devices = FCMDevice.objects.filter(user=user, active=True)
-        for device in devices:
-            device.send_message(
-                message=messaging.Message(
-                    notification=messaging.Notification(
-                        title=notification_title,
-                        body=notification_msg
-                    ),
-                    token=device.registration_id
-                )
-            )
-        return {'success': True, 'message': 'Notification sent successfully'}
-    except Exception as e:
-        return {'success': False, 'error': str(e)}
+        user_id, notification_title, notification_msg, data=None, image_url=None):
+    """
+    Celery task to send push notification to a user.
+
+    :param user_id: User ID to send notification to
+    :param notification_title: Title of the notification
+    :param notification_msg: Body text of the notification
+    :param data: Optional dict of custom data
+    :param image_url: Optional image URL for rich notifications
+    :return: Dict with success status and results
+    """
+    return MessagingService.send_push_notification(
+        user_id=user_id,
+        title=notification_title,
+        body=notification_msg,
+        data=data,
+        image_url=image_url
+    )
+
+
+@app.task
+def send_data_notification(user_id, data):
+    """
+    Celery task to send data-only (silent) notification to a user.
+
+    :param user_id: User ID to send notification to
+    :param data: Dict of data to send
+    :return: Dict with success status and results
+    """
+    return MessagingService.send_data_message(user_id=user_id, data=data)
