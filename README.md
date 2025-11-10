@@ -39,11 +39,27 @@ DATABASE=your_db_type
 - **Migrations**
 Make migrations and migrate, incase of any error about abscent folders ensure all modules have a migration folder in migration_files
 
-- **load location data**
+- **load data**
+*Prepopulate locations{county,subcounty,ward} from CSV*
 ```
-python manage.py load_locations pemostv2-backend/backend/sample_data/locationscsv
+python manage.py load_locations sample_data/locations.csv
 ```
-
+*Prepopulate crops from CSV*
+```
+python manage.py load_crops sample_data/crops.csv
+```
+*Prepopulate crop varieties from CSV*
+```
+python manage.py load_crop_varieties sample_data/crop_variety.csv
+```
+*Prepopulate crop growth stages from CSV*
+```
+python manage.py load_crop_growth_stages sample_data/crop_growth_stages.csv
+```
+*Prepopulate crop growth stages from CSV*
+```
+python manage.py load_pests sample_data/pest_control.csv
+```
 - **Create a superuser Account and follow the prompts**
 ```
 python manage.py createsuperuser
