@@ -77,7 +77,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 ```bash
 cd backend
-pip install -r requirements.txt  # or requirements/dev.txt for development
+pip install -r requirements/dev.txt # for development
 ```
 
 ## Environment Configuration
@@ -85,7 +85,7 @@ pip install -r requirements.txt  # or requirements/dev.txt for development
 ### 1. Create Environment File
 
 ```bash
-cp .env.example .env  # If .env.example exists
+cp environments/env.dev .env  
 # OR
 touch .env
 ```
@@ -93,6 +93,8 @@ touch .env
 ### 2. Configure Environment Variables
 
 Edit the `.env` file with your configuration:
+Generate firebasefile.json using the instructions found here: [Firebase Quick Setup](#quick-setup)
+
 
 ```env
 # Project Settings
@@ -117,7 +119,7 @@ REDIS_PORT=6379
 FIREBASE_CREDENTIALS_PATH=/backend/sample_data/firebase-credentials.json
 
 # Area Conversion Factor
-ACERAGE_CONVERT=0.000247105  # Square meters to acres
+ACERAGE_CONVERT=0.000247105  # square meters to acres
 ```
 
 ### 3. Generate Secret Key
@@ -232,13 +234,34 @@ python manage.py upload_farms sample_data/farms.zip --clear
 ```
 
 **For Docker users**, prefix commands with:
-```bash
-docker exec -it pemost_backend bash -c "cd /pemostbackend && <command>"
-```
 
-Example:
+**Load locations:**
 ```bash
 docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_locations sample_data/locations.csv"
+```
+
+**Load Crop:**
+```bash
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_crops sample_data/crops.csv"
+```
+
+**Load Crop Varieties:**
+```bash
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_crop_varieties sample_data/crop_variety.csv"
+```
+
+**Load Crop Growth Stages:**
+```bash
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_crop_growth_stages sample_data/crop_growth_stages.csv"
+```
+
+**Load Pest Control Data:**
+```bash
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_pests sample_data/pest_control.csv"
+```
+**Load Pest Control Data:**
+```bash
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py upload_farms sample_data/farms.zip"
 ```
 
 ## Running the Application
@@ -312,7 +335,7 @@ python manage.py test_fcm [--user-id USER_ID] [--username EMAIL] [--all-devices]
 
 ## Push Notifications
 
-PeMost supports Firebase Cloud Messaging (FCM) for push notifications. See [FCM_TESTING_GUIDE.md](FCM_TESTING_GUIDE.md) for detailed setup and testing instructions.
+PeMost supports Firebase Cloud Messaging (FCM) for push notifications. 
 
 ### Quick Setup
 
@@ -507,6 +530,11 @@ If Celery worker fails to start:
 
 2. Check Redis connection in settings
 
+3. Purge any celery tasks:
+   ```bash
+   celery -A project purge
+   ```
+
 ### Migration Errors
 
 If migrations fail due to missing folders:
@@ -520,9 +548,9 @@ touch app/migrations/__init__.py locations/migrations/__init__.py crops/migratio
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -m 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
 5. Open a Pull Request
 
 ### Code Standards
@@ -538,4 +566,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-For more information or support, please contact the development team.
+For more information or support, please contact the Pemost development team.
