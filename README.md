@@ -1,67 +1,541 @@
-Pemost Backend
+# PeMost Backend
 
-PeMost is built on DRF and postgis database
+A comprehensive agricultural management system built with Django REST Framework and PostGIS for spatial data handling. PeMost provides APIs for farm management, crop tracking, pest control, and location-based services.
 
-## Quick Start
-- **Clone repository**
-- **Create python3 environment**
+## Table of Contents
+
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Environment Configuration](#environment-configuration)
+- [Database Setup](#database-setup)
+- [Data Loading](#data-loading)
+- [Running the Application](#running-the-application)
+- [Management Commands](#management-commands)
+- [Push Notifications](#push-notifications)
+- [API Documentation](#api-documentation)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+
+## Features
+
+- **Farm Management**: Create, update, and manage farms with spatial boundaries
+- **Crop Management**: Track crops, varieties, and growth stages
+- **Pest Control**: Monitor and manage pest control activities
+- **Location Services**: County, subcounty, and ward-based location tracking
+- **User Management**: Multi-role system (Farmers, Extension Officers, System Admins)
+- **Push Notifications**: Firebase Cloud Messaging (FCM) integration
+- **Spatial Data**: PostGIS-powered geographic queries and boundary management
+- **REST API**: Comprehensive RESTful API built with Django REST Framework
+- **Bulk Import**: Shapefile upload support for farm boundaries
+
+## Technology Stack
+
+- **Backend Framework**: Django 4.x
+- **API Framework**: Django REST Framework
+- **Database**: PostgreSQL with PostGIS extension
+- **Task Queue**: Celery with Redis
+- **Push Notifications**: Firebase Cloud Messaging (FCM)
+- **Spatial Libraries**: GDAL, OGR
+- **Python Version**: 3.12+
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- Python 3.12 or higher
+- PostgreSQL 13+ with PostGIS extension
+- Redis server
+- GDAL/OGR libraries
+- Git
+
+### Install System Dependencies (Ubuntu/Debian)
+
+```bash
+sudo apt update
+sudo apt install python3-pip python3-venv postgresql postgresql-contrib postgis redis-server gdal-bin libgdal-dev
 ```
-python3 -m venv pemost_env
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone repository-url
+cd pemost_backend
 ```
-- **Change to the working directory**
+
+### 2. Create Virtual Environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
-cd pemostv2_backend
+
+### 3. Install Dependencies
+
+```bash
+cd backend
+pip install -r requirements.txt  # or requirements/dev.txt for development
 ```
-- **Install the requirements**
-```
-pip3 install requirements/dev.txt
-```
-- **Create an environment variable file**
-```
+
+## Environment Configuration
+
+### 1. Create Environment File
+
+```bash
+cp .env.example .env  # If .env.example exists
+# OR
 touch .env
 ```
-- **Here are some of the variables. To add all variables to .env file lias with pemostv2-backend/backend/env.example file**
-```
-PROJECT_NAME=project name
-ALLOWED_HOSTS=*
-DEBUG=True/False
-SECRET_KEY=your_secret
 
-POSTGRES_DB=your_db_name
+### 2. Configure Environment Variables
+
+Edit the `.env` file with your configuration:
+
+```env
+# Project Settings
+PROJECT_NAME=PeMost
+DEBUG=True
+SECRET_KEY=your-secret-key-here
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Database Configuration
+DATABASE=postgres
+POSTGRES_DB=pemost_db
 POSTGRES_USER=your_db_username
 POSTGRES_PASSWORD=your_db_password
-POSTGRES_HOST=your_db_host
-DB_PORT=your_db_port
-DATABASE=your_db_type
+POSTGRES_HOST=localhost
+DB_PORT=5432
 
+# Redis Configuration
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+# Firebase Configuration (for Push Notifications)
+FIREBASE_CREDENTIALS_PATH=/backend/sample_data/firebase-credentials.json
+
+# Area Conversion Factor
+ACERAGE_CONVERT=0.000247105  # Square meters to acres
 ```
 
-- **Migrations**
-Make migrations and migrate, incase of any error about abscent folders ensure all modules have a migration folder in migration_files
+### 3. Generate Secret Key
 
-- **load location data**
-```
-python manage.py load_locations pemostv2-backend/backend/sample_data/locationscsv
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-- **Create a superuser Account and follow the prompts**
+## Database Setup
+
+### 1. Create PostgreSQL Database
+
+```bash
+sudo -u postgres psql
 ```
+
+```sql
+CREATE DATABASE pemost_db;
+CREATE USER your_db_username WITH PASSWORD 'your_db_password';
+ALTER ROLE your_db_username SET client_encoding TO 'utf8';
+ALTER ROLE your_db_username SET default_transaction_isolation TO 'read committed';
+ALTER ROLE your_db_username SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE pemost_db TO your_db_username;
+
+-- Enable PostGIS extension
+\c pemost_db
+CREATE EXTENSION postgis;
+\q
+```
+
+### 2. Run Migrations
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### 3. Create Superuser
+
+```bash
 python manage.py createsuperuser
+```
 
+Follow the prompts to create your admin account.
+
+## Data Loading
+
+### Quick Load (Docker)
+
+If you're using Docker Compose, use the automated script to load all sample data at once:
+
+```bash
+# Load all data with default settings (skip existing farms)
+./load_sample_data.sh
+
+# Update existing farms instead of skipping
+./load_sample_data.sh --farm-mode update
+
+# Clear all farms and import fresh
+./load_sample_data.sh --clear-farms
+
+# View all options
+./load_sample_data.sh --help
 ```
-- **Use the credentials created above to log in to the admin Interface through the link below**
+
+The script will automatically:
+- Check Docker is running
+- Verify the backend container is up
+- Load all sample data in the correct order
+- Provide colored progress output
+- Show a summary of successes and failures
+
+### Manual Load (Local or Docker)
+
+Load sample data using individual management commands. Run these from the `backend` directory:
+
+**Load Locations (Counties, Subcounties, Wards):**
+```bash
+python manage.py load_locations sample_data/locations.csv
 ```
-http://127.0.0.1:8000/admin
+
+**Load Crops:**
+```bash
+python manage.py load_crops sample_data/crops.csv
 ```
-- **Development Server**
+
+**Load Crop Varieties:**
+```bash
+python manage.py load_crop_varieties sample_data/crop_variety.csv
 ```
+
+**Load Crop Growth Stages:**
+```bash
+python manage.py load_crop_growth_stages sample_data/crop_growth_stages.csv
+```
+
+**Load Pest Control Data:**
+```bash
+python manage.py load_pests sample_data/pest_control.csv
+```
+
+**Upload Farm Shapefiles:**
+```bash
+# Skip existing farms (default)
+python manage.py upload_farms sample_data/farms.zip
+
+# Update existing farms
+python manage.py upload_farms sample_data/farms.zip --mode update
+
+# Clear all farms and import fresh
+python manage.py upload_farms sample_data/farms.zip --clear
+```
+
+**For Docker users**, prefix commands with:
+```bash
+docker exec -it pemost_backend bash -c "cd /pemostbackend && <command>"
+```
+
+Example:
+```bash
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_locations sample_data/locations.csv"
+```
+
+## Running the Application
+
+### 1. Start Development Server
+
+```bash
 python manage.py runserver
 ```
-- **Run redis worker**
-```
+
+The API will be available at `http://127.0.0.1:8000/`
+
+### 2. Access Admin Interface
+
+Navigate to `http://127.0.0.1:8000/admin` and log in with your superuser credentials.
+
+### 3. Start Celery Worker (for background tasks)
+
+In a separate terminal:
+
+```bash
 celery -A project worker -l info
 ```
-- **Collection**
+
+### 4. Start Redis (if not running as service)
+
+In a separate terminal:
+
+```bash
+redis-server
 ```
-PEMOST.postman_collection.json can be found on the project folder
+
+## Management Commands
+
+PeMost includes several custom management commands:
+
+### Data Loading
+
+```bash
+# Load locations
+python manage.py load_locations backend/sample_data/locations.csv
+
+# Load crops
+python manage.py load_crops backend/sample_data/crops.csv
+
+# Load crop varieties
+python manage.py load_crop_varieties backend/sample_data/varieties.csv
+
+# Load growth stages
+python manage.py load_crop_growth_stages backend/sample_data/stages.csv
+
+# Load pest control data
+python manage.py load_pests backend/sample_data/pests.csv
+
+# Upload farms from shapefile
+python manage.py upload_farms backend/sample_data/farms.zip [--mode {skip,update,create}] [--clear]
 ```
+
+### Push Notifications
+
+```bash
+# List registered FCM devices
+python manage.py list_devices [--user USER_ID] [--type {ios,android,web}] [--stats]
+
+# Send test push notification
+python manage.py test_push user_id [--title TITLE] [--body BODY] [--image IMAGE_URL]
+
+# Test FCM configuration
+python manage.py test_fcm [--user-id USER_ID] [--username EMAIL] [--all-devices]
+```
+
+## Push Notifications
+
+PeMost supports Firebase Cloud Messaging (FCM) for push notifications. See [FCM_TESTING_GUIDE.md](FCM_TESTING_GUIDE.md) for detailed setup and testing instructions.
+
+### Quick Setup
+
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com)
+2. Download service account credentials JSON file for python
+3. Copy the downloaded file to backend folder and rename to firebasefile.json
+4. Use the API endpoints to register devices and send notifications
+
+### API Endpoints
+
+- `POST /api/v2/notifications/register/device/` - Register FCM device
+- `POST /api/v2/notifications/unregister/device/` - Unregister device
+- `GET /api/v2/notifications/devices/` - List user's devices
+- `POST /api/v2/notifications/test/push/` - Send test notification (dev only)
+
+## API Documentation
+
+### Base URL
+
+```
+http://127.0.0.1:8000/api/v2/
+```
+
+### Postman Collection
+
+Import `PEMOST.postman_collection.json` into Postman for complete API documentation and testing.
+
+### Key Endpoints
+
+**Authentication**
+- `POST /api/v2/auth/login/` - User login
+- `POST /api/v2/auth/register/` - User registration
+- `POST /api/v2/auth/logout/` - User logout
+
+**Farms**
+- `GET /api/v2/app/farms/` - List farms
+- `POST /api/v2/app/farms/` - Create farm
+- `GET /api/v2/app/farms/{id}/` - Get farm details
+- `PUT /api/v2/app/farms/{id}/` - Update farm
+- `DELETE /api/v2/app/farms/{id}/` - Delete farm
+- `POST /api/v2/app/upload/farm/` - Upload farm shapefile
+
+**Plantations**
+- `GET /api/v2/app/plantations/` - List plantations
+- `POST /api/v2/app/plantations/` - Create plantation
+
+**Locations**
+- `GET /api/v2/locations/counties/` - List counties
+- `GET /api/v2/locations/subcounties/` - List subcounties
+- `GET /api/v2/locations/wards/` - List wards
+
+## Firebase Notification API Endpoints Reference
+
+All notification endpoints are prefixed with `/api/v2/notifications/`
+
+### Authentication
+
+All endpoints require JWT authentication. Include the token in the Authorization header:
+
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+### Endpoints
+
+| Endpoint | Method | Description | Auth Required | Production Safe |
+|----------|--------|-------------|---------------|-----------------|
+| `/register/device/` | POST | Register FCM device for current user | Yes | Yes |
+| `/unregister/device/` | POST | Unregister a specific FCM device | Yes | Yes |
+| `/devices/` | GET | List all devices for current user | Yes | Yes |
+| `/test/push/` | POST | Send test notification to current user | Yes | No (Dev only) |
+
+### Request/Response Examples
+
+#### Register Device
+
+**Request:**
+```json
+POST /api/v2/notifications/register/device/
+{
+  "registration_id": "fK7xY9...",
+  "name": "My Android Phone",
+  "device_id": "device-uuid-123",
+  "type": "android"
+}
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "name": "My Android Phone",
+  "registration_id": "fK7xY9...",
+  "device_id": "device-uuid-123",
+  "type": "android",
+  "active": true,
+  "date_created": "2025-11-10T10:30:00Z"
+}
+```
+
+#### List Devices
+
+**Request:**
+```
+GET /api/v2/notifications/devices/
+```
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "name": "My Android Phone",
+    "type": "android",
+    "active": true,
+    "date_created": "2025-11-10T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "name": "My Tablet",
+    "type": "android",
+    "active": true,
+    "date_created": "2025-11-09T15:20:00Z"
+  }
+]
+```
+
+#### Send Test Notification (Dev Only)
+
+**Request:**
+```json
+POST /api/v2/notifications/test/push/
+{
+  "title": "Test Notification",
+  "body": "This is a test message",
+  "data": {
+    "screen": "home",
+    "action": "refresh"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Notification sent successfully",
+  "total_devices": 2,
+  "successful": 2,
+  "failed": 0
+}
+```
+
+## Troubleshooting
+
+### Database Connection Issues
+
+If you encounter database connection errors:
+
+1. Ensure PostgreSQL is running:
+   ```bash
+   sudo systemctl status postgresql
+   ```
+
+2. Verify PostGIS extension is installed:
+   ```sql
+   SELECT PostGIS_version();
+   ```
+
+3. Check database credentials in `.env`
+
+### GDAL/OGR Import Errors
+
+If you get GDAL-related errors:
+
+```bash
+# Ubuntu/Debian
+sudo apt install gdal-bin libgdal-dev
+
+# Set GDAL library path if needed
+export GDAL_LIBRARY_PATH=/usr/lib/libgdal.so
+```
+
+### Celery Worker Issues
+
+If Celery worker fails to start:
+
+1. Ensure Redis is running:
+   ```bash
+   redis-cli ping  # Should return PONG
+   ```
+
+2. Check Redis connection in settings
+
+### Migration Errors
+
+If migrations fail due to missing folders:
+
+```bash
+# Ensure each app has a migrations directory
+mkdir -p app/migrations locations/migrations crops/migrations pest_control/migrations
+touch app/migrations/__init__.py locations/migrations/__init__.py crops/migrations/__init__.py pest_control/migrations/__init__.py
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Code Standards
+
+- Follow PEP 8 style guidelines
+- Write unit tests for new features
+- Update documentation as needed
+- Ensure all tests pass before submitting PR
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+For more information or support, please contact the development team.
