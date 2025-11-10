@@ -154,6 +154,7 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create the request and associate multiple farms."""
         farms = validated_data.pop("farms", [])
+        sent_message = validated_data.pop("message", "")
 
         work_request = FarmerWorkRequest.objects.create(**validated_data)
         work_request.farms.set(farms)
@@ -182,8 +183,8 @@ class FarmerWorkRequestCreateSerializer(serializers.ModelSerializer):
             eextension.user.email,
             settings.EMAIL_FROM,
             "New Farm Work Request Received",
-            "",
-            html_template,
+            msg=sent_message,
+            html_content=html_template,
         )
 
         # Mark as notified

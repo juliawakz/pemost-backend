@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "django.contrib.gis",
     "django.contrib.sites",
     'rest_framework_simplejwt.token_blacklist',
+    "django_json_widget",
 
     "channels",
     "django_filters",

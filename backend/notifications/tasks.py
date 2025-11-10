@@ -30,13 +30,9 @@ def send_email_task(
         "channel": MessageTypeChoices.EMAIL,
         "subject": subject,
         "message_type": MessageTypeChoices.EMAIL,
-        "message_to": user
+        "message_to": user,
+        "message": subject
     }
-
-    if html_content:
-        payload["message"] = html_content
-    else:
-        payload["message"] = msg
 
     Notification.objects.create(**payload)
 

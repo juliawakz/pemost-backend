@@ -26,6 +26,7 @@ class PestOccurenceUtils:
         farms_with_occurrences = []
 
         for _counts, occurence in enumerate(data):
+            
             farm_object = Farm.objects.get(id=occurence['id'])
 
             farm_geometry = farm_object.boundary
