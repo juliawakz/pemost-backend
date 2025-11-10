@@ -63,7 +63,7 @@ class Command(BaseCommand):
 
             if result['success']:
                 msg = (
-                    f"\n✓ Notification sent successfully to "
+                    f"\nNotification sent successfully to "
                     f"{result['successful']}/{result['total_devices']} devices"
                 )
                 self.stdout.write(self.style.SUCCESS(msg))
@@ -71,7 +71,7 @@ class Command(BaseCommand):
                 error = result.get('error')
                 self.stdout.write(
                     self.style.ERROR(
-                        f"\n✗ Failed to send notification: {error}"
+                        f"\nFailed to send notification: {error}"
                     )
                 )
 
@@ -79,7 +79,7 @@ class Command(BaseCommand):
             if 'results' in result:
                 self.stdout.write("\nDetailed Results:")
                 for device_result in result['results']:
-                    status = "✓" if device_result['success'] else "✗"
+                    status = "Success" if device_result['success'] else "Failed"
                     self.stdout.write(
                         f"  {status} {device_result['type']}: {device_result['device_id']}"
                     )
@@ -91,9 +91,9 @@ class Command(BaseCommand):
 
         except User.DoesNotExist:
             self.stdout.write(
-                self.style.ERROR(f"✗ User with ID {user_id} not found")
+                self.style.ERROR(f"User with ID {user_id} not found")
             )
         except Exception as e:
             self.stdout.write(
-                self.style.ERROR(f"✗ Unexpected error: {str(e)}")
+                self.style.ERROR(f"Unexpected error: {str(e)}")
             )

@@ -327,7 +327,7 @@ for device in FCMDevice.objects.all():
 
 ## Production Considerations
 
-⚠️ **Important:** Remove or restrict the `test/push` endpoint before deploying to production!
+**Important:** Remove or restrict the `test/push` endpoint before deploying to production!
 
 ```python
 # In viewsets.py, add permission check:

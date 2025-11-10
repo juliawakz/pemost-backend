@@ -81,7 +81,7 @@ class Command(BaseCommand):
                 )
 
                 for device in user_devices:
-                    status = "✓ Active" if device.active else "✗ Inactive"
+                    status = "Active" if device.active else "Inactive"
                     self.stdout.write(
                         f"  [{device.type.upper()}] {device.name or device.device_id}"
                     )
@@ -156,7 +156,7 @@ class Command(BaseCommand):
         if recent.exists():
             self.stdout.write("\nRecent Notifications:")
             for notif in recent:
-                status = "✓" if notif.is_read else "○"
+                status = "Read" if notif.is_read else "Unread"
                 self.stdout.write(
                     f"  {status} [{notif.created_at.strftime('%Y-%m-%d %H:%M')}] "
                     f"{notif.subject} → {notif.message_to.email}"
