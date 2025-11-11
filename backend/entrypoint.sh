@@ -12,7 +12,7 @@ then
     echo "PostgreSQL started"
 fi
 
-echo "-------Generate Migartion Files------"
+echo "-------Generate Migration Files------"
 python manage.py makemigrations --noinput || exit 1
 
 echo "-------Apply database migrate------"
