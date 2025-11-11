@@ -50,7 +50,7 @@ Before you begin, ensure you have the following installed:
 - GDAL/OGR libraries
 - Git
 
-### Install System Dependencies (Ubuntu/Debian)
+##### Install System Dependencies (Ubuntu/Debian)
 
 ```bash
 sudo apt update
@@ -59,21 +59,21 @@ sudo apt install python3-pip python3-venv postgresql postgresql-contrib postgis 
 
 ## Installation
 
-### 1. Clone the Repository
+##### 1. Clone the Repository
 
 ```bash
 git clone repository-url
 cd pemost_backend
 ```
 
-### 2. Create Virtual Environment
+##### 2. Create Virtual Environment
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-### 3. Install Dependencies
+##### 3. Install Dependencies
 
 ```bash
 cd backend
@@ -82,7 +82,7 @@ pip install -r requirements/dev.txt # for development
 
 ## Environment Configuration
 
-### 1. Create Environment File
+##### 1. Create Environment File
 
 ```bash
 cp environments/env.dev .env  
@@ -90,11 +90,9 @@ cp environments/env.dev .env
 touch .env
 ```
 
-### 2. Configure Environment Variables
+##### 2. Configure Environment Variables
 
 Edit the `.env` file with your configuration:
-Generate firebasefile.json using the instructions found here: [Firebase Quick Setup](#quick-setup)
-
 
 ```env
 # Project Settings
@@ -122,7 +120,9 @@ FIREBASE_CREDENTIALS_PATH=/backend/sample_data/firebase-credentials.json
 ACERAGE_CONVERT=0.000247105  # square meters to acres
 ```
 
-### 3. Generate Secret Key
+Generate firebasefile.json using the instructions found here: [Firebase Quick Setup](#quick-setup)
+
+##### 3. Generate Secret Key
 
 ```bash
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
@@ -130,7 +130,7 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 
 ## Database Setup
 
-### 1. Create PostgreSQL Database
+##### 1. Create PostgreSQL Database
 
 ```bash
 sudo -u postgres psql
@@ -150,14 +150,14 @@ CREATE EXTENSION postgis;
 \q
 ```
 
-### 2. Run Migrations
+##### 2. Run Migrations
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 3. Create Superuser
+##### 3. Create Superuser
 
 ```bash
 python manage.py createsuperuser
@@ -165,9 +165,60 @@ python manage.py createsuperuser
 
 Follow the prompts to create your admin account.
 
+
+##### 4. Start Development Server
+
+```bash
+python manage.py runserver
+```
+
+The API will be available at `http://127.0.0.1:8000/`
+
+##### 5. Access Admin Interface
+
+Navigate to `http://127.0.0.1:8000/admin` and log in with your superuser credentials.
+
+##### 6. Start Celery Worker (for background tasks)
+
+In a separate terminal:
+
+```bash
+celery -A project worker -l info
+```
+
+##### 7. Start Redis (if not running as service)
+
+In a separate terminal:
+
+```bash
+redis-server
+```
+## Run project using Docker
+1. Install Docker and Docker-Compose, if not installed, and check the version:
+* docker compose
+  ```sh
+  docker compose version
+  ```
+* Change directory
+  ```sh
+  cd to pemost-backendv2
+  ```
+
+2. Build the project with docker-compose as
+   ```sh
+   docker compose -f docker-compose-dev.yml build
+   ```
+3. Start the project with
+    ```sh
+    docker compose -f docker-compose-dev.yml up
+    ```
+4. Project runs on: http://localhost:8082
+5. Visit http://localhost:8082 for API documentation
+
+
 ## Data Loading
 
-### Quick Load (Docker)
+##### Quick Load (Docker)
 
 If you're using Docker Compose, use the automated script to load all sample data at once:
 
@@ -192,36 +243,24 @@ The script will automatically:
 - Provide colored progress output
 - Show a summary of successes and failures
 
-### Manual Load (Local or Docker)
-
+## Manual Load
+#### None Docker users:
 Load sample data using individual management commands. Run these from the `backend` directory:
 
-**Load Locations (Counties, Subcounties, Wards):**
+
 ```bash
-python manage.py load_locations sample_data/locations.csv
+python manage.py load_locations sample_data/locations.csv # Load Locations (Counties, Subcounties, Wards)
+
+python manage.py load_crops sample_data/crops.csv # Load Crops
+
+python manage.py load_crop_varieties sample_data/crop_variety.csv # Load Crop Varieties
+
+python manage.py load_crop_growth_stages sample_data/crop_growth_stages.csv # Load Crop Growth Stages
+
+python manage.py load_pests sample_data/pest_control.csv # Load Pest Control Data
 ```
 
-**Load Crops:**
-```bash
-python manage.py load_crops sample_data/crops.csv
-```
-
-**Load Crop Varieties:**
-```bash
-python manage.py load_crop_varieties sample_data/crop_variety.csv
-```
-
-**Load Crop Growth Stages:**
-```bash
-python manage.py load_crop_growth_stages sample_data/crop_growth_stages.csv
-```
-
-**Load Pest Control Data:**
-```bash
-python manage.py load_pests sample_data/pest_control.csv
-```
-
-**Upload Farm Shapefiles:**
+###### Upload Farm Shapefiles:
 ```bash
 # Skip existing farms (default)
 python manage.py upload_farms sample_data/farms.zip
@@ -233,94 +272,32 @@ python manage.py upload_farms sample_data/farms.zip --mode update
 python manage.py upload_farms sample_data/farms.zip --clear
 ```
 
-**For Docker users**, prefix commands with:
-
-**Load locations:**
-```bash
-docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_locations sample_data/locations.csv"
-```
-
-**Load Crop:**
-```bash
-docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_crops sample_data/crops.csv"
-```
-
-**Load Crop Varieties:**
-```bash
-docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_crop_varieties sample_data/crop_variety.csv"
-```
-
-**Load Crop Growth Stages:**
-```bash
-docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_crop_growth_stages sample_data/crop_growth_stages.csv"
-```
-
-**Load Pest Control Data:**
-```bash
-docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_pests sample_data/pest_control.csv"
-```
-**Load Pest Control Data:**
-```bash
-docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py upload_farms sample_data/farms.zip"
-```
-
-## Running the Application
-
-### 1. Start Development Server
+#### For Docker users:
 
 ```bash
-python manage.py runserver
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_locations sample_data/locations.csv" # Load locations
+
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_crops sample_data/crops.csv" # Load Crop
+
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_crop_varieties sample_data/crop_variety.csv" #Load Crop Varieties
+
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_crop_growth_stages sample_data/crop_growth_stages.csv" # Load Crop Growth Stages
+
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_pests sample_data/pest_control.csv" # Load Pest Control Data
+
+docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py upload_farms sample_data/farms.zip" # Load farm Data
 ```
 
-The API will be available at `http://127.0.0.1:8000/`
+## Push Notifications
 
-### 2. Access Admin Interface
+PeMost supports Firebase Cloud Messaging (FCM) for push notifications. 
 
-Navigate to `http://127.0.0.1:8000/admin` and log in with your superuser credentials.
+#### Quick Setup
 
-### 3. Start Celery Worker (for background tasks)
-
-In a separate terminal:
-
-```bash
-celery -A project worker -l info
-```
-
-### 4. Start Redis (if not running as service)
-
-In a separate terminal:
-
-```bash
-redis-server
-```
-
-## Management Commands
-
-PeMost includes several custom management commands:
-
-### Data Loading
-
-```bash
-# Load locations
-python manage.py load_locations backend/sample_data/locations.csv
-
-# Load crops
-python manage.py load_crops backend/sample_data/crops.csv
-
-# Load crop varieties
-python manage.py load_crop_varieties backend/sample_data/varieties.csv
-
-# Load growth stages
-python manage.py load_crop_growth_stages backend/sample_data/stages.csv
-
-# Load pest control data
-python manage.py load_pests backend/sample_data/pests.csv
-
-# Upload farms from shapefile
-python manage.py upload_farms backend/sample_data/farms.zip [--mode {skip,update,create}] [--clear]
-```
-
-### Push Notifications
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com)
+2. Download service account credentials JSON file for python
+3. Copy the downloaded file to backend folder and rename to firebasefile.json
+4. Use the API endpoints to register devices and send notifications
 
 ```bash
 # List registered FCM devices
@@ -333,18 +310,7 @@ python manage.py test_push user_id [--title TITLE] [--body BODY] [--image IMAGE_
 python manage.py test_fcm [--user-id USER_ID] [--username EMAIL] [--all-devices]
 ```
 
-## Push Notifications
-
-PeMost supports Firebase Cloud Messaging (FCM) for push notifications. 
-
-### Quick Setup
-
-1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com)
-2. Download service account credentials JSON file for python
-3. Copy the downloaded file to backend folder and rename to firebasefile.json
-4. Use the API endpoints to register devices and send notifications
-
-### API Endpoints
+#### API Endpoints
 
 - `POST /api/v2/notifications/register/device/` - Register FCM device
 - `POST /api/v2/notifications/unregister/device/` - Unregister device
@@ -353,13 +319,13 @@ PeMost supports Firebase Cloud Messaging (FCM) for push notifications.
 
 ## API Documentation
 
-### Base URL
+#### Base URL
 
 ```
 http://127.0.0.1:8000/api/v2/
 ```
 
-### Postman Collection
+#### Postman Collection
 
 Import `PEMOST.postman_collection.json` into Postman for complete API documentation and testing.
 
@@ -373,6 +339,7 @@ Import `PEMOST.postman_collection.json` into Postman for complete API documentat
 **Farms**
 - `GET /api/v2/app/farms/` - List farms
 - `POST /api/v2/app/farms/` - Create farm
+- `GET /api/v2/app/farms/` - Get all farms
 - `GET /api/v2/app/farms/{id}/` - Get farm details
 - `PUT /api/v2/app/farms/{id}/` - Update farm
 - `DELETE /api/v2/app/farms/{id}/` - Delete farm
@@ -386,6 +353,10 @@ Import `PEMOST.postman_collection.json` into Postman for complete API documentat
 - `GET /api/v2/locations/counties/` - List counties
 - `GET /api/v2/locations/subcounties/` - List subcounties
 - `GET /api/v2/locations/wards/` - List wards
+
+**Pemost Model posting occurence to the backend**
+- `POST /api/v2/pest/control/process/occurence/` - Post occurence
+
 
 ## Firebase Notification API Endpoints Reference
 
@@ -410,7 +381,7 @@ Authorization: Bearer YOUR_JWT_TOKEN
 
 ### Request/Response Examples
 
-#### Register Device
+### Register Device
 
 **Request:**
 ```json
