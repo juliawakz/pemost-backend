@@ -50,7 +50,7 @@ Before you begin, ensure you have the following installed:
 - GDAL/OGR libraries
 - Git
 
-##### Install System Dependencies (Ubuntu/Debian)
+### Install System Dependencies (Ubuntu/Debian)
 
 ```bash
 sudo apt update
@@ -59,21 +59,21 @@ sudo apt install python3-pip python3-venv postgresql postgresql-contrib postgis 
 
 ## Installation
 
-##### 1. Clone the Repository
+#### 1. Clone the Repository
 
 ```bash
 git clone repository-url
 cd pemost_backend
 ```
 
-##### 2. Create Virtual Environment
+#### 2. Create Virtual Environment
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-##### 3. Install Dependencies
+#### 3. Install Dependencies
 
 ```bash
 cd backend
@@ -82,7 +82,7 @@ pip install -r requirements/dev.txt # for development
 
 ## Environment Configuration
 
-##### 1. Create Environment File
+#### 1. Create Environment File
 
 ```bash
 cp environments/env.dev .env  
@@ -90,7 +90,7 @@ cp environments/env.dev .env
 touch .env
 ```
 
-##### 2. Configure Environment Variables
+#### 2. Configure Environment Variables
 
 Edit the `.env` file with your configuration:
 
@@ -130,7 +130,7 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 
 ## Database Setup
 
-##### 1. Create PostgreSQL Database
+#### 1. Create PostgreSQL Database
 
 ```bash
 sudo -u postgres psql
@@ -150,14 +150,14 @@ CREATE EXTENSION postgis;
 \q
 ```
 
-##### 2. Run Migrations
+#### 2. Run Migrations
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-##### 3. Create Superuser
+#### 3. Create Superuser
 
 ```bash
 python manage.py createsuperuser
@@ -166,7 +166,7 @@ python manage.py createsuperuser
 Follow the prompts to create your admin account.
 
 
-##### 4. Start Development Server
+#### 4. Start Development Server
 
 ```bash
 python manage.py runserver
@@ -174,11 +174,11 @@ python manage.py runserver
 
 The API will be available at `http://127.0.0.1:8000/`
 
-##### 5. Access Admin Interface
+#### 5. Access Admin Interface
 
 Navigate to `http://127.0.0.1:8000/admin` and log in with your superuser credentials.
 
-##### 6. Start Celery Worker (for background tasks)
+#### 6. Start Celery Worker (for background tasks)
 
 In a separate terminal:
 
@@ -186,7 +186,7 @@ In a separate terminal:
 celery -A project worker -l info
 ```
 
-##### 7. Start Redis (if not running as service)
+#### 7. Start Redis (if not running as service)
 
 In a separate terminal:
 
@@ -197,7 +197,7 @@ redis-server
 1. Install Docker and Docker-Compose, if not installed, and check the version:
 * docker compose
   ```sh
-  docker compose version
+  docker-compose version
   ```
 * Change directory
   ```sh
@@ -218,7 +218,7 @@ redis-server
 
 ## Data Loading
 
-##### Quick Load (Docker)
+### Quick Load (Docker)
 
 If you're using Docker Compose, use the automated script to load all sample data at once:
 
@@ -244,7 +244,7 @@ The script will automatically:
 - Show a summary of successes and failures
 
 ## Manual Load
-#### None Docker users:
+### None Docker users:
 Load sample data using individual management commands. Run these from the `backend` directory:
 
 
@@ -260,7 +260,7 @@ python manage.py load_crop_growth_stages sample_data/crop_growth_stages.csv # Lo
 python manage.py load_pests sample_data/pest_control.csv # Load Pest Control Data
 ```
 
-###### Upload Farm Shapefiles:
+#### Upload Farm Shapefiles:
 ```bash
 # Skip existing farms (default)
 python manage.py upload_farms sample_data/farms.zip
@@ -272,7 +272,7 @@ python manage.py upload_farms sample_data/farms.zip --mode update
 python manage.py upload_farms sample_data/farms.zip --clear
 ```
 
-#### For Docker users:
+### For Docker users:
 
 ```bash
 docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py load_locations sample_data/locations.csv" # Load locations
@@ -292,7 +292,7 @@ docker exec -it pemost_backend bash -c "cd /pemostbackend && python manage.py up
 
 PeMost supports Firebase Cloud Messaging (FCM) for push notifications. 
 
-#### Quick Setup
+### Quick Setup
 
 1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com)
 2. Download service account credentials JSON file for python
@@ -310,7 +310,7 @@ python manage.py test_push user_id [--title TITLE] [--body BODY] [--image IMAGE_
 python manage.py test_fcm [--user-id USER_ID] [--username EMAIL] [--all-devices]
 ```
 
-#### API Endpoints
+### API Endpoints
 
 - `POST /api/v2/notifications/register/device/` - Register FCM device
 - `POST /api/v2/notifications/unregister/device/` - Unregister device
@@ -319,17 +319,17 @@ python manage.py test_fcm [--user-id USER_ID] [--username EMAIL] [--all-devices]
 
 ## API Documentation
 
-#### Base URL
+### Base URL
 
 ```
 http://127.0.0.1:8000/api/v2/
 ```
 
-#### Postman Collection
+### Postman Collection
 
 Import `PEMOST.postman_collection.json` into Postman for complete API documentation and testing.
 
-### Key Endpoints
+## Key Endpoints
 
 **Authentication**
 - `POST /api/v2/auth/login/` - User login
@@ -434,7 +434,7 @@ GET /api/v2/notifications/devices/
 ]
 ```
 
-#### Send Test Notification (Dev Only)
+### Send Test Notification (Dev Only)
 
 **Request:**
 ```json
@@ -524,7 +524,7 @@ touch app/migrations/__init__.py locations/migrations/__init__.py crops/migratio
 4. Push to the branch (`git push origin feature/new-feature`)
 5. Open a Pull Request
 
-### Code Standards
+## Code Standards
 
 - Follow PEP 8 style guidelines
 - Write unit tests for new features
