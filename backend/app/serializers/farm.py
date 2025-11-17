@@ -1,6 +1,7 @@
 from app.models.farm import Farm
 from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.types import OpenApiTypes
 from locations.serializers.ward import MiniWardSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -23,6 +24,7 @@ class FarmReadSerializer(serializers.ModelSerializer):
         read_only=True,
         many=True
     )
+    metadata = serializers.SerializerMethodField()
 
     class Meta:
         model = Farm
@@ -49,14 +51,85 @@ class FarmReadSerializer(serializers.ModelSerializer):
             "alert_status",
             "is_archived",
             "created_at",
-            "updated_at",
-            "metadata"
+            "updated_at"
         ]
 
     @extend_schema_field(serializers.IntegerField)
     def get_e_extensions_count(self, obj):
         """Return count of e-extensions managing this farm"""
         return obj.e_extensions.count()
+
+    @extend_schema_field({
+        'type': 'object',
+        'properties': {
+            'pest_and_interventions': {
+                'type': 'object',
+                'properties': {
+                    'interventions': {
+                        'type': 'array',
+                        'items': {
+                            'oneOf': [
+                                {'type': 'string'},
+                                {
+                                    'type': 'object',
+                                    'properties': {
+                                        'stage': {'type': 'string'},
+                                        'name': {'type': 'string'},
+                                        'scientific_name': {'type': 'string'},
+                                        'presence_period': {'type': 'string'},
+                                        'no_of_plants_affected': {
+                                            'type': 'string'
+                                        },
+                                        'action_threshold': {'type': 'string'},
+                                        'action_threshold_risk': {
+                                            'type': 'string'
+                                        },
+                                        'crop_growth_stage': {
+                                            'type': 'string'
+                                        },
+                                        'cultural': {'type': 'string'},
+                                        'cultural_description': {
+                                            'type': 'string'
+                                        },
+                                        'biological': {'type': 'string'},
+                                        'biological_description': {
+                                            'type': 'string'
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        'example': {
+            'pest_and_interventions': {
+                'interventions': [
+                    {
+                        'stage': 'Vegetative',
+                        'name': 'Fall Armyworm',
+                        'scientific_name': 'Spodoptera frugiperda',
+                        'presence_period': '20-40 days',
+                        'no_of_plants_affected': '5-10%',
+                        'action_threshold': '10% infestation',
+                        'action_threshold_risk': 'High',
+                        'crop_growth_stage': 'Vegetative',
+                        'cultural': 'Manual removal',
+                        'cultural_description': 'Remove affected leaves',
+                        'biological': 'Bacillus thuringiensis',
+                        'biological_description': 'Apply Bio-pesticide'
+                    }
+                ]
+            }
+        }
+    })
+    def get_metadata(self, obj):
+        """
+        Return farm metadata including pest and intervention information.
+        Updated by pest occurrence processing system.
+        """
+        return obj.metadata
 
 
 class FarmWriteSerializer(serializers.ModelSerializer):
