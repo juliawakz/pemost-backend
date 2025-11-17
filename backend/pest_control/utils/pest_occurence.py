@@ -5,11 +5,13 @@ import geojson
 from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import Union
 from django.contrib.gis.geos import GEOSGeometry
+from django.core.exceptions import ObjectDoesNotExist
 from notifications.choices import MessageTypeChoices
 from notifications.models import Notification
 from notifications.signals import send_notification
 from osgeo import ogr, osr
 from pest_control.models import Pest, PestOccurrence
+from rest_framework.exceptions import ValidationError
 from shapely import wkt
 from shapely.geometry import MultiPolygon
 from shapely.ops import unary_union
@@ -24,18 +26,82 @@ class PestOccurenceUtils:
         all_clipped_yellow_buffers = []
         all_clipped_green_buffers = []
         farms_with_occurrences = []
+        errors = []
+        processed_farms = []
 
         for _counts, occurence in enumerate(data):
-            
-            farm_object = Farm.objects.get(id=occurence['id'])
+            # Validate occurrence data structure
+            if not isinstance(occurence, dict):
+                errors.append({
+                    'index': _counts,
+                    'farm_id': None,
+                    'error': 'Invalid data format. Expected a dictionary.'
+                })
+                continue
+
+            farm_id = occurence.get('id', None)
+
+            if not farm_id:
+                errors.append({
+                    'index': _counts,
+                    'farm_id': None,
+                    'error': "Missing 'id' field in occurrence data."
+                })
+                continue
+
+            if 'Occurence' not in occurence:
+                errors.append({
+                    'index': _counts,
+                    'farm_id': farm_id,
+                    'error': "Missing 'Occurence' field in occurrence data."
+                })
+                continue
+
+            try:
+                farm_object = Farm.objects.get(id=farm_id)
+            except (Farm.DoesNotExist, ObjectDoesNotExist):
+                errors.append({
+                    'index': _counts,
+                    'farm_id': farm_id,
+                    'error': 'Farm does not exist. Please provide a valid farm ID.'
+                })
+                continue
+            except ValueError as e:
+                errors.append({
+                    'index': _counts,
+                    'farm_id': farm_id,
+                    'error': f'Invalid farm ID format: {str(e)}'
+                })
+                continue
 
             farm_geometry = farm_object.boundary
 
-            # Create a Feature with the polygon geometry
-            geojson.loads(farm_geometry.geojson)
-            farm_wkt = str(farm_geometry).replace("SRID=4326;", "")
-            shapely_area_geometry = wkt.loads(farm_wkt)
-            shapely_area_geometry.bounds
+            # Validate that farm has a boundary
+            if not farm_geometry:
+                errors.append({
+                    'index': _counts,
+                    'farm_id': farm_id,
+                    'error': 'Farm has no boundary defined. '
+                    'Please add a boundary to this farm.'
+                })
+                continue
+
+            try:
+                # Create a Feature with the polygon geometry
+                geojson.loads(farm_geometry.geojson)
+                farm_wkt = str(farm_geometry).replace("SRID=4326;", "")
+                shapely_area_geometry = wkt.loads(farm_wkt)
+                shapely_area_geometry.bounds
+            except Exception as e:
+                errors.append({
+                    'index': _counts,
+                    'farm_id': farm_id,
+                    'error': f'Invalid geometry: {str(e)}'
+                })
+                continue
+
+            # Mark this farm as successfully processed
+            processed_farms.append(str(farm_id))
 
             if occurence["Occurence"]:
 
@@ -116,6 +182,16 @@ class PestOccurenceUtils:
 
                 # Store the clipped_yellow_buffer geometry in the list
                 all_clipped_green_buffers.append(clipped_green_buffer_wkt)
+
+        # If no valid farms with occurrences were processed, return early
+        if not farms_with_occurrences or not all_clipped_yellow_buffers:
+            return {
+                'processed_farms': processed_farms,
+                'errors': errors,
+                'total_submitted': len(data),
+                'total_processed': len(processed_farms),
+                'total_errors': len(errors)
+            }
 
         # Create OGR geometries from the WKT representations
         yellow_geometries = self.create_geometries_from_wkt(
@@ -378,6 +454,14 @@ class PestOccurenceUtils:
 
             for farm_objectt in Farm.objects.all():
                 self.all_green_interventions(farm_objectt)
+
+        return {
+            'processed_farms': processed_farms,
+            'errors': errors,
+            'total_submitted': len(data),
+            'total_processed': len(processed_farms),
+            'total_errors': len(errors)
+        }
 
     def all_green_interventions(self, farm_object):
         pest_info_dict = {

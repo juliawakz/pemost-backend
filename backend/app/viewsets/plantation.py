@@ -4,13 +4,14 @@ from app.serializers.plantation import (
     PlantationReadSerializer,
     PlantationWriteSerializer,
 )
+from app.filtersets.plantation import PlantationFilterSet
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from django.db.models import Q
 
 
 @extend_schema(tags=["App - Plantations"])
@@ -28,6 +29,8 @@ class PlantationViewSet(viewsets.ModelViewSet):
     serializer_class = PlantationReadSerializer
     authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [CanManagePlantation]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PlantationFilterSet
 
     def get_serializer_class(self):
         """
@@ -140,33 +143,3 @@ class PlantationViewSet(viewsets.ModelViewSet):
             },
             status=status.HTTP_200_OK
         )
-
-    @action(detail=False, methods=['get'], url_path='active')
-    def active_plantations(self, request):
-        """
-        Get all active (non-matured) plantations accessible to the user.
-        """
-        queryset = self.get_queryset().filter(is_matured=False)
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['get'], url_path='matured')
-    def matured_plantations(self, request):
-        """
-        Get all matured plantations accessible to the user.
-        """
-        queryset = self.get_queryset().filter(is_matured=True)
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
