@@ -10,7 +10,15 @@ from pest_control.serializers.pest_occurence import ProcessOccurrenceSerializer
 class ProcessOccurrenceApiView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = ProcessOccurrenceSerializer
 
+    @extend_schema(
+        request=ProcessOccurrenceSerializer,
+        responses={
+            201: {"type": "object", "properties": {"detail": {"type": "string"}}},
+            400: {"type": "object", "properties": {"detail": {"type": "string"}}}
+        }
+    )
     def post(self, request, *args, **kwargs):
         if not request.data:
             return Response(

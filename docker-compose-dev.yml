@@ -14,6 +14,7 @@ services:
 
   backend:
     build: ./backend
+    image: pemost-backend:latest
     container_name: pemost_backend
     command: gunicorn project.wsgi:application --workers 16 --timeout 1500 --worker-class gevent --bind 0.0.0.0:8001
     restart: unless-stopped
@@ -39,7 +40,7 @@ services:
        - pemost_network
 
   celery_worker:
-    build: ./backend
+    image: pemost-backend:latest
     container_name: pemost_celery_worker
     restart: unless-stopped
     env_file:
@@ -55,7 +56,7 @@ services:
       - db
 
   celery_beat:
-    build: ./backend
+    image: pemost-backend:latest
     container_name: pemost_celery_beat
     restart: unless-stopped
     env_file:

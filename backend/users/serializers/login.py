@@ -4,6 +4,7 @@ from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from users.serializers.user import MiniUserReadSerializer
+from django.utils.translation import gettext as _
 
 User = get_user_model()
 
@@ -67,6 +68,7 @@ class LoginSerializer(serializers.Serializer):
             return validation
         except User.DoesNotExist as e:
             raise serializers.ValidationError(("Invalid login credentials")) from e
+
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField(

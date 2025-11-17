@@ -1,4 +1,5 @@
 import os
+import sys
 from django.core.management.base import BaseCommand
 from django.core.files.uploadedfile import SimpleUploadedFile
 from app.utils.farm_import import FarmImportUtil
@@ -89,7 +90,19 @@ class Command(BaseCommand):
             farm_import_util = FarmImportUtil()
             self.stdout.write("Processing shapefile...")
 
-            result = farm_import_util.import_farms(uploaded_file, mode=mode)
+            # Create progress callback
+            def progress_callback(current, total):
+                percent = int((current / total) * 100)
+                bar_length = 50
+                filled_length = int(bar_length * current / total)
+                bar = '█' * filled_length + '░' * (bar_length - filled_length)
+                sys.stdout.write(f'\r[{bar}] {percent}% ({current}/{total} farms)')
+                sys.stdout.flush()
+                if current == total:
+                    sys.stdout.write('\n')
+                    sys.stdout.flush()
+
+            result = farm_import_util.import_farms(uploaded_file, mode=mode, progress_callback=progress_callback)
 
             if isinstance(result, str):
                 # Error message returned

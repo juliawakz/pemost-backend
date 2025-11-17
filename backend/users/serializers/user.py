@@ -11,6 +11,7 @@ from users.utils.user import UserUtils
 User = get_user_model()
 user_utils = UserUtils()
 
+
 class RegisterAccountSerializer(serializers.Serializer):
     """Base serializer for user registration with common fields"""
     email = serializers.EmailField(required=False, allow_blank=True, allow_null=True)
@@ -133,7 +134,7 @@ class MiniUserReadSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id", "email", "full_name", "phone_number",
-            "role","agree_to_terms","license_type"
+            "role", "agree_to_terms", "license_type"
         ]
         extra_kwargs = {
             "id": {"read_only": True},

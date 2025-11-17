@@ -1,49 +1,38 @@
-FROM python:3.8.3
-FROM osgeo/gdal:ubuntu-small-3.6.3
+FROM python:3.12-slim
 
-# Python Domain
+# Python env
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# Install GDAL + system deps
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+        gdal-bin \
+        libgdal-dev \
+        build-essential \
+        postgresql-client \
+        python3-pip && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update -y \
-    && apt-get install build-essential binutils -y
+# Working directories
+RUN mkdir -p /pemostbackend/static \
+    /pemostbackend/media \
+    /pemostbackend/database/backups
 
-RUN apt-get install python3-pip -y
-
-# Pemost Files location
-RUN mkdir -p /pemostbackend
-RUN mkdir -p /pemostbackend/static
-RUN mkdir -p /pemostbackend/media
-RUN mkdir -p /pemostbackend/database/backups
-
-
-# Set working directory
 WORKDIR /pemostbackend
 
-# Copy depency file
+# Copy dependencies
 COPY requirements/prod.txt /pemostbackend/requirements.txt
-#COPY database/db.sql /docker-entrypoint-initdb.d/
 
-# install dependencies
+# Install Python deps
 RUN pip install --upgrade pip
-COPY ./requirements/prod.txt /requirements.txt
 RUN pip install --no-cache-dir -r /pemostbackend/requirements.txt
 
-# Clean up
-RUN apt-get purge -y binutils
-
-RUN rm -rf /var/lib/apt/lists/*
-# Copy all files to workingdir
+# Copy project files
 COPY . .
 
-# Print working directory
-RUN echo "$PWD"
-RUN echo $(ls -a /pemostbackend)
-
-# Give docker write and read access
-RUN sed -i 's/\r$//g' /pemostbackend/entrypoint.sh
-RUN chmod +x /pemostbackend/entrypoint.sh
-
+# Fix entrypoint permissions
+RUN sed -i 's/\r$//g' /pemostbackend/entrypoint.sh && \
+    chmod +x /pemostbackend/entrypoint.sh
 
 ENTRYPOINT ["/pemostbackend/entrypoint.sh"]

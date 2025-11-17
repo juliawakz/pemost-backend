@@ -1,15 +1,15 @@
 #!/bin/sh
+set -e
 
-if [ "$DATABASE" = "postgres" ]
-then
-    echo "Waiting for postgres..."
+if [ "$DATABASE" = "postgres" ]; then
+    echo "Waiting for PostgreSQL at $POSTGRES_HOST:$DB_PORT..."
 
-    while ! curl http://$POSTGRES_HOST:$DB_PORT/ 2>&1 | grep '52'
-    do
-      sleep 1
+    until pg_isready -h "$POSTGRES_HOST" -p "$DB_PORT" -U "$POSTGRES_USER"; do
+        echo "PostgreSQL is unavailable - sleeping"
+        sleep 1
     done
 
-    echo "PostgreSQL started"
+    echo "PostgreSQL is up!"
 fi
 
 echo "-------Generate Migration Files------"
