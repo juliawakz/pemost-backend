@@ -13,7 +13,7 @@ services:
       - pemost_backend_pemost_prod_network
 
   backend_v2:
-    image: gitjulia/pemost-backend
+    image: gitjulia/pemost-backend:latest
     container_name: pemost_backend_v2
     command: gunicorn project.wsgi:application --workers 16 --timeout 1500 --worker-class gevent --bind 0.0.0.0:8001
     restart: unless-stopped
@@ -43,7 +43,7 @@ services:
       - pemost_backend_pemost_prod_network
 
   celery_worker_v2:
-    image: gitjulia/pemost-backend
+    image: gitjulia/pemost-backend:latest
     container_name: pemost_celery_worker_v2
     restart: unless-stopped
     env_file:
@@ -62,7 +62,7 @@ services:
       - database_v2
 
   celery_beat_v2:
-    image: gitjulia/pemost-backend
+    image: gitjulia/pemost-backend:latest
     container_name: pemost_celery_beat_v2
     restart: unless-stopped
     env_file:

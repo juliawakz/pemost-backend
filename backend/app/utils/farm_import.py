@@ -14,12 +14,15 @@ from app.models.farm import Farm
 from locations.models import Ward, County, SubCounty
 from users.choices import RoleChoices
 
+# Enable GDAL exceptions to suppress warnings
+ogr.UseExceptions()
+
 User = get_user_model()
 
 
 class FarmImportUtil:
     # Function for shapefiles imports through rest api.
-    def import_farms(self, shapefile, mode='skip'):
+    def import_farms(self, shapefile, mode='skip', progress_callback=None):
         # This  function read the contents of the uploaded object
         # and store it into a temporary file on the disk so that we
         # can work with it.
@@ -93,6 +96,10 @@ class FarmImportUtil:
         skipped_count = 0
 
         for i in range(layer.GetFeatureCount()):
+            # Report progress if callback is provided
+            if progress_callback:
+                progress_callback(i + 1, total_farms)
+
             src_feature = layer.GetFeature(i)
             src_geometry = src_feature.GetGeometryRef()
             geometry = GEOSGeometry(src_geometry.ExportToWkt())

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # PeMost Backend - Sample Data Loader Script
-# This script loads all sample data into the Docker container
+# This script loads all sample data (run inside container)
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -9,10 +9,6 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
-
-# Configuration
-CONTAINER_NAME="pemost_backend"
-COMPOSE_FILE="docker-compose-dev.yml"
 
 # Default farm upload mode
 FARM_MODE="skip"
@@ -66,30 +62,7 @@ if [ -n "$CLEAR_FARMS" ]; then
 fi
 echo ""
 
-# Check if Docker is running
-echo -e "${YELLOW}[1/8]${NC} Checking Docker status..."
-if ! docker info > /dev/null 2>&1; then
-    echo -e "${RED}Error: Docker is not running. Please start Docker first.${NC}"
-    exit 1
-fi
-echo -e "${GREEN}Docker is running.${NC}\n"
-
-# Check if docker-compose file exists
-if [ ! -f "$COMPOSE_FILE" ]; then
-    echo -e "${RED}Error: $COMPOSE_FILE not found!${NC}"
-    exit 1
-fi
-
-# Check if container is running
-echo -e "${YELLOW}[2/8]${NC} Checking if $CONTAINER_NAME container is running..."
-if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
-    echo -e "${RED}Error: Container $CONTAINER_NAME is not running.${NC}"
-    echo -e "${YELLOW}Please start the containers first with: docker-compose -f $COMPOSE_FILE up -d${NC}"
-    exit 1
-fi
-echo -e "${GREEN}Container is running.${NC}\n"
-
-# Function to execute command in container
+# Function to execute command
 exec_command() {
     local step=$1
     local description=$2
@@ -98,7 +71,7 @@ exec_command() {
     echo -e "${YELLOW}[$step]${NC} $description"
     echo -e "${BLUE}Running:${NC} $command"
 
-    if docker exec -it $CONTAINER_NAME bash -c "cd /pemostbackend && $command"; then
+    if eval "$command"; then
         echo -e "${GREEN}Success!${NC}\n"
         return 0
     else
@@ -111,37 +84,37 @@ exec_command() {
 FAILED_COMMANDS=()
 
 # Load Locations (Counties, Subcounties, Wards)
-if ! exec_command "3/8" "Loading locations (Counties, Subcounties, Wards)..." \
+if ! exec_command "1/6" "Loading locations (Counties, Subcounties, Wards)..." \
     "python manage.py load_locations sample_data/locations.csv"; then
     FAILED_COMMANDS+=("load_locations")
 fi
 
 # Load Crops
-if ! exec_command "4/8" "Loading crops..." \
+if ! exec_command "2/6" "Loading crops..." \
     "python manage.py load_crops sample_data/crops.csv"; then
     FAILED_COMMANDS+=("load_crops")
 fi
 
 # Load Crop Varieties
-if ! exec_command "5/8" "Loading crop varieties..." \
+if ! exec_command "3/6" "Loading crop varieties..." \
     "python manage.py load_crop_varieties sample_data/crop_variety.csv"; then
     FAILED_COMMANDS+=("load_crop_varieties")
 fi
 
 # Load Crop Growth Stages
-if ! exec_command "6/8" "Loading crop growth stages..." \
+if ! exec_command "4/6" "Loading crop growth stages..." \
     "python manage.py load_crop_growth_stages sample_data/crop_growth_stages.csv"; then
     FAILED_COMMANDS+=("load_crop_growth_stages")
 fi
 
 # Load Pest Control Data
-if ! exec_command "7/8" "Loading pest control data..." \
+if ! exec_command "5/6" "Loading pest control data..." \
     "python manage.py load_pests sample_data/pest_control.csv"; then
     FAILED_COMMANDS+=("load_pests")
 fi
 
 # Upload Farm Shapefiles
-echo -e "${YELLOW}[8/8]${NC} Uploading farm shapefiles..."
+echo -e "${YELLOW}[6/6]${NC} Uploading farm shapefiles..."
 if [ -n "$CLEAR_FARMS" ]; then
     echo -e "${BLUE}Mode: Clear existing farms and import fresh${NC}"
     FARM_CMD="python manage.py upload_farms sample_data/farms.zip --mode $FARM_MODE $CLEAR_FARMS"
@@ -161,7 +134,7 @@ else
 fi
 echo -e "${BLUE}Running:${NC} $FARM_CMD"
 
-if docker exec -it $CONTAINER_NAME bash -c "cd /pemostbackend && $FARM_CMD"; then
+if eval "$FARM_CMD"; then
     echo -e "${GREEN}Success!${NC}\n"
 else
     echo -e "${RED}Failed!${NC}\n"
