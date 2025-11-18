@@ -84,37 +84,37 @@ exec_command() {
 FAILED_COMMANDS=()
 
 # Load Locations (Counties, Subcounties, Wards)
-if ! exec_command "1/6" "Loading locations (Counties, Subcounties, Wards)..." \
+if ! exec_command "1/7" "Loading locations (Counties, Subcounties, Wards)..." \
     "python manage.py load_locations sample_data/locations.csv"; then
     FAILED_COMMANDS+=("load_locations")
 fi
 
 # Load Crops
-if ! exec_command "2/6" "Loading crops..." \
+if ! exec_command "2/7" "Loading crops..." \
     "python manage.py load_crops sample_data/crops.csv"; then
     FAILED_COMMANDS+=("load_crops")
 fi
 
 # Load Crop Varieties
-if ! exec_command "3/6" "Loading crop varieties..." \
+if ! exec_command "3/7" "Loading crop varieties..." \
     "python manage.py load_crop_varieties sample_data/crop_variety.csv"; then
     FAILED_COMMANDS+=("load_crop_varieties")
 fi
 
 # Load Crop Growth Stages
-if ! exec_command "4/6" "Loading crop growth stages..." \
+if ! exec_command "4/7" "Loading crop growth stages..." \
     "python manage.py load_crop_growth_stages sample_data/crop_growth_stages.csv"; then
     FAILED_COMMANDS+=("load_crop_growth_stages")
 fi
 
 # Load Pest Control Data
-if ! exec_command "5/6" "Loading pest control data..." \
+if ! exec_command "5/7" "Loading pest control data..." \
     "python manage.py load_pests sample_data/pest_control.csv"; then
     FAILED_COMMANDS+=("load_pests")
 fi
 
 # Upload Farm Shapefiles
-echo -e "${YELLOW}[6/6]${NC} Uploading farm shapefiles..."
+echo -e "${YELLOW}[6/7]${NC} Uploading farm shapefiles..."
 if [ -n "$CLEAR_FARMS" ]; then
     echo -e "${BLUE}Mode: Clear existing farms and import fresh${NC}"
     FARM_CMD="python manage.py upload_farms sample_data/farms.zip --mode $FARM_MODE $CLEAR_FARMS"
@@ -139,6 +139,12 @@ if eval "$FARM_CMD"; then
 else
     echo -e "${RED}Failed!${NC}\n"
     FAILED_COMMANDS+=("upload_farms")
+fi
+
+# Load Plantations
+if ! exec_command "7/7" "Loading plantation data..." \
+    "python manage.py load_plantations sample_data/plantation.csv --skip-duplicates"; then
+    FAILED_COMMANDS+=("load_plantations")
 fi
 
 # Summary

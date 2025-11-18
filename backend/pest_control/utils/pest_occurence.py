@@ -11,12 +11,12 @@ from notifications.models import Notification
 from notifications.signals import send_notification
 from osgeo import ogr, osr
 from pest_control.models import Pest, PestOccurrence
-from rest_framework.exceptions import ValidationError
 from shapely import wkt
 from shapely.geometry import MultiPolygon
 from shapely.ops import unary_union
 from shapely.wkt import loads as wkt_loads
 from app.models.plantation import Plantation
+from app.choices import AlertStatusChoices
 
 User = get_user_model()
 
@@ -385,6 +385,38 @@ class PestOccurenceUtils:
                     created=True
                 )
 
+            # Set alert status for farms in red zone
+            farms_within_red_buffer.update(
+                alert_status=AlertStatusChoices.RED)
+
+            # Set alert status for farms in yellow zone
+            # (excluding those already in red zone)
+            farms_within_yellow_buffer.exclude(
+                id__in=farm_ids_within_red_buffer
+            ).update(alert_status=AlertStatusChoices.YELLOW)
+
+            # Set alert status for farms in green zone
+            # (excluding those in yellow or red zones)
+            farms_within_green_buffer.exclude(
+                id__in=farm_ids_within_yellow_buffer
+            ).exclude(
+                id__in=farm_ids_within_red_buffer
+            ).update(alert_status=AlertStatusChoices.GREEN)
+
+            # Get farm IDs in green buffer
+            farm_ids_within_green_buffer = \
+                farms_within_green_buffer.values_list('id', flat=True)
+
+            # Set alert status for farms not in any buffer zone
+            # (they are safe - outside the affected area)
+            Farm.objects.exclude(
+                id__in=farm_ids_within_red_buffer
+            ).exclude(
+                id__in=farm_ids_within_yellow_buffer
+            ).exclude(
+                id__in=farm_ids_within_green_buffer
+            ).update(alert_status=AlertStatusChoices.GREEN)
+
             for farm_objectt in Farm.objects.all():
                 self.all_interventions(farm_objectt)
 
@@ -474,6 +506,7 @@ class PestOccurenceUtils:
             ]
         }
         farm_object.metadata['pest_and_interventions'] = pest_info_dict
+        farm_object.alert_status = AlertStatusChoices.GREEN
         farm_object.save()
 
     def all_interventions(self, farm_object):
