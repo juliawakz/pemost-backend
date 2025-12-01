@@ -6,9 +6,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.gis.db.models import Union
 from django.contrib.gis.geos import GEOSGeometry
 from django.core.exceptions import ObjectDoesNotExist
-from notifications.choices import MessageTypeChoices
-from notifications.models import Notification
-from notifications.signals import send_notification
 from osgeo import ogr, osr
 from pest_control.models import Pest, PestOccurrence
 from shapely import wkt
@@ -17,6 +14,7 @@ from shapely.ops import unary_union
 from shapely.wkt import loads as wkt_loads
 from app.models.plantation import Plantation
 from app.choices import AlertStatusChoices
+from alerts.utils import AlertNotificationService
 
 User = get_user_model()
 
@@ -327,62 +325,50 @@ class PestOccurenceUtils:
                     'task_status': 'DONE'
                 }
             )
-            notifications_to_create = []
-
             farmer_ids = Plantation.objects.values_list(
                 'farm__farmer__id', flat=True).distinct()
             farmers_with_planting_info = list(farmer_ids)
 
-            # Process green zone
-            for farm_owner_uuid in unique_farm_owners_within_green_buffer:
-                if farm_owner_uuid in farmers_with_planting_info:
-                    notification_message = 'You are in the green zone. \
-                        This is a safe zone'
-                    notification = Notification(
-                        channel=f"pemost_notification_{farm_owner_uuid.hex}",
-                        message=notification_message,
-                        message_type=MessageTypeChoices.PUSH,
-                        subject='zone notification',
-                        message_to=User(id=farm_owner_uuid),
-                        is_read=False,
-                    )
-                    notifications_to_create.append(notification)
+            # Create alerts and send notifications for green zone
+            green_farms = farms_within_green_buffer.filter(
+                farmer__id__in=farmers_with_planting_info
+            )
+            for farm in green_farms:
+                AlertNotificationService.create_alert_and_notify(
+                    farm=farm,
+                    alert_type=AlertStatusChoices.GREEN,
+                    notification_title="Green Zone Alert",
+                    notification_message="Your farm is in the green zone. "
+                    "This is a safe zone with low pest risk.",
+                    email_subject="Farm Alert: Green Zone"
+                )
 
-            for farm_owner_uuid in unique_farm_owners_within_yellow_buffer:
-                if farm_owner_uuid in farmers_with_planting_info:
-                    notification_message = 'You are in the yellow zone'
-                    notification = Notification(
-                        channel=f"pemost_notification_{farm_owner_uuid.hex}",
-                        message=notification_message,
-                        message_type=MessageTypeChoices.PUSH,
-                        subject='zone notification',
-                        message_to=User(id=farm_owner_uuid),
-                        is_read=False,
-                    )
-                    notifications_to_create.append(notification)
+            # Create alerts and send notifications for yellow zone
+            yellow_farms = farms_within_yellow_buffer.filter(
+                farmer__id__in=farmers_with_planting_info
+            ).exclude(id__in=farm_ids_within_red_buffer)
+            for farm in yellow_farms:
+                AlertNotificationService.create_alert_and_notify(
+                    farm=farm,
+                    alert_type=AlertStatusChoices.YELLOW,
+                    notification_title="Yellow Zone Alert",
+                    notification_message="Your farm is in the yellow zone. "
+                    "Please monitor for pest activity.",
+                    email_subject="Farm Alert: Yellow Zone - Action Needed"
+                )
 
-            for farm_owner_uuid in unique_farm_owners_within_red_buffer:
-                if farm_owner_uuid in farmers_with_planting_info:
-                    notification_message = 'You are in the red zone'
-                    notification = Notification(
-                        channel=f"pemost_notification_{farm_owner_uuid.hex}",
-                        message=notification_message,
-                        message_type=MessageTypeChoices.PUSH,
-                        subject='zone notification',
-                        message_to=User(id=farm_owner_uuid),
-                        is_read=False,
-                    )
-
-                    notifications_to_create.append(notification)
-
-            # Use bulk_create to create all the notifications at once
-            Notification.objects.bulk_create(notifications_to_create)
-
-            for notification in notifications_to_create:
-                send_notification(
-                    Notification,
-                    notification,
-                    created=True
+            # Create alerts and send notifications for red zone
+            red_farms = farms_within_red_buffer.filter(
+                farmer__id__in=farmers_with_planting_info
+            )
+            for farm in red_farms:
+                AlertNotificationService.create_alert_and_notify(
+                    farm=farm,
+                    alert_type=AlertStatusChoices.RED,
+                    notification_title="Red Zone Alert - Urgent",
+                    notification_message="Your farm is in the red zone. "
+                    "Immediate action required to prevent crop damage.",
+                    email_subject="Farm Alert: Red Zone - Urgent Action Required"
                 )
 
             # Set alert status for farms in red zone
@@ -456,33 +442,18 @@ class PestOccurenceUtils:
                 }
             )
 
-            notifications_to_create = []
-
-            for farm in Farm.objects.all():
-                farm_owner_uuid = farm.farmer
-                notification_message = 'You are in the green zone. \
-                    This is a safe zone'
-
-                notification = Notification(
-                    channel=f"pemost_notification_{farm_owner_uuid.id.hex}",
-                    message=notification_message,
-                    message_type=MessageTypeChoices.PUSH,
-                    subject='zone notification',
-                    message_to=User(id=farm_owner_uuid.id),
-                    is_read=False,
-                )
-
-                notifications_to_create.append(notification)
-
-            # Use bulk_create to create all the notifications at once
-            Notification.objects.bulk_create(notifications_to_create)
-
-            for notification in notifications_to_create:
-                send_notification(
-                    Notification,
-                    notification,
-                    created=True
-                )
+            # Create alerts and send notifications for all farms (green zone)
+            all_farms = Farm.objects.all()
+            for farm in all_farms:
+                if farm.farmer:
+                    AlertNotificationService.create_alert_and_notify(
+                        farm=farm,
+                        alert_type=AlertStatusChoices.GREEN,
+                        notification_title="Green Zone Alert",
+                        notification_message="Your farm is in the green zone. "
+                        "This is a safe zone with low pest risk.",
+                        email_subject="Farm Alert: Green Zone"
+                    )
 
             for farm_objectt in Farm.objects.all():
                 self.all_green_interventions(farm_objectt)

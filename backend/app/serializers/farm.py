@@ -1,13 +1,11 @@
 from app.models.farm import Farm
 from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema_field
-from drf_spectacular.types import OpenApiTypes
 from locations.serializers.ward import MiniWardSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from users.serializers.user import MiniUserReadSerializer
 from app.serializers.e_extension import MiniEExtensionOfficerSerializer
-from locations.serializers.ward import MiniWardSerializer
 
 User = get_user_model()
 
@@ -240,4 +238,10 @@ class MiniFarmReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Farm
-        fields = ["id", "name", "ward", "boundary"]
+        fields = [
+            "id",
+            "name",
+            "ward",
+            "alert_status",
+            "calc_size"
+        ]

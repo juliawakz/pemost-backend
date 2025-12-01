@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     "app",
     "crops",
     "pest_control",
+    "alerts",
 ]
 
 MIDDLEWARE = [
@@ -431,15 +432,14 @@ FCM_DJANGO_SETTINGS = {
 }
 
 MIGRATION_MODULES = {
-    "api": "migration_files.api",
-    "base": "migration_files.base",
     "users": "migration_files.users",
     "notifications": "migration_files.notifications",
     "locations": "migration_files.locations",
     "app": "migration_files.app",
     "pest_control": "migration_files.pest_control",
     "farms": "migration_files.farms",
-    "crops": "migration_files.crops"
+    "crops": "migration_files.crops",
+    "alerts": "migration_files.alerts"
 }
 
 SPECTACULAR_SETTINGS = {

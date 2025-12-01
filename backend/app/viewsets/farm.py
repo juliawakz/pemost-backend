@@ -5,13 +5,16 @@ from app.serializers.farm import (
     FarmReadSerializer,
     FarmUpdateSerializer,
     FarmWriteSerializer,
+    MiniFarmReadSerializer
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from app.choices import AlertStatusChoices
 
 
 @extend_schema(tags=["App - Farms"])
@@ -62,7 +65,7 @@ class FarmViewset(viewsets.ModelViewSet):
         ).prefetch_related('e_extensions')
 
         if u.is_superuser or u.is_systemadmin():
-            return base_queryset.filter(is_archived=False).distinct()
+            return base_queryset.distinct()
 
         # Super Extension sees farms managed by their E-Extensions
         if u.is_superextension():
@@ -148,3 +151,20 @@ class FarmViewset(viewsets.ModelViewSet):
         Save the updated farm instance.
         """
         serializer.save()
+
+    @action(detail=False, methods=["get"], url_path="summary")
+    def get_farm_summary(self, request):
+        qs = self.get_queryset().distinct()
+        serializer = MiniFarmReadSerializer(qs, many=True)
+        farms_with_issues = qs.exclude(
+            alert_status__in=[
+                AlertStatusChoices.NONE,
+                AlertStatusChoices.GREEN
+                ]
+            )
+        return Response(
+            {
+                "total_farms": qs.count(),
+                "farm_with_issues": farms_with_issues.count(),
+                "results": serializer.data
+            })
