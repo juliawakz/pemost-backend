@@ -11,6 +11,9 @@ from users.views.password import (
 from users.views.profile import ProfileView
 from users.views.registration import RegisterAccountView, VerifyAccountView
 from users.views.token import CustomTokenRefreshView, ObtainAuthTokenView
+from users.views.notification_preferences import (
+    NotificationPreferencesView
+)
 
 app_name = "users"
 
@@ -41,6 +44,12 @@ urlpatterns = [
         "profile/",
         ProfileView.as_view(),
         name="profile-management"
+    ),
+    # Notification Preferences
+    path(
+        "notification-preferences/",
+        NotificationPreferencesView.as_view(),
+        name="notification-preferences"
     ),
     # List Available roles
     path(

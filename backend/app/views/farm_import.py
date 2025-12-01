@@ -1,11 +1,12 @@
 from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from drf_spectacular.utils import extend_schema
 from app.serializers.farm_import import FarmsImportSerializer
 from users.permissions import IsSystemAdminOrSuperUser
 
 
+@extend_schema(tags=["App - Farms"])
 class FarmsImportView(generics.GenericAPIView):
     queryset = None
     serializer_class = FarmsImportSerializer

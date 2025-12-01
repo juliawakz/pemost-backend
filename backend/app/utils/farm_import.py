@@ -147,11 +147,13 @@ class FarmImportUtil:
                     defaults={
                         'phone_number': phone,
                         'first_name': first_name.capitalize(),
-                        'last_name': last_name.capitalize()
+                        'last_name': last_name.capitalize(),
+                        'email': payload["email"]
                     }
                 )
                 if created:
                     user.set_password(user_pass)
+                    user.save()
 
                 fields["farmer"] = user
 

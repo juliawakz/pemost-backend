@@ -116,7 +116,8 @@ class UserReadSerializer(serializers.ModelSerializer):
         fields = [
             "id", "email", "first_name", "last_name", "phone_number",
             "id_number", "role", "is_verified", "full_name",
-            "profile_photo", "created_at", "updated_at"
+            "profile_photo", "enable_email_notifications",
+            "enable_push_notifications", "created_at", "updated_at"
         ]
         extra_kwargs = {
             "id": {"read_only": True},
@@ -142,3 +143,25 @@ class MiniUserReadSerializer(serializers.ModelSerializer):
             "full_name": {"read_only": True},
             "role": {"read_only": True}
         }
+
+
+class NotificationPreferencesSerializer(serializers.ModelSerializer):
+    """Serializer for updating user notification preferences"""
+    class Meta:
+        model = User
+        fields = [
+            "enable_email_notifications",
+            "enable_push_notifications"
+        ]
+
+    def update(self, instance, validated_data):
+        instance.enable_email_notifications = validated_data.get(
+            'enable_email_notifications',
+            instance.enable_email_notifications
+        )
+        instance.enable_push_notifications = validated_data.get(
+            'enable_push_notifications',
+            instance.enable_push_notifications
+        )
+        instance.save()
+        return instance

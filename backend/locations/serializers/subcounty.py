@@ -31,7 +31,6 @@ class MinimalSubCountySerializer(serializers.ModelSerializer):
         model = SubCounty
         fields = [
             "id",
-            "subcounty_id",
             "name",
             "county"
         ]

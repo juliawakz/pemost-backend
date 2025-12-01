@@ -41,6 +41,10 @@ urlpatterns = [
     path(
         "api/v2/pest/control/",
         include("pest_control.urls", namespace="pest-control")
+    ),
+    path(
+        "api/v2/alerts/",
+        include("alerts.urls", namespace="alerts")
     )
 ]
 

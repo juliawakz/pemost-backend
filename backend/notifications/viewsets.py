@@ -24,11 +24,17 @@ class NotificationViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = NotificationFilterSet
+    queryset = Notification.objects.all()
 
     def get_queryset(self):
+        u = self.request.user
+
         if getattr(self, "swagger_fake_view", False):
             return Notification.objects.none()
-        return Notification.objects.filter(message_to=self.request.user)
+
+        if u.is_superuser or u.is_systemadmin():
+            return self.queryset.distinct()
+        return self.queryset.filter(message_to=u)
 
     # Disable DELETE
     def destroy(self, request, *args, **kwargs):
@@ -51,7 +57,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
             status=status.HTTP_405_METHOD_NOT_ALLOWED
         )
 
-    @action(detail=True, methods=["post"], url_path="mark/read")
+    @action(detail=True, methods=["post"], url_path="mark-as-read")
     def mark_as_read(self, request, pk=None):
         """Mark a single notification as read"""
         notification = self.get_object()
@@ -61,7 +67,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(notification)
         return Response(serializer.data)
 
-    @action(detail=False, methods=["post"], url_path="mark/read/all")
+    @action(detail=False, methods=["post"], url_path="mark-all-as-read")
     def mark_all_as_read(self, request):
         """Mark all notifications for the user as read and return them"""
         qs = self.get_queryset().filter(is_read=False)

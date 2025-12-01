@@ -69,6 +69,14 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         null=False,
         default=True
     )
+    enable_email_notifications = models.BooleanField(
+        default=True,
+        help_text="Enable email notifications for alerts"
+    )
+    enable_push_notifications = models.BooleanField(
+        default=True,
+        help_text="Enable push notifications for alerts"
+    )
 
     objects = UserManager()
 

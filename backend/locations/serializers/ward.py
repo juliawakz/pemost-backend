@@ -1,18 +1,18 @@
 # serializers.py
 from locations.models.ward import Ward
-from locations.serializers.subcounty import MinimalSubCountySerializer
+from locations.serializers.county import MinimalCountySerializer
 from rest_framework import serializers
 
 
 class WardSerializer(serializers.ModelSerializer):
-    subcounty = MinimalSubCountySerializer(read_only=True)
+    county = serializers.SerializerMethodField()
 
     class Meta:
         model = Ward
         fields = [
             "id",
             "ward_id",
-            "subcounty",
+            "county",
             "name",
             "created_at",
             "updated_at"
@@ -23,15 +23,30 @@ class WardSerializer(serializers.ModelSerializer):
             "updated_at"
         ]
 
+    def get_county(self, obj):
+        """Get county data from ward's subcounty"""
+        if obj.subcounty and obj.subcounty.county:
+            return MinimalCountySerializer(obj.subcounty.county).data
+        return None
+
 
 class MiniWardSerializer(serializers.ModelSerializer):
+    county = serializers.SerializerMethodField()
+
     class Meta:
         model = Ward
         fields = [
             "id",
             "ward_id",
-            "name"
+            "name",
+            "county"
         ]
         read_only_fields = [
             "id"
         ]
+
+    def get_county(self, obj):
+        """Get county data from ward's subcounty"""
+        if obj.subcounty and obj.subcounty.county:
+            return MinimalCountySerializer(obj.subcounty.county).data
+        return None
