@@ -147,6 +147,8 @@ database/
 firebasefile.json
 env.v2
 backend/environments/env.v2
+env.dev
+backend/environments/env.dev
 .vscode/
 .DS_Store
 *.sqlite3
