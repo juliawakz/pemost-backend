@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from pest_control.serializers.pest_occurence import ProcessOccurrenceSerializer
 
+
 @extend_schema(tags=["Pest Control"])
 class ProcessOccurrenceApiView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -61,7 +62,6 @@ class ProcessOccurrenceApiView(APIView):
 
         serializer.is_valid(raise_exception=True)
 
-        # Get the processing result
         result = serializer.get_processing_result()
 
         if result:
@@ -76,8 +76,6 @@ class ProcessOccurrenceApiView(APIView):
                 "errors": result['errors']
             }
 
-            # Return 207 Multi-Status if there are both successes and errors
-            # Return 201 if all successful, 400 if all failed
             if result['total_errors'] > 0 and result['total_processed'] > 0:
                 return Response(
                     response_data, status=status.HTTP_207_MULTI_STATUS)

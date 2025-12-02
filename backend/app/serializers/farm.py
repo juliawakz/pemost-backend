@@ -141,9 +141,6 @@ class FarmWriteSerializer(serializers.ModelSerializer):
         model = Farm
         fields = ["name", "boundary", "user_size", "ward"]
 
-    # -----------------------------
-    # VALIDATION METHODS
-    # -----------------------------
     def validate_name(self, value):
         """Ensure farm name is unique."""
         if Farm.objects.filter(name=value).exists():
@@ -174,16 +171,10 @@ class FarmWriteSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    # -----------------------------
-    # CREATION LOGIC
-    # -----------------------------
     def create(self, validated_data):
         """Create a farm and attach the correct user."""
         return super().create(validated_data)
 
-    # -----------------------------
-    # OUTPUT REPRESENTATION
-    # -----------------------------
     def to_representation(self, instance):
         """Return full farm data after creation."""
         return FarmReadSerializer(instance, context=self.context).data
@@ -243,5 +234,6 @@ class MiniFarmReadSerializer(serializers.ModelSerializer):
             "name",
             "ward",
             "alert_status",
-            "calc_size"
+            "calc_size",
+            "user_size"
         ]

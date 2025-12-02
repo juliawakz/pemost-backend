@@ -39,21 +39,18 @@ class Command(BaseCommand):
         mode = options['mode']
         clear = options['clear']
 
-        # Check if file exists
         if not os.path.exists(shapefile_path):
             self.stdout.write(
                 self.style.ERROR(f"File not found: {shapefile_path}")
             )
             return
 
-        # Check if it's a zip file
         if not shapefile_path.endswith('.zip'):
             self.stdout.write(
                 self.style.ERROR("File must be a .zip file containing shapefile data")
             )
             return
 
-        # Clear existing farms if requested
         if clear:
             existing_count = Farm.objects.count()
             if existing_count > 0:

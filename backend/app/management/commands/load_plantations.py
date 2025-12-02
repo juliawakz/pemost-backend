@@ -38,16 +38,14 @@ class Command(BaseCommand):
         skipped_plantations = 0
         error_rows = []
 
-        # Count rows for tqdm
         with open(csv_file, newline="", encoding="utf-8") as f:
-            total_rows = sum(1 for _ in f) - 1  # subtract header
+            total_rows = sum(1 for _ in f) - 1
 
         with open(csv_file, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
 
             for row_num, row in enumerate(tqdm(reader, total=total_rows, desc="Importing plantations", unit="row"), start=2):
                 try:
-                    # Parse farm field (format: "calc_size-farmer_full_name")
                     farm_str = row.get("farm", "").strip()
                     if not farm_str:
                         error_rows.append({
@@ -58,7 +56,6 @@ class Command(BaseCommand):
                         skipped_plantations += 1
                         continue
 
-                    # Split farm string to get calc_size and farmer name
                     try:
                         calc_size_str, farmer_full_name = farm_str.split('-', 1)
                         calc_size = float(calc_size_str)
@@ -71,8 +68,6 @@ class Command(BaseCommand):
                         skipped_plantations += 1
                         continue
 
-                    # Find farm by calc_size and farmer full name
-                    # Parse farmer full name to get first and last name
                     name_parts = farmer_full_name.strip().split(' ', 1)
                     if len(name_parts) == 2:
                         first_name, last_name = name_parts
@@ -80,7 +75,6 @@ class Command(BaseCommand):
                         first_name = farmer_full_name.strip()
                         last_name = ""
 
-                    # Find farm matching calc_size and farmer name
                     farm = Farm.objects.filter(
                         Q(calc_size__gte=calc_size - 0.01) & Q(calc_size__lte=calc_size + 0.01),
                         Q(farmer__first_name__iexact=first_name.strip()) &
@@ -96,7 +90,6 @@ class Command(BaseCommand):
                         skipped_plantations += 1
                         continue
 
-                    # Parse crop variety field (format: "Crop-Variety")
                     crop_variety_str = row.get("crop variety", "").strip()
                     if not crop_variety_str:
                         error_rows.append({
@@ -107,7 +100,6 @@ class Command(BaseCommand):
                         skipped_plantations += 1
                         continue
 
-                    # Split crop variety string
                     try:
                         crop_name, variety_name = crop_variety_str.split('-', 1)
                     except ValueError:
@@ -119,7 +111,6 @@ class Command(BaseCommand):
                         skipped_plantations += 1
                         continue
 
-                    # Find crop variety
                     crop_variety = CropVariety.objects.filter(
                         name__iexact=variety_name.strip(),
                         crop__name__iexact=crop_name.strip()
@@ -134,7 +125,6 @@ class Command(BaseCommand):
                         skipped_plantations += 1
                         continue
 
-                    # Parse transplanting date
                     transplanting_date_str = row.get("transplanting date", "").strip()
                     if not transplanting_date_str:
                         error_rows.append({
@@ -145,7 +135,6 @@ class Command(BaseCommand):
                         skipped_plantations += 1
                         continue
 
-                    # Try multiple date formats
                     transplanting_date = None
                     date_formats = ["%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y"]
                     for date_format in date_formats:
@@ -166,7 +155,6 @@ class Command(BaseCommand):
                         skipped_plantations += 1
                         continue
 
-                    # Check if plantation already exists
                     existing_plantation = Plantation.objects.filter(
                         farm=farm,
                         crop_variety=crop_variety,
@@ -187,8 +175,6 @@ class Command(BaseCommand):
                                     'data': row
                                 })
                     else:
-                        # Create new plantation
-                        # Note: notification_end_date will be auto-calculated in the save method
                         plantation = Plantation(
                             farm=farm,
                             crop_variety=crop_variety,
@@ -196,12 +182,9 @@ class Command(BaseCommand):
                         )
 
                         try:
-                            # Try to save with validation
                             plantation.save()
                             created_plantations += 1
                         except Exception as validation_error:
-                            # If validation fails (e.g., active plantation exists),
-                            # log the error and skip
                             error_rows.append({
                                 'row': row_num,
                                 'error': f'Validation error: {str(validation_error)}',
@@ -217,7 +200,6 @@ class Command(BaseCommand):
                     })
                     skipped_plantations += 1
 
-        # Summary report
         self.stdout.write(self.style.SUCCESS("\n" + "="*50))
         self.stdout.write(self.style.SUCCESS("Plantation Import Summary"))
         self.stdout.write(self.style.SUCCESS("="*50))
@@ -233,7 +215,7 @@ class Command(BaseCommand):
         if error_rows:
             self.stdout.write(self.style.ERROR(f"\nErrors encountered: {len(error_rows)}"))
             self.stdout.write(self.style.ERROR("\nDetailed errors:"))
-            for error in error_rows[:10]:  # Show first 10 errors
+            for error in error_rows[:10]:
                 self.stdout.write(
                     self.style.ERROR(
                         f"  Row {error['row']}: {error['error']}"
