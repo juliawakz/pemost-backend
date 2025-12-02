@@ -17,7 +17,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             "phone_number",
             "profile_photo",
             "role",
-            "is_verified"
+            "is_verified",
+            "last_login",
+            "created_at"
         )
         extra_kwargs = {
             "id": {"read_only": True},
@@ -25,4 +27,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             "full_name": {"read_only": True},
             "role": {"read_only": True},
             "is_verified": {"read_only": True},
+            "last_login": {"read_only": True},
+            "created_at": {"read_only": True}
         }

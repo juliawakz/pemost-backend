@@ -49,7 +49,7 @@ class NotificationPreferencesView(APIView):
             return Response(
                 {
                     "message": "Notification preferences updated successfully",
-                    "data": UserReadSerializer(request.user).data
+                    "data": serializer.data
                 },
                 status=status.HTTP_200_OK
             )
