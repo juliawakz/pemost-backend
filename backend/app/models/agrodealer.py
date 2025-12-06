@@ -23,9 +23,11 @@ class Agrodealer(BaseModel):
     )
     user = models.ForeignKey(
         User,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name="agrodealer_users",
-        limit_choices_to={'role': 'AGRODEALER'}
+        limit_choices_to={'role': 'AGRODEALER'},
+        null=True,
+        blank=True
     )
     ward = models.ForeignKey(
         Ward,
@@ -63,7 +65,7 @@ class Agrodealer(BaseModel):
         return self.name
 
     def clean(self):
-        if self.user and self.user.role != RoleChoices.AGRODEALER:
+        if self.user is not None and self.user.role != RoleChoices.AGRODEALER:
             raise ValidationError(
                 _("User must have the role 'Agrodealer'.")
             )

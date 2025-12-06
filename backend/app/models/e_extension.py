@@ -12,10 +12,12 @@ User = get_user_model()
 class EExtensionOfficer(BaseModel):
     user = models.OneToOneField(
         User,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='e_extension_users',
         limit_choices_to={'role': 'E_EXTENSION'},
-        unique=True
+        unique=True,
+        null=True,
+        blank=True
     )
     wards = models.ManyToManyField(
         Ward,
@@ -43,9 +45,12 @@ class EExtensionOfficer(BaseModel):
         get_latest_by = ("-updated_at",)
 
     def __str__(self):
-        return f"{self.user.full_name}"
+        if self.user:
+            return f"{self.user.full_name}"
+        return f"E-Extension Officer (Deleted User)"
 
     def save(self, *args, **kwargs):
-        self.user.role = RoleChoices.E_EXTENSION
-        self.user.save()
+        if self.user:
+            self.user.role = RoleChoices.E_EXTENSION
+            self.user.save()
         super().save(*args, **kwargs)
