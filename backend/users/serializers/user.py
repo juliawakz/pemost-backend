@@ -134,12 +134,14 @@ class MiniUserReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            "id", "email", "full_name", "phone_number",
-            "role", "agree_to_terms", "license_type"
+            "id",
+            "full_name",
+            "phone_number",
+            "role"
         ]
         extra_kwargs = {
             "id": {"read_only": True},
-            "email": {"read_only": True},
+            "phone_number": {"read_only": True},
             "full_name": {"read_only": True},
             "role": {"read_only": True}
         }

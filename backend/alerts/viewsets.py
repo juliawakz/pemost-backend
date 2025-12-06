@@ -1,3 +1,4 @@
+from alerts.filters import AlertFilter
 from alerts.models import Alert
 from alerts.serializers import MiniAlertSerializer, AlertReadSerializer
 from django_filters.rest_framework import DjangoFilterBackend
@@ -29,7 +30,7 @@ class AlertViewSet(viewsets.ReadOnlyModelViewSet):
     authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['alert_type', 'read', 'farm']
+    filterset_class = AlertFilter
 
     def get_serializer_class(self):
         """

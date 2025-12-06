@@ -11,10 +11,12 @@ User = get_user_model()
 class SuperExtensionOfficer(BaseModel):
     user = models.OneToOneField(
         User,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='super_extension_users',
         limit_choices_to={'role': 'SUPER_EXTENSION'},
-        unique=True
+        unique=True,
+        null=True,
+        blank=True
     )
     counties = models.ManyToManyField(
         County,
@@ -32,9 +34,12 @@ class SuperExtensionOfficer(BaseModel):
         get_latest_by = ("-updated_at",)
 
     def __str__(self):
-        return f"{self.user.full_name}"
+        if self.user:
+            return f"{self.user.full_name}"
+        return f"Super-Extension Officer (Deleted User)"
 
     def save(self, *args, **kwargs):
-        self.user.role = RoleChoices.SUPER_EXTENSION
-        self.user.save()
+        if self.user:
+            self.user.role = RoleChoices.SUPER_EXTENSION
+            self.user.save()
         super().save(*args, **kwargs)

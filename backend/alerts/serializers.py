@@ -2,7 +2,7 @@ from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 
 from alerts.models import Alert
-from app.serializers.farm import MiniFarmReadSerializer
+from app.serializers.farm import MiniFarmReadSerializer, FarmReadSerializer
 from app.models.plantation import Plantation
 
 

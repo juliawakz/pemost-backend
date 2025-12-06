@@ -226,6 +226,7 @@ class FarmSerializer(serializers.ModelSerializer):
 class MiniFarmReadSerializer(serializers.ModelSerializer):
     """Minimal representation of a Farm."""
     ward = MiniWardSerializer()
+    farmer = MiniUserReadSerializer()
 
     class Meta:
         model = Farm
@@ -233,6 +234,7 @@ class MiniFarmReadSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "ward",
+            "farmer",
             "alert_status",
             "calc_size",
             "user_size"

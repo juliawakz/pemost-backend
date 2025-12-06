@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.gis.admin import GISModelAdmin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
-from pest_control.models import Pest, PestOccurrence
+from pest_control.models import Pest, PestOccurrence, PestReport
 
 
 class PestAdmin(ExportActionsMixin, admin.ModelAdmin):
@@ -143,5 +143,60 @@ class PestOccurrenceAdmin(ExportActionsMixin, GISModelAdmin):
     )
 
 
+class PestReportAdmin(ExportActionsMixin, GISModelAdmin):
+    actions = ['export_to_csv', 'download_sample_csv']
+    list_display = [
+        "id",
+        "pest",
+        "farm",
+        "no_of_pests",
+        "user",
+        "created_at",
+    ]
+    list_filter = [
+        "pest",
+        "farm",
+        "created_at",
+        "is_archived",
+    ]
+    search_fields = [
+        "pest__name",
+        "pest__scientific_name",
+        "farm__name",
+        "user__email",
+        "user__first_name",
+        "user__last_name"
+    ]
+    list_per_page = 50
+    save_on_top = True
+    readonly_fields = ["created_at", "updated_at"]
+    raw_id_fields = ["pest", "farm", "user"]
+
+    fieldsets = (
+        ("Report Details", {
+            "fields": (
+                "pest",
+                "farm",
+                "no_of_pests",
+                "user",
+            )
+        }),
+        ("Location", {
+            "fields": (
+                "location",
+            )
+        }),
+        ("Metadata", {
+            "fields": (
+                "is_archived",
+                "created_at",
+                "updated_at",
+            ),
+            "classes": ("collapse",)
+        }),
+    )
+
+
 admin.site.register(Pest, PestAdmin)
 admin.site.register(PestOccurrence, PestOccurrenceAdmin)
+admin.site.register(PestReport, PestReportAdmin)
