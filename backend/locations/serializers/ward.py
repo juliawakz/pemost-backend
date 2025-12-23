@@ -2,6 +2,7 @@
 from locations.models.ward import Ward
 from locations.serializers.county import MinimalCountySerializer
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 
 
 class WardSerializer(serializers.ModelSerializer):
@@ -23,6 +24,7 @@ class WardSerializer(serializers.ModelSerializer):
             "updated_at"
         ]
 
+    @extend_schema_field(MinimalCountySerializer(allow_null=True))
     def get_county(self, obj):
         """Get county data from ward's subcounty"""
         if obj.subcounty and obj.subcounty.county:
@@ -45,6 +47,7 @@ class MiniWardSerializer(serializers.ModelSerializer):
             "id"
         ]
 
+    @extend_schema_field(MinimalCountySerializer(allow_null=True))
     def get_county(self, obj):
         """Get county data from ward's subcounty"""
         if obj.subcounty and obj.subcounty.county:

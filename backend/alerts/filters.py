@@ -16,12 +16,13 @@ class AlertFilter(django_filters.FilterSet):
     - end_date: Filter alerts created on or before this date
       (format: YYYY-MM-DD)
     """
-
-    alert_type = django_filters.ChoiceFilter(
-        field_name='alert_type',
-        choices=AlertStatusChoices.choices,
+    alert_type = django_filters.CharFilter(
+        method="filter_alert_type",
         help_text="Filter by alert type (YELLOW, RED, GREEN, NONE)"
     )
+
+    def filter_alert_type(self, queryset, name, value):
+        return queryset.filter(alert_type__iexact=value)
 
     start_date = django_filters.DateFilter(
         field_name='created_at',

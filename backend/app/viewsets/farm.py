@@ -156,15 +156,23 @@ class FarmViewset(viewsets.ModelViewSet):
     def get_farm_summary(self, request):
         qs = self.get_queryset().distinct()
         serializer = MiniFarmReadSerializer(qs, many=True)
+        farms_in_red = qs.filter(
+            alert_status=AlertStatusChoices.RED
+        ).distinct().count()
+        farms_in_yellow = qs.filter(
+            alert_status=AlertStatusChoices.YELLOW
+        ).distinct().count()
         farms_with_issues = qs.exclude(
             alert_status__in=[
                 AlertStatusChoices.NONE,
                 AlertStatusChoices.GREEN
                 ]
-            )
+            ).count()
         return Response(
             {
                 "total_farms": qs.count(),
-                "farm_with_issues": farms_with_issues.count(),
+                "farms_with_issues": farms_with_issues,
+                "farms_in_red": farms_in_red,
+                "farms_in_yellow": farms_in_yellow,
                 "results": serializer.data
             })

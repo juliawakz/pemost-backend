@@ -71,6 +71,7 @@ class PestReport(BaseModel):
         verbose_name_plural = _("Pest Reports")
         ordering = ("-created_at",)
         get_latest_by = ("-created_at",)
+        unique_together = ("pest", "location")
 
     def __str__(self):
         farm_info = f" at {self.farm.name}" if self.farm else ""

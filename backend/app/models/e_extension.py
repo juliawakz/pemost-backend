@@ -19,10 +19,12 @@ class EExtensionOfficer(BaseModel):
         null=True,
         blank=True
     )
-    wards = models.ManyToManyField(
+    ward = models.ForeignKey(
         Ward,
-        blank=False,
-        related_name="e_extension_wards"
+        related_name="e_extension_ward",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
     )
     super_extensions = models.ManyToManyField(
         SuperExtensionOfficer,

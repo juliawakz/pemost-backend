@@ -2,6 +2,7 @@ from crops.models.crop_variety import CropVariety
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 from users.serializers.user import MiniUserReadSerializer
+from crops.serializers.crop import MiniCropSerializer
 
 
 class CropVarietySerializer(serializers.ModelSerializer):
@@ -38,3 +39,15 @@ class CropVarietySerializer(serializers.ModelSerializer):
         if request and request.user and request.user.is_authenticated:
             validated_data["updated_by"] = request.user
         return super().update(instance, validated_data)
+
+
+class MiniCropVarietySerializer(serializers.ModelSerializer):
+    crop = MiniCropSerializer()
+
+    class Meta:
+        model = CropVariety
+        fields = [
+            "id",
+            "name",
+            "crop",
+        ]

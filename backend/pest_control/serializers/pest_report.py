@@ -1,4 +1,3 @@
-from django.contrib.gis.geos import Point
 from pest_control.models.pest_report import PestReport
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
@@ -9,21 +8,11 @@ class PestReportWriteSerializer(serializers.ModelSerializer):
     """
     Serializer for creating and updating pest reports.
     """
-    longitude = serializers.FloatField(
-        write_only=True,
-        help_text="Longitude of the pest location"
-    )
-    latitude = serializers.FloatField(
-        write_only=True,
-        help_text="Latitude of the pest location"
-    )
-
     class Meta:
         model = PestReport
         fields = [
             "id",
-            "longitude",
-            "latitude",
+            "location",
             "farm",
             "no_of_pests",
             "pest",
@@ -31,25 +20,6 @@ class PestReportWriteSerializer(serializers.ModelSerializer):
             "created_at"
         ]
         read_only_fields = ["id", "created_at"]
-
-    def create(self, validated_data):
-        longitude = validated_data.pop('longitude')
-        latitude = validated_data.pop('latitude')
-
-        # Create Point from longitude and latitude
-        location = Point(longitude, latitude, srid=4326)
-        validated_data['location'] = location
-
-        return super().create(validated_data)
-
-    def update(self, instance, validated_data):
-        longitude = validated_data.pop('longitude', None)
-        latitude = validated_data.pop('latitude', None)
-
-        if longitude is not None and latitude is not None:
-            instance.location = Point(longitude, latitude, srid=4326)
-
-        return super().update(instance, validated_data)
 
 
 class PestReportReadSerializer(serializers.ModelSerializer):
@@ -70,15 +40,12 @@ class PestReportReadSerializer(serializers.ModelSerializer):
         read_only=True,
         allow_null=True
     )
-    longitude = serializers.SerializerMethodField()
-    latitude = serializers.SerializerMethodField()
 
     class Meta:
         model = PestReport
         fields = [
             "id",
-            "longitude",
-            "latitude",
+            "location",
             "farm",
             "farm_name",
             "no_of_pests",
@@ -89,14 +56,6 @@ class PestReportReadSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at"
         ]
-
-    def get_longitude(self, obj):
-        """Extract longitude from location Point."""
-        return obj.location.x if obj.location else None
-
-    def get_latitude(self, obj):
-        """Extract latitude from location Point."""
-        return obj.location.y if obj.location else None
 
 
 class MiniPestReportSerializer(serializers.ModelSerializer):
