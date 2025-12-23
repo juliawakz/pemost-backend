@@ -1,14 +1,14 @@
 from app.models.plantation import Plantation
 from app.serializers.farm import MiniFarmReadSerializer
-from crops.serializers.crop_variety import CropVarietySerializer
+from crops.serializers.crop_variety import MiniCropVarietySerializer
 from rest_framework import serializers
 from django.db.models import Q
-from datetime import datetime
+
 
 class PlantationReadSerializer(serializers.ModelSerializer):
     """Serializer for reading plantation data with nested relationships"""
     farm = MiniFarmReadSerializer(read_only=True)
-    crop_variety = CropVarietySerializer(read_only=True)
+    crop_variety = MiniCropVarietySerializer(read_only=True)
 
     class Meta:
         model = Plantation

@@ -36,3 +36,9 @@ class CropSerializer(serializers.ModelSerializer):
         if request and request.user and request.user.is_authenticated:
             validated_data["updated_by"] = request.user
         return super().update(instance, validated_data)
+
+
+class MiniCropSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Crop
+        fields = ["id", "name"]

@@ -13,10 +13,10 @@ User = get_user_model()
 class EExtensionOfficerReadSerializer(serializers.ModelSerializer):
     """
     Serializer for reading/retrieving E-Extension officer data.
-    Includes nested user, wards, and super extension information.
+    Includes nested user, ward, and super extension information.
     """
     user = MiniUserReadSerializer(read_only=True)
-    wards = MiniWardSerializer(many=True, read_only=True)
+    ward = MiniWardSerializer(read_only=True)
     managed_farms_count = serializers.SerializerMethodField()
     super_extensions_count = serializers.SerializerMethodField()
 
@@ -25,7 +25,7 @@ class EExtensionOfficerReadSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "user",
-            "wards",
+            "ward",
             "super_extensions_count",
             "managed_farms_count",
             "managed_farms",
@@ -57,15 +57,14 @@ class EExtensionOfficerWriteSerializer(serializers.ModelSerializer):
     Serializer for creating new E-Extension officers.
     E-Extension officers can self-register.
     """
-    wards = serializers.PrimaryKeyRelatedField(
-        many=True,
+    ward = serializers.PrimaryKeyRelatedField(
         queryset=Ward.objects.all(),
         required=True
     )
 
     class Meta:
         model = EExtensionOfficer
-        fields = ["wards"]
+        fields = ["ward"]
 
     # -----------------------------
     # VALIDATION
@@ -80,7 +79,7 @@ class EExtensionOfficerWriteSerializer(serializers.ModelSerializer):
         if request is None:
             raise ValidationError("Request context is missing.")
         user = request.user
-        wards = attrs.get("wards")
+        ward = attrs.get("ward")
 
         if not user.is_eextension():
             raise ValidationError(
@@ -94,9 +93,9 @@ class EExtensionOfficerWriteSerializer(serializers.ModelSerializer):
             )
 
         # Ensure at least one ward
-        if not wards:
+        if not ward:
             raise ValidationError(
-                "At least one ward must be assigned.")
+                "You must provide a ward.")
 
         attrs["user"] = user
 
@@ -122,10 +121,9 @@ class EExtensionOfficerWriteSerializer(serializers.ModelSerializer):
 class EExtensionOfficerUpdateSerializer(serializers.ModelSerializer):
     """
     Serializer for updating E-Extension officer data.
-    Allows updating: wards, is_visible.
+    Allows updating: ward, is_visible.
     """
-    wards = serializers.PrimaryKeyRelatedField(
-        many=True,
+    ward = serializers.PrimaryKeyRelatedField(
         queryset=__import__(
             'locations.models.ward',
             fromlist=['Ward']
@@ -135,11 +133,11 @@ class EExtensionOfficerUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = EExtensionOfficer
         fields = [
-            "wards",
+            "ward",
             "is_visible",
         ]
 
-    def validate_wards(self, value):
+    def validate_ward(self, value):
         """Ensure at least one ward is provided"""
         if not value:
             raise ValidationError(

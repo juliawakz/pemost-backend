@@ -2,7 +2,6 @@ from app.serializers.farm import (
     FarmReadSerializer,
     FarmWriteSerializer,
     FarmUpdateSerializer,
-    FarmSerializer,
 )
 from app.serializers.agrodealer import (
     AgrodealerReadSerializer,
@@ -32,7 +31,6 @@ __all__ = [
     'FarmReadSerializer',
     'FarmWriteSerializer',
     'FarmUpdateSerializer',
-    'FarmSerializer',
     'AgrodealerReadSerializer',
     'AgrodealerWriteSerializer',
     'AgrodealerUpdateSerializer',

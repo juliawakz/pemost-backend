@@ -1,11 +1,16 @@
 from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.generics import DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 User = get_user_model()
+
+
+class DeleteAccountResponseSerializer(serializers.Serializer):
+    """Serializer for delete account response."""
+    message = serializers.CharField()
 
 
 @extend_schema(tags=["Account Management"])
@@ -17,6 +22,7 @@ class DeleteAccountView(DestroyAPIView):
     to have null user references instead of deleting them.
     """
     permission_classes = [IsAuthenticated]
+    serializer_class = DeleteAccountResponseSerializer
 
     def get_object(self):
         return self.request.user
