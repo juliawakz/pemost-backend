@@ -75,6 +75,7 @@ class FarmReadSerializer(serializers.ModelSerializer):
         """Return count of e-extensions managing this farm"""
         return obj.e_extensions.count()
 
+    @extend_schema_field(MiniPlantationReadSerializer(allow_null=True))
     def get_farm_plantation(self, obj):
         plantation = (
             obj.farm_plantation
