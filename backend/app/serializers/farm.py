@@ -1,15 +1,29 @@
 from app.models.farm import Farm
 from django.contrib.auth import get_user_model
+from app.models.plantation import Plantation
+from crops.serializers.crop_variety import MiniCropVarietySerializer
 from drf_spectacular.utils import extend_schema_field
-from drf_spectacular.types import OpenApiTypes
 from locations.serializers.ward import MiniWardSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from users.serializers.user import MiniUserReadSerializer
 from app.serializers.e_extension import MiniEExtensionOfficerSerializer
-from locations.serializers.ward import MiniWardSerializer
 
 User = get_user_model()
+
+
+class MiniPlantationReadSerializer(serializers.ModelSerializer):
+    crop_variety = MiniCropVarietySerializer(read_only=True)
+
+    class Meta:
+        model = Plantation
+        fields = [
+            "id",
+            "crop_variety",
+            "transplanting_date",
+            "created_at"
+        ]
+        read_only_fields = fields
 
 
 class FarmReadSerializer(serializers.ModelSerializer):
@@ -17,6 +31,7 @@ class FarmReadSerializer(serializers.ModelSerializer):
     Serializer for reading/retrieving farm data.
     Includes nested user and ward information, and calculated size.
     """
+    farm_plantation = serializers.SerializerMethodField()
     farmer = MiniUserReadSerializer(read_only=True)
     ward = MiniWardSerializer(read_only=True)
     e_extensions_count = serializers.SerializerMethodField()
@@ -36,6 +51,7 @@ class FarmReadSerializer(serializers.ModelSerializer):
             "calc_size",
             "ward",
             "farmer",
+            "farm_plantation",
             "e_extensions_count",
             "e_extensions",
             "alert_status",
@@ -58,6 +74,20 @@ class FarmReadSerializer(serializers.ModelSerializer):
     def get_e_extensions_count(self, obj):
         """Return count of e-extensions managing this farm"""
         return obj.e_extensions.count()
+
+    @extend_schema_field(MiniPlantationReadSerializer(allow_null=True))
+    def get_farm_plantation(self, obj):
+        plantation = (
+            obj.farm_plantation
+            .filter(is_matured=False)
+            .order_by("-transplanting_date")
+            .first()
+        )
+
+        if not plantation:
+            return None
+
+        return MiniPlantationReadSerializer(plantation).data
 
     @extend_schema_field({
         'type': 'object',
@@ -143,9 +173,6 @@ class FarmWriteSerializer(serializers.ModelSerializer):
         model = Farm
         fields = ["name", "boundary", "user_size", "ward"]
 
-    # -----------------------------
-    # VALIDATION METHODS
-    # -----------------------------
     def validate_name(self, value):
         """Ensure farm name is unique."""
         if Farm.objects.filter(name=value).exists():
@@ -176,16 +203,10 @@ class FarmWriteSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    # -----------------------------
-    # CREATION LOGIC
-    # -----------------------------
     def create(self, validated_data):
         """Create a farm and attach the correct user."""
         return super().create(validated_data)
 
-    # -----------------------------
-    # OUTPUT REPRESENTATION
-    # -----------------------------
     def to_representation(self, instance):
         """Return full farm data after creation."""
         return FarmReadSerializer(instance, context=self.context).data
@@ -223,21 +244,19 @@ class FarmUpdateSerializer(serializers.ModelSerializer):
         return FarmReadSerializer(instance, context=self.context).data
 
 
-# Keep the old serializer for backward compatibility (if needed)
-class FarmSerializer(serializers.ModelSerializer):
-    """
-    Legacy serializer - use FarmReadSerializer, FarmWriteSerializer,
-    or FarmUpdateSerializer instead.
-    """
-    class Meta:
-        model = Farm
-        fields = "__all__"
-
-
 class MiniFarmReadSerializer(serializers.ModelSerializer):
     """Minimal representation of a Farm."""
     ward = MiniWardSerializer()
+    farmer = MiniUserReadSerializer()
 
     class Meta:
         model = Farm
-        fields = ["id", "name", "ward", "boundary"]
+        fields = [
+            "id",
+            "name",
+            "ward",
+            "farmer",
+            "alert_status",
+            "calc_size",
+            "user_size"
+        ]

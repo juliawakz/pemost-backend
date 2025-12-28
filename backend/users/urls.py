@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from users.views.choices import RoleChoicesView
+from users.views.delete_account import DeleteAccountView
 from users.views.login import LoginAPIView
 from users.views.logout import LogoutView
 from users.views.password import (
@@ -11,6 +12,9 @@ from users.views.password import (
 from users.views.profile import ProfileView
 from users.views.registration import RegisterAccountView, VerifyAccountView
 from users.views.token import CustomTokenRefreshView, ObtainAuthTokenView
+from users.views.notification_preferences import (
+    NotificationPreferencesView
+)
 
 app_name = "users"
 
@@ -41,6 +45,18 @@ urlpatterns = [
         "profile/",
         ProfileView.as_view(),
         name="profile-management"
+    ),
+    # Delete Account
+    path(
+        "account/delete/",
+        DeleteAccountView.as_view(),
+        name="delete-account"
+    ),
+    # Notification Preferences
+    path(
+        "notification-preferences/",
+        NotificationPreferencesView.as_view(),
+        name="notification-preferences"
     ),
     # List Available roles
     path(

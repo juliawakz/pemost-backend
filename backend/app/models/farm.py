@@ -46,9 +46,11 @@ class Farm(BaseModel):
     )
     farmer = models.ForeignKey(
         User,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name="farm_users",
-        limit_choices_to={'role': 'FARMER'}
+        limit_choices_to={'role': 'FARMER'},
+        null=True,
+        blank=True
     )
     e_extensions = models.ManyToManyField(
         EExtensionOfficer,
@@ -76,7 +78,7 @@ class Farm(BaseModel):
 
     def clean(self):
         """Validate farm data"""
-        if self.farmer and not self.farmer.is_farmer():
+        if self.farmer is not None and not self.farmer.is_farmer():
             raise ValidationError(
                 "Farm user must have the role 'FARMER'."
             )
@@ -87,8 +89,9 @@ class Farm(BaseModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name or 'Unnamed'} - {self.farmer.first_name}\
-            {self.farmer.last_name}"
+        if self.farmer:
+            return f"{self.name or 'Unnamed'} - {self.farmer.first_name} {self.farmer.last_name}"
+        return f"{self.name or 'Unnamed'} - No Farmer"
 
     def get_sqm_by_wgs84_polygon(self, geom):
         """

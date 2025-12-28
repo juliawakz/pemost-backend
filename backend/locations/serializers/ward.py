@@ -1,18 +1,19 @@
 # serializers.py
 from locations.models.ward import Ward
-from locations.serializers.subcounty import MinimalSubCountySerializer
+from locations.serializers.county import MinimalCountySerializer
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 
 
 class WardSerializer(serializers.ModelSerializer):
-    subcounty = MinimalSubCountySerializer(read_only=True)
+    county = serializers.SerializerMethodField()
 
     class Meta:
         model = Ward
         fields = [
             "id",
             "ward_id",
-            "subcounty",
+            "county",
             "name",
             "created_at",
             "updated_at"
@@ -23,15 +24,32 @@ class WardSerializer(serializers.ModelSerializer):
             "updated_at"
         ]
 
+    @extend_schema_field(MinimalCountySerializer(allow_null=True))
+    def get_county(self, obj):
+        """Get county data from ward's subcounty"""
+        if obj.subcounty and obj.subcounty.county:
+            return MinimalCountySerializer(obj.subcounty.county).data
+        return None
+
 
 class MiniWardSerializer(serializers.ModelSerializer):
+    county = serializers.SerializerMethodField()
+
     class Meta:
         model = Ward
         fields = [
             "id",
             "ward_id",
-            "name"
+            "name",
+            "county"
         ]
         read_only_fields = [
             "id"
         ]
+
+    @extend_schema_field(MinimalCountySerializer(allow_null=True))
+    def get_county(self, obj):
+        """Get county data from ward's subcounty"""
+        if obj.subcounty and obj.subcounty.county:
+            return MinimalCountySerializer(obj.subcounty.county).data
+        return None

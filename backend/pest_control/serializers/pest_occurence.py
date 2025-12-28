@@ -31,11 +31,9 @@ class ProcessOccurrenceSerializer(serializers.Serializer):
             data=attrs.get("data")
         )
 
-        # Store the result in the serializer for later access
         self._processing_result = result
 
         return attrs
 
     def get_processing_result(self):
-        """Return the processing result from validation"""
         return getattr(self, '_processing_result', None)
